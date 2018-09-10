@@ -16,6 +16,14 @@ const style = {
   height: '100%'
 };
 
+const kotusLayers = {
+  'kotus:pitajat': 'Finnish parishes in 1938',
+  // https://www.kotus.fi/en/on_language/dialects/finnish_dialects_7541
+  'kotus:rajat-sms-alueet': 'Dialectical regions in Finland',
+  'kotus:rajat-sms-alueosat': 'Dialectical subregions in Finland',
+  'kotus:rajat-lansi-ita': 'Border between western and eastern dialects in Finland'
+};
+
 // https://github.com/pointhi/leaflet-color-markers
 const ColorIcon = L.Icon.extend({
   options: {
@@ -38,12 +46,7 @@ class LeafletMap extends React.Component {
     //   kotus:rajat-sms-alueosat  murrealueenosat
     //   kotus:rajat-lansi-ita
     //   kotus:rajat-sms-alueet    murrealueet
-    this.props.getGeoJSON([
-      'kotus:pitajat',
-      'kotus:rajat-sms-alueet',
-      'kotus:rajat-sms-alueosat',
-      'kotus:rajat-lansi-ita'
-    ]);
+    this.props.getGeoJSON(Object.keys(kotusLayers));
 
     // Base layers
     const OSMBaseLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -195,7 +198,7 @@ class LeafletMap extends React.Component {
         const layer = L.geoJSON(obj.geoJSON, {
           onEachFeature: this.onEachFeature
         });
-        this.layerControl.addOverlay(layer, obj.layerID);
+        this.layerControl.addOverlay(layer, kotusLayers[obj.layerID]);
       });
     }
   }
