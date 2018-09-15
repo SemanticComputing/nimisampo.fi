@@ -1,15 +1,24 @@
-# Hipla.fi
+# NameSampo Web App
 
-## Build
- `docker build -t hipla-full-stack .`
+## Local development
 
-## Run
- `docker run -d -p 3005:3001 --name hipla hipla-full-stack`
-
-## Upgrade
 ```
-docker build -t hipla-full-stack .
-docker stop hipla
-docker rm hipla
-docker run -d -p 3005:3001 --name hipla hipla-full-stack
+npm install
+npm run dev
+```
+
+## Deploy with Docker
+
+### Build
+ `docker build -t nimisampo-c .`
+
+### Run
+ `docker run -d -p 3005:3001 --name nimisampo nimisampo-c`
+
+### Upgrade
+```
+docker build -t nimisampo-c .
+docker stop nimisampo
+docker rm nimisampo
+docker run -d -p 3005:3001 --name nimisampo nimisampo-c
 ```
