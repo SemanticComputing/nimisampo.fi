@@ -20,5 +20,5 @@ npm run dev
 docker build -t nimisampo-c .
 docker stop nimisampo
 docker rm nimisampo
-docker run -d -p 3005:3001 --name nimisampo nimisampo-c
+docker run -d -p 3005:3001 --restart unless-stopped --name nimisampo nimisampo-c
 ```
