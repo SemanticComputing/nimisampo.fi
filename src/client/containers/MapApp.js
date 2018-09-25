@@ -206,7 +206,7 @@ let MapApp = (props) => {
       case 'map': {
         mainResultsView = (
           <div className={classes.fullMap}>
-            {map}
+            {mapElement}
           </div>
         );
         break;
