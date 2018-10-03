@@ -281,7 +281,7 @@ module.exports = {
         ?s a hipla:Place .
         ?s skos:prefLabel ?label .
         ?s hipla:municipality ?broaderAreaLabel .
-        BIND("DNA" AS ?source)
+        BIND("NA" AS ?source)
         BIND("violet" AS ?markerColor)
         BIND("undefined" AS ?missingValue)
         OPTIONAL {

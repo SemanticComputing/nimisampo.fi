@@ -109,7 +109,7 @@ let Pie = (props) => {
           <Paper className={classes.legendPaper}>
             <VictoryLegend
               height={legendHeigth}
-              title={groupBy}
+              title={'Names archive place type'}
               colorScale={'qualitative'}
               data={legendArray}
               style={{

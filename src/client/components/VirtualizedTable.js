@@ -172,7 +172,7 @@ class VirtualizedTable extends React.PureComponent {
           cellDataGetter={({rowData}) => rowData.modifier}
           dataKey="modifier"
           headerRenderer={headerRenderer}
-          width={columnWidth}
+          width={columnWidth + 10}
         />
       );
       base = (
@@ -251,14 +251,14 @@ class VirtualizedTable extends React.PureComponent {
                     {modifier}
                     {base}
                     <Column
-                      label="Type 1"
+                      label="PNR type"
                       cellDataGetter={({rowData}) => rowData.broaderTypeLabel}
                       dataKey="broaderTypeLabel"
                       headerRenderer={headerRenderer}
-                      width={columnWidth}
+                      width={columnWidth + 10}
                     />
                     <Column
-                      label="Type 2"
+                      label="NA type"
                       cellDataGetter={({rowData}) => rowData.typeLabel}
                       dataKey="typeLabel"
                       headerRenderer={headerRenderer}
