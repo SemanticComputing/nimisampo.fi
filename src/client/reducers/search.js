@@ -11,7 +11,7 @@ import {
   SORT_RESULTS
 } from '../actions';
 
-import sampleResults from './sampleResults';
+// import sampleResults from './sampleResults';
 
 export const INITIAL_STATE = {
   query: '',

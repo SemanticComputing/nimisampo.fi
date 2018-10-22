@@ -134,6 +134,7 @@ let MapApp = (props) => {
   // console.log('oneColumnView', oneColumnView)
   // console.log('resultFormat', resultFormat)
   // console.log('mapMode', mapMode)
+  console.log(results)
 
   let table = '';
   if ((oneColumnView && options.resultFormat === 'table') || (!oneColumnView)) {
@@ -247,7 +248,7 @@ let MapApp = (props) => {
           }
         </div>
         <Paper className={classes.footer}>
-          <img className={classes.aaltoLogo} src='img/logos/aalto-logo-white-no-background-small.png' alt='Aalto University logo'/> 
+          <img className={classes.aaltoLogo} src='img/logos/aalto-logo-white-no-background-small.png' alt='Aalto University logo'/>
           <img className={classes.uhLogo} src='img/logos/university-of-helsinki-logo-white-no-background-small.png' alt='University of Helsinki logo'/>
           {/* <img className={classes.secoLogo} src='img/logos/seco-logo-white-no-background-small.png' alt='SeCo logo'/> */}
           <img className={classes.heldigLogo} src='img/logos/heldig-logo-small.png' alt='HELDIG logo'/>
