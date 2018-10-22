@@ -12,7 +12,7 @@ import {
   FETCH_RESULTS,
   //FETCH_RESULTS_FAILED,
   GET_GEOJSON,
-  GET_GEOJSON_FAILED
+  //GET_GEOJSON_FAILED
 } from '../actions';
 
 const apiUrl = (process.env.NODE_ENV === 'development')
