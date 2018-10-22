@@ -1,49 +1,49 @@
 module.exports = {
-  "rules": {
-    "indent": [
-      "error",
+  'rules': {
+    'indent': [
+      'error',
       2,
-      { "SwitchCase": 1 }
+      { 'SwitchCase': 1 }
     ],
-    "quotes": [
+    'quotes': [
       2,
-      "single",
-      { "allowTemplateLiterals": true }
+      'single',
+      { 'allowTemplateLiterals': true }
     ],
-    "linebreak-style": [
+    'linebreak-style': [
       2,
-      "unix"
+      'unix'
     ],
-    "semi": [
+    'semi': [
       2,
-      "always"
+      'always'
     ],
     //'no-console': 'off',
-    "react/jsx-uses-vars": ["error"],
-    "space-infix-ops": ["error", {"int32Hint": true}],
+    'react/jsx-uses-vars': ['error'],
+    'space-infix-ops': ['error', {'int32Hint': true}],
   },
-  "env": {
-    "es6": true,
-    "node": true,
-    "browser": true,
-    "jest/globals": true, 
+  'env': {
+    'es6': true,
+    'node': true,
+    'browser': true,
+    'jest/globals': true,
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:import/errors",
+  'extends': [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:import/errors',
   ],
-  "parser": "babel-eslint",
-  "parserOptions": {
-    "ecmaVersion": 6,
-    "ecmaFeatures": {
-      "jsx": true,
-      "experimentalObjectRestSpread": true
+  'parser': 'babel-eslint',
+  'parserOptions': {
+    'ecmaVersion': 6,
+    'ecmaFeatures': {
+      'jsx': true,
+      'experimentalObjectRestSpread': true
     },
-    "sourceType": "module"
+    'sourceType': 'module'
   },
-  "plugins": [
-    "react",
-    "jest",
+  'plugins': [
+    'react',
+    'jest',
   ]
 };
