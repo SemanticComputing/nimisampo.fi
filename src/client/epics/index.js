@@ -15,9 +15,9 @@ import {
   GET_GEOJSON_FAILED
 } from '../actions';
 
-const hiplaApiUrl = (process.env.NODE_ENV === 'development')
+const apiUrl = (process.env.NODE_ENV === 'development')
   ? 'http://localhost:3001/'
-  : 'http://193.166.25.181:3005/';
+  : 'http://dev.nimisampo.fi/';
 
 const pickSelectedDatasets = (datasets) => {
   let selected = [];
@@ -30,7 +30,7 @@ const pickSelectedDatasets = (datasets) => {
 };
 
 const getSuggestionsEpic = (action$, store) => {
-  const searchUrl = hiplaApiUrl + 'suggest';
+  const searchUrl = apiUrl + 'suggest';
   return action$.ofType(FETCH_SUGGESTIONS)
     .debounceTime(1000)
     .switchMap(() => {
@@ -50,7 +50,7 @@ const getSuggestionsEpic = (action$, store) => {
 };
 
 const getResultsEpic = (action$, store) => {
-  const searchUrl = hiplaApiUrl + 'search';
+  const searchUrl = apiUrl + 'search';
   return action$.ofType(FETCH_RESULTS)
     .debounceTime(500)
     .switchMap(() => {
@@ -70,7 +70,7 @@ const getResultsEpic = (action$, store) => {
 };
 
 const getGeoJSONEpic = (action$) => {
-  const wfsUrl = hiplaApiUrl + 'wfs';
+  const wfsUrl = apiUrl + 'wfs';
   return action$.ofType(GET_GEOJSON)
     .switchMap(action => {
       let s = '';
