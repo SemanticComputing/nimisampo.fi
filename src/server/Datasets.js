@@ -185,7 +185,6 @@ module.exports = {
           ?municipality sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderAreaLabel) .
           FILTER (?munType != <http://ldf.fi/pnr-schema#SubRegion>)
         }
-        FILTER (LCASE(STR(?prefLabel))='<QUERYTERM>')
         BIND("PNR" AS ?source)
         BIND("yellow" AS ?markerColor)
       }
