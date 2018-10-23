@@ -234,6 +234,9 @@ class LeafletMap extends React.Component {
       return null;
     } else {
       const latLng = [+lat, +long];
+      if (result.typeLabel == '-') {
+        result.typeLabel = result.broaderTypeLabel;
+      }
       const marker = L.marker(latLng, {icon: icon})
         .bindPopup(this.createPopUpContent(result));
       return marker;

@@ -170,13 +170,14 @@ module.exports = {
       PREFIX sf: <http://ldf.fi/functions#>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
       PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
-      SELECT ?s ?label ?typeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
+      SELECT ?s ?label ?broaderTypeLabel ?typeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
         ?s text:query (skos:prefLabel '<QUERYTERM>') .
         ?s skos:prefLabel ?prefLabel .
         ?s sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?label) .
         ?s a ?type .
-        ?type sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?typeLabel) .
+        ?type sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderTypeLabel) .
+        BIND("-" as ?typeLabel)
         ?s wgs84:lat ?lat .
         ?s wgs84:long ?long .
         OPTIONAL {
@@ -282,7 +283,7 @@ module.exports = {
         ?s hipla:municipality ?broaderAreaLabel .
         BIND("NA" AS ?source)
         BIND("violet" AS ?markerColor)
-        BIND("undefined" AS ?missingValue)
+        BIND("-" AS ?missingValue)
         OPTIONAL {
           ?s hipla:type ?type .
           OPTIONAL {
