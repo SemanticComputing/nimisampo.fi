@@ -35,7 +35,7 @@ import {
 } from '../actions';
 
 const styles = theme => ({
-  root: {
+  root: {visualization
     flexGrow: 1,
     height: '100%',
   },
@@ -134,7 +134,7 @@ let MapApp = (props) => {
   // console.log('oneColumnView', oneColumnView)
   // console.log('resultFormat', resultFormat)
   // console.log('mapMode', mapMode)
-  console.log(results)
+  // console.log(results)
 
   let table = '';
   if ((oneColumnView && options.resultFormat === 'table') || (!oneColumnView)) {
