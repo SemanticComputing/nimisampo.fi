@@ -35,7 +35,7 @@ import {
 } from '../actions';
 
 const styles = theme => ({
-  root: {visualization
+  root: {
     flexGrow: 1,
     height: '100%',
   },
