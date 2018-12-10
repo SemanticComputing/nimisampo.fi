@@ -172,7 +172,7 @@ module.exports = {
       PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
       SELECT ?s ?label ?broaderTypeLabel ?typeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
-        ?s text:query (skos:prefLabel '<QUERYTERM>') .
+        ?s text:query (skos:prefLabel '<QUERYTERM>' 100000) .
         ?s skos:prefLabel ?prefLabel .
         ?s sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?label) .
         ?s a ?type .
@@ -277,7 +277,7 @@ module.exports = {
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
       SELECT ?s ?label ?typeLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector ?collectionYear ?markerColor
       WHERE {
-        ?s text:query (skos:prefLabel '<QUERYTERM>') .
+        ?s text:query (skos:prefLabel '<QUERYTERM>' 100000) .
         ?s a hipla:Place .
         ?s skos:prefLabel ?label .
         ?s hipla:municipality ?broaderAreaLabel .
