@@ -83,19 +83,20 @@ let Pie = (props) => {
   dataArray = combineSmallGroups(dataArray);
   const legendArray = dataArray.map(group => ({ name: group.x + ' (' + group.y + ')' }));
   const legendHeigth = legendArray.length * 33;
-  const pieTitle = resultCount + ' results for the query "' + query + '"';
+  // const pieTitle = resultCount + ' results for the query "' + query + '"';
+  // <VictoryLabel
+  //   style={{
+  //     fontSize: '14px',
+  //     fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+  //   }}
+  //   text={pieTitle}
+  // />
 
   return (
     <div className={classes.root}>
       <Grid container className={classes.container}>
         <Grid className={classes.pie} item xs={12} sm={6}>
-          <VictoryLabel
-            style={{
-              fontSize: '14px',
-              fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-            }}
-            text={pieTitle}
-          />
+
           <VictoryPie
             padding={{
               left: 0, bottom: 0, top: 32
