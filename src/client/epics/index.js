@@ -89,30 +89,6 @@ const getGeoJSONEpic = (action$) => action$.pipe(
   })
 );
 
-
-//
-// const getGeoJSONEpic = (action$) => {
-//   const wfsUrl = apiUrl + 'wfs';
-//   return action$.ofType(GET_GEOJSON)
-//     .switchMap(action => {
-//       let s = '';
-//       action.layerIDs.map(layerID => {
-//         s += `&layerID=${layerID}`;
-//       });
-//       const requestUrl = `${wfsUrl}?${s}`;
-//       return ajax.getJSON(requestUrl)
-//         // .map(response => {
-//         //   console.log(response)
-//         // })
-//         .map(response => updateGeoJSON({ geoJSON: response }))
-//         .catch(error => Observable.of({
-//           type: GET_GEOJSON_FAILED,
-//           error: error,
-//         }));
-//     });
-// };
-
-
 const rootEpic = combineEpics(
   //getSuggestionsEpic,
   getResultsEpic,
