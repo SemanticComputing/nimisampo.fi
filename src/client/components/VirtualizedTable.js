@@ -7,6 +7,7 @@ import SearchField from '../components/SearchField';
 import ResultFilterDialogSingle from './ResultFilterDialogSingle';
 import IconButton from '@material-ui/core/IconButton';
 import PlaceIcon from '@material-ui/icons/Place';
+import { has } from 'lodash';
 import {
   AutoSizer,
   Column,
@@ -319,9 +320,8 @@ class VirtualizedTable extends React.PureComponent {
   // }
 
   // https://stackoverflow.com/questions/40412114/how-to-do-proper-column-filtering-with-react-virtualized-advice-needed
-  _sort({ event, sortBy, sortDirection }) {
-    // console.log(event.target)
-    if (event.target.id.startsWith('filter') || event.target.className.startsWith('Mui')) {
+  _sort({ sortBy, event, sortDirection }) {
+    if (has(event.target, 'className') && event.target.className.startsWith('Mui')) {
       event.stopPropagation();
     } else {
       this.props.sortResults({ sortBy, sortDirection: sortDirection.toLowerCase() });
