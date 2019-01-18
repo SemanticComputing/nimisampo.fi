@@ -273,19 +273,20 @@ module.exports = {
       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
       PREFIX gs: <http://www.opengis.net/ont/geosparql#>
-      PREFIX hipla: <http://ldf.fi/schema/hipla/>
+      PREFIX hipla-schema: <http://ldf.fi/schema/hipla/>
+      PREFIX na-schema: <http://ldf.fi/schema/kotus-names-archive/>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
       SELECT ?s ?label ?typeLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector ?collectionYear ?markerColor
       WHERE {
         ?s text:query (skos:prefLabel '<QUERYTERM>' 100000) .
-        ?s a hipla:Place .
+        ?s a hipla-schema:Place .
         ?s skos:prefLabel ?label .
-        ?s hipla:municipality ?broaderAreaLabel .
+        ?s na-schema:municipality ?broaderAreaLabel .
         BIND("NA" AS ?source)
         BIND("violet" AS ?markerColor)
         BIND("-" AS ?missingValue)
         OPTIONAL {
-          ?s hipla:type ?type .
+          ?s na-schema:type ?type .
           OPTIONAL {
             ?type skos:prefLabel ?tLbl .
             ?type rdfs:subClassOf/skos:prefLabel ?btLbl .
@@ -298,11 +299,11 @@ module.exports = {
           ?s wgs84:long ?long .
         }
         OPTIONAL {
-          ?s hipla:place_name_modifier ?modifier ;
-             hipla:place_name_basic_element ?basicElement .
+          ?s na-schema:place_name_modifier ?modifier ;
+             na-schema:place_name_basic_element ?basicElement .
         }
-        OPTIONAL { ?s hipla:collector ?collector }
-        OPTIONAL { ?s hipla:collection_year ?collectionYear }
+        OPTIONAL { ?s na-schema:collector ?collector }
+        OPTIONAL { ?s na-schema:collection_year ?collectionYear }
         #FILTER(LANGMATCHES(LANG(?label), 'fi'))
         #FILTER(LANGMATCHES(LANG(?typeLabel), 'fi'))
         #FILTER(LANGMATCHES(LANG(?broaderAreaLabel), 'fi'))
