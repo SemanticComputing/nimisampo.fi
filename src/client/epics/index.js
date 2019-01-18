@@ -17,7 +17,7 @@ import {
 
 const apiUrl = (process.env.NODE_ENV === 'development')
   ? 'http://localhost:3001/'
-  : 'http://dev.nimisampo.fi/';
+  : `http://${location.hostname}/`;
 
 const pickSelectedDatasets = (datasets) => {
   let selected = [];
