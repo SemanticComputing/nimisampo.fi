@@ -79,7 +79,7 @@ class ResultFilterDialog extends React.Component {
               <IconButton color="inherit" onClick={this.handleClose} aria-label="Close">
                 <CloseIcon />
               </IconButton>
-              <Typography variant="title" color="inherit" className={classes.flex}>
+              <Typography variant="h6" color="inherit" className={classes.flex}>
                 Result filters
               </Typography>
             </Toolbar>
@@ -87,7 +87,7 @@ class ResultFilterDialog extends React.Component {
           <DialogContent className={classes.root}>
             <Grid container justify='center' spacing={24}>
               <Grid item>
-                <Typography variant="title" color="inherit" className={classes.title}>
+                <Typography variant="h6" color="inherit" className={classes.title}>
                   Type
                 </Typography>
                 <Paper className={classes.paper}>
@@ -99,7 +99,7 @@ class ResultFilterDialog extends React.Component {
                 </Paper>
               </Grid>
               <Grid item>
-                <Typography variant="title" color="inherit" className={classes.title}>
+                <Typography variant="h6" color="inherit" className={classes.title}>
                   Area
                 </Typography>
                 <Paper className={classes.paper}>
@@ -111,7 +111,7 @@ class ResultFilterDialog extends React.Component {
                 </Paper>
               </Grid>
               <Grid item>
-                <Typography variant="title" color="inherit" className={classes.title}>
+                <Typography variant="h6" color="inherit" className={classes.title}>
                   Source
                 </Typography>
                 <Paper className={classes.paper}>
