@@ -19,7 +19,7 @@ import {
 const styles = () => ({
   root: {
     display: 'flex',
-    height: 'calc(100% - 2px)',
+    height: 'calc(100% - 74px)',
     width: 'calc(100% - 1px)',
     flexGrow: 1,
   },
@@ -100,15 +100,15 @@ class VirtualizedTable extends React.PureComponent {
           <SortIndicator key="SortIndicator" sortDirection={sortDirection} />,
         );
       }
-      children.push(
-        <ResultFilterDialogSingle
-          key="resultFilter"
-          propertyLabel={label}
-          property={dataKey}
-          resultValues={this.props.resultValues[dataKey]}
-          updateResultsFilter={this.props.updateResultsFilter}
-        />
-      );
+      // children.push(
+      //   <ResultFilterDialogSingle
+      //     key="resultFilter"
+      //     propertyLabel={label}
+      //     property={dataKey}
+      //     resultValues={this.props.resultValues[dataKey]}
+      //     updateResultsFilter={this.props.updateResultsFilter}
+      //   />
+      // );
       return children;
     };
 

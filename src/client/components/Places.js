@@ -13,7 +13,7 @@ let Places = props => {
       <ViewTabs routeProps={props.routeProps} />
       <Route
         exact path='/app'
-        render={() => <Redirect to='/app/map' />}
+        render={() => <Redirect to='/app/table' />}
       />
       <Route
         path={'/app/map'}

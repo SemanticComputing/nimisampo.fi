@@ -35,7 +35,7 @@ class ViewTabs extends React.Component {
   pathnameToValue = pathname => {
     let value;
     switch (pathname) {
-      case '/app/table':
+      case '/app/map':
         value = 1;
         break;
       default:
@@ -59,8 +59,8 @@ class ViewTabs extends React.Component {
           textColor="secondary"
           variant="fullWidth"
         >
-          <Tab icon={<AddLocationIcon />} label="map" component={Link} to="/app" />
-          <Tab icon={<CalendarViewDayIcon />} label="table" component={Link} to="/app/table" />
+          <Tab icon={<CalendarViewDayIcon />} label="table" component={Link} to="/app" />
+          <Tab icon={<AddLocationIcon />} label="map" component={Link} to="/app/map" />
         </Tabs>
       </Paper>
     );
