@@ -40,7 +40,7 @@ class SearchField extends React.Component {
   };
 
   handleOnKeyDown = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && this.state.value != '') {
       this.props.updateQuery(this.state.value);
       this.props.clearResults();
       this.props.fetchResults();
@@ -48,9 +48,11 @@ class SearchField extends React.Component {
   };
 
   handleClick = () => {
-    this.props.updateQuery(this.state.value);
-    this.props.clearResults();
-    this.props.fetchResults();
+    if (this.state.value != '') {
+      this.props.updateQuery(this.state.value);
+      this.props.clearResults();
+      this.props.fetchResults();
+    }
   };
 
   render() {

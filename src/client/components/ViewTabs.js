@@ -5,8 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay';
 import AddLocationIcon from '@material-ui/icons/AddLocation';
-import RedoIcon from '@material-ui/icons/Redo';
-//import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
 
@@ -36,11 +35,8 @@ class ViewTabs extends React.Component {
   pathnameToValue = pathname => {
     let value;
     switch (pathname) {
-      case '/manuscripts/production_places':
+      case '/app/table':
         value = 1;
-        break;
-      case '/manuscripts/migrations':
-        value = 2;
         break;
       default:
         value = 0;
@@ -51,8 +47,6 @@ class ViewTabs extends React.Component {
   handleChange = (event, value) => {
     this.setState({ value });
   };
-
-
 
   render() {
     const { classes } = this.props;
@@ -65,9 +59,8 @@ class ViewTabs extends React.Component {
           textColor="secondary"
           variant="fullWidth"
         >
-        { /* <Tab icon={<CalendarViewDayIcon />} label="table" component={Link} to="/manuscripts" />
-          <Tab icon={<AddLocationIcon />} label="production places" component={Link} to="/manuscripts/production_places" />
-          <Tab icon={<RedoIcon />} label="migrations" component={Link} to="/manuscripts/migrations" /> */}
+          <Tab icon={<AddLocationIcon />} label="map" component={Link} to="/app" />
+          <Tab icon={<CalendarViewDayIcon />} label="table" component={Link} to="/app/table" />
         </Tabs>
       </Paper>
     );

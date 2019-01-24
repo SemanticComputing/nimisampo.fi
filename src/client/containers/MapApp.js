@@ -2,18 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import withWidth from '@material-ui/core/withWidth';
 import compose from 'recompose/compose';
+import { Route, Redirect } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
-import Immutable from 'immutable';
-import VirtualizedTable from '../components/VirtualizedTable';
-import LeafletMap from '../components/map/LeafletMap';
-import GMap from '../components/map/GMap';
 import Grid from '@material-ui/core/Grid';
 import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import FacetBar from '../components/FacetBar';
-import ViewTabs from '../components/ViewTabs';
+import Places from '../components/Places';
 
 import {
   getVisibleResults,
@@ -88,9 +86,7 @@ let MapApp = (props) => {
   const { classes, options, browser, search, map, results, resultValues } = props;
   //error,
 
-  // let mapElement = '';
-  // if (options.mapMode === 'heatmap') {
-  //   mapElement = (
+
   //     <GMap
   //       results={props.results}
   //       googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKWw5FjhwLsfp_l2gjVAifPkT3cxGXhA4&v=3.exp&libraries=geometry,drawing,places,visualization"
@@ -98,22 +94,6 @@ let MapApp = (props) => {
   //       containerElement={<div style={{ height: `100%` }} />}
   //       mapElement={<div style={{ height: `100%` }} />}
   //     />
-  //   );
-  // } else {
-  //   mapElement = (
-  //     <LeafletMap
-  //       results={props.results}
-  //       mapMode={options.mapMode}
-  //       geoJSON={map.geoJSON}
-  //       geoJSONKey={map.geoJSONKey}
-  //       getGeoJSON={props.getGeoJSON}
-  //       bouncingMarker={map.bouncingMarker}
-  //       popupMarker={map.popupMarker}
-  //       bouncingMarkerKey={map.bouncingMarkerKey}
-  //       openPopupMarkerKey={map.openPopupMarkerKey}
-  //     />
-  //   );
-  // }
 
   return (
     <div className={classes.root}>
@@ -128,36 +108,50 @@ let MapApp = (props) => {
           datasets={search.datasets}
           toggleDataset={props.toggleDataset}
         />
-        <Grid container spacing={8} className={classes.mainContainer}>
-          <Grid item sm={12} md={3} className={classes.facetBarContainer}>
-            <FacetBar
-              search={search}
-              fetchResults={props.fetchResults}
-              updateQuery={props.updateQuery}
-              clearResults={props.clearResults}
-            />
-          </Grid>
-          <Grid item sm={12} md={9} className={classes.resultsContainer}>
-            <Paper className={classes.resultsContainerPaper}>
-              {/* <ViewTabs routeProps={props.routeProps} /> */}
-              <VirtualizedTable
-                list={Immutable.List(results)}
-                resultValues={resultValues}
-                search={search}
-                sortResults={props.sortResults}
-                updateResultsFilter={props.updateResultsFilter}
-                updateQuery={props.updateQuery}
-                fetchResults={props.fetchResults}
-                clearResults={props.clearResults}
-                fetchSuggestions={props.fetchSuggestions}
-                clearSuggestions={props.clearSuggestions}
-                bounceMarker={props.bounceMarker}
-                openMarkerPopup={props.openMarkerPopup}
-                removeTempMarker={props.removeTempMarker}
-              />
-            </Paper>
-          </Grid>
-        </Grid>
+        <Route
+          exact path='/'
+          render={() => <Redirect to='/app' />}
+        />
+        <Route
+          path="/app"
+          render={routeProps =>
+            <Grid container spacing={8} className={classes.mainContainer}>
+              <Grid item sm={12} md={3} className={classes.facetBarContainer}>
+                <FacetBar
+                  search={search}
+                  fetchResults={props.fetchResults}
+                  updateQuery={props.updateQuery}
+                  clearResults={props.clearResults}
+                />
+              </Grid>
+              <Grid item sm={12} md={9} className={classes.resultsContainer}>
+                <Paper className={classes.resultsContainerPaper}>
+                  <Places
+                    results={results}
+                    resultValues={resultValues}
+                    search={search}
+                    map={props.map}
+                    options={props.options}
+                    sortResults={props.sortResults}
+                    updateResultsFilter={props.updateResultsFilter}
+                    updateQuery={props.updateQuery}
+                    fetchResults={props.fetchResults}
+                    clearResults={props.clearResults}
+                    fetchSuggestions={props.fetchSuggestions}
+                    clearSuggestions={props.clearSuggestions}
+                    bounceMarker={props.bounceMarker}
+                    openMarkerPopup={props.openMarkerPopup}
+                    removeTempMarker={props.removeTempMarker}
+                    getGeoJSON={props.getGeoJSON}
+                    updateResultFormat={props.updateResultFormat}
+                    updateMapMode={props.updateMapMode}
+                    routeProps={routeProps}
+                  />
+                </Paper>
+              </Grid>
+            </Grid>
+          }
+        />
         <Footer />
       </div>
     </div>
@@ -218,9 +212,11 @@ MapApp.propTypes = {
   updateResultFormat: PropTypes.func.isRequired,
   updateMapMode: PropTypes.func.isRequired,
   updateResultsFilter: PropTypes.func.isRequired,
+
 };
 
 export default compose(
+  withRouter,
   connect(
     mapStateToProps,
     mapDispatchToProps

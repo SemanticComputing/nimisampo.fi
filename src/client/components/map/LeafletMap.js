@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import L from 'leaflet';
 import 'leaflet-fullscreen/dist/fullscreen.png';
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';
@@ -11,10 +13,30 @@ import 'Leaflet.Control.Opacity/dist/L.Control.Opacity.css';
 import 'Leaflet.Control.Opacity/dist/L.Control.Opacity.js';
 import 'leaflet.smooth_marker_bouncing/leaflet.smoothmarkerbouncing.js';
 
+import markerShadowIcon from '../../img/markers/marker-shadow.png';
+import markerIconViolet from '../../img/markers/marker-icon-violet.png';
+import markerIconYellow from '../../img/markers/marker-icon-yellow.png';
+import markerIconGrey from '../../img/markers/marker-icon-grey.png';
+
 const style = {
   width: '100%',
   height: '100%'
 };
+
+const styles = () => ({
+  leafletContainer: {
+    height: 'calc(100% - 72px)'
+  },
+  spinner: {
+    height: 40,
+    width: 40,
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%,-50%)',
+    zIndex: 500
+  },
+});
 
 const kotusLayers = {
   'kotus:pitajat': 'Finnish parishes in 1938',
@@ -27,7 +49,7 @@ const kotusLayers = {
 // https://github.com/pointhi/leaflet-color-markers
 const ColorIcon = L.Icon.extend({
   options: {
-    shadowUrl: 'img/markers/marker-shadow.png',
+    shadowUrl: markerShadowIcon,
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -203,6 +225,17 @@ class LeafletMap extends React.Component {
     }
   }
 
+  renderSpinner() {
+    if(this.props.fetchingPlaces) {
+      return (
+        <div className={this.props.classes.spinner}>
+          <CircularProgress style={{ color: purple[500] }} thickness={5} />
+        </div>
+      );
+    }
+    return null;
+  }
+
   updateMarkers(results) {
     this.resultMarkerLayer.clearLayers();
     this.markers = {};
@@ -228,7 +261,19 @@ class LeafletMap extends React.Component {
 
   createMarker(result) {
     const color = typeof result.markerColor === 'undefined' ? 'grey' : result.markerColor;
-    const icon = new ColorIcon({iconUrl: 'img/markers/marker-icon-' + color + '.png'});
+    let markerIcon = '';
+    switch(color) {
+      case 'violet':
+        markerIcon = markerIconViolet;
+        break;
+      case 'yellow':
+        markerIcon = markerIconYellow;
+        break;
+      case 'grey':
+        markerIcon = markerIconGrey;
+        break;
+    }
+    const icon = new ColorIcon({iconUrl: markerIcon });
     const { lat, long } = result;
     if (typeof lat === 'undefined' || typeof long === 'undefined') {
       return null;
@@ -296,11 +341,20 @@ class LeafletMap extends React.Component {
   }
 
   render() {
-    return <div id="map" style={style} />;
+    return (
+      <React.Fragment>
+        <div className={this.props.classes.leafletContainer}>
+          {/*<LeafletSidebar />*/}
+          <div id="map" style={style} />
+        </div>
+        {this.renderSpinner()}
+      </React.Fragment>
+    );
   }
 }
 
 LeafletMap.propTypes = {
+  classes: PropTypes.object.isRequired,
   results: PropTypes.array,
   mapMode: PropTypes.string.isRequired,
   geoJSON: PropTypes.array,
@@ -312,4 +366,4 @@ LeafletMap.propTypes = {
   openPopupMarkerKey: PropTypes.number.isRequired,
 };
 
-export default LeafletMap;
+export default withStyles(styles)(LeafletMap);

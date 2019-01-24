@@ -2,6 +2,11 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import aaltoLogo from '../img/logos/aalto-logo-white-no-background-small.png';
+import uhLogo from '../img/logos/university-of-helsinki-logo-white-no-background-small.png';
+import heldigLogo from '../img/logos/heldig-logo-small.png';
+import kotusLogo from '../img/logos/kotus-logo-white-no-backgrounds-small.png';
+
 
 const styles = theme => ({
   root: {
@@ -42,11 +47,11 @@ const Footer = props => {
   const { classes } = props;
   return (
     <Paper className={classes.root}>
-      <img className={classes.aaltoLogo} src='img/logos/aalto-logo-white-no-background-small.png' alt='Aalto University logo'/>
-      <img className={classes.uhLogo} src='img/logos/university-of-helsinki-logo-white-no-background-small.png' alt='University of Helsinki logo'/>
+      <img className={classes.aaltoLogo} src={aaltoLogo} alt='Aalto University logo'/>
+      <img className={classes.uhLogo} src={uhLogo} alt='University of Helsinki logo'/>
       {/* <img className={classes.secoLogo} src='img/logos/seco-logo-white-no-background-small.png' alt='SeCo logo'/> */}
-      <img className={classes.heldigLogo} src='img/logos/heldig-logo-small.png' alt='HELDIG logo'/>
-      <img className={classes.kotusLogo} src='img/logos/kotus-logo-white-no-backgrounds-small.png' alt='Kotus logo'/>
+      <img className={classes.heldigLogo} src={heldigLogo} alt='HELDIG logo'/>
+      <img className={classes.kotusLogo} src={kotusLogo} alt='Kotus logo'/>
     </Paper>
   );
 };

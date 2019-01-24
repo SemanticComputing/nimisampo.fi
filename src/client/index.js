@@ -1,33 +1,42 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware, compose, bindActionCreators } from 'redux';
 import { createEpicMiddleware } from 'redux-observable';
-import { Provider } from 'react-redux';
 import {responsiveStoreEnhancer} from 'redux-responsive';
-import reducer from './reducers';
-import rootEpic from './epics';
-import ReduxToastr from 'react-redux-toastr';
-import { bindActionCreators } from 'redux';
-import { actions as toastrActions } from 'react-redux-toastr';
-import App from './components/App';
-
+import { Provider } from 'react-redux';
+import ReduxToastr, { actions as toastrActions } from 'react-redux-toastr';
+import { Router } from 'react-router-dom';
+import { createBrowserHistory } from 'history';
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 import 'react-virtualized/styles.css';
+
+import reducer from './reducers';
+import rootEpic from './epics';
+import App from './components/App';
+
+const epicMiddleware = createEpicMiddleware();
+const history = createBrowserHistory();
 
 const store = createStore(
   reducer,
   compose(
     responsiveStoreEnhancer,
-    applyMiddleware(createEpicMiddleware(rootEpic))
+    applyMiddleware(
+      epicMiddleware,
+    )
   )
 );
+
+epicMiddleware.run(rootEpic);
 
 bindActionCreators(toastrActions, store.dispatch);
 
 render(
   <Provider store={store}>
     <div id='app'>
-      <App />
+      <Router history={history}>
+        <App />
+      </Router>
       <ReduxToastr
         timeOut={4000}
         newestOnTop={false}

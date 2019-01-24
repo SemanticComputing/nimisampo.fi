@@ -17,6 +17,7 @@ import { CSVLink } from 'react-csv';
 import Button from '@material-ui/core/Button';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
+import namesampoLogo from '../img/logos/namesampo.png';
 
 const styles = theme => ({
   toolBar: {
@@ -152,7 +153,7 @@ class TopBar extends React.Component {
             </div>
 
           </Menu>
-          <img className={classes.namesampoLogo} src='img/logos/namesampo.png' alt='NameSampo logo'/>
+          <img className={classes.namesampoLogo} src={namesampoLogo} alt='NameSampo logo'/>
           {this.props.oneColumnView &&
             <div className={classes.navTabs}>
               <NavTabs

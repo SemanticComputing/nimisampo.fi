@@ -1,7 +1,6 @@
-
-import _ from 'lodash';
+import { map as lodashMap } from 'lodash';
 import { ajax } from 'rxjs/ajax';
-import { switchMap, map, debounceTime } from 'rxjs/operators';
+import { switchMap, map, debounceTime, withLatestFrom } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 import {
   //updateSuggestions,
@@ -51,14 +50,15 @@ const pickSelectedDatasets = (datasets) => {
 
 const getResultsEpic = (action$, state$) => action$.pipe(
   ofType(FETCH_RESULTS),
+  withLatestFrom(state$),
   debounceTime(500),
-  switchMap(() => {
+  switchMap(([, state]) => {
     const searchUrl = apiUrl + 'search';
-    const { query, datasets } = state$.getState().search;
+    const { query, datasets } = state.search;
     if (query.length < 3) {
       return [];
     }
-    const dsParams = _.map(pickSelectedDatasets(datasets), ds => `dataset=${ds}`).join('&');
+    const dsParams = lodashMap(pickSelectedDatasets(datasets), ds => `dataset=${ds}`).join('&');
     const requestUrl = `${searchUrl}?q=${query}&${dsParams}`;
     return ajax.getJSON(requestUrl).pipe(
       map(response => updateResults({ results: response }))
@@ -70,7 +70,7 @@ const getResultsEpic = (action$, state$) => action$.pipe(
   })
 );
 
-const getGeoJSONEpic = (action$) => action$.pipe(
+const getGeoJSONEpic = action$ => action$.pipe(
   ofType(GET_GEOJSON),
   switchMap(action => {
     const wfsUrl = apiUrl + 'wfs';
