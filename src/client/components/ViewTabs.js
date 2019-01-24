@@ -38,6 +38,9 @@ class ViewTabs extends React.Component {
       case '/app/map':
         value = 1;
         break;
+      case '/app/heatmap':
+        value = 2;
+        break;
       default:
         value = 0;
     }
@@ -61,6 +64,7 @@ class ViewTabs extends React.Component {
         >
           <Tab icon={<CalendarViewDayIcon />} label="table" component={Link} to="/app" />
           <Tab icon={<AddLocationIcon />} label="map" component={Link} to="/app/map" />
+          <Tab icon={<AddLocationIcon />} label="heatmap" component={Link} to="/app/heatmap" />
         </Tabs>
       </Paper>
     );

@@ -4,7 +4,7 @@ import Immutable from 'immutable';
 import { Route, Redirect } from 'react-router-dom';
 import ViewTabs from './ViewTabs';
 import LeafletMap from './map/LeafletMap';
-// import GMap from '../components/map/GMap';
+import GMap from '../components/map/GMap';
 import VirtualizedTable from './VirtualizedTable';
 
 let Places = props => {
@@ -14,23 +14,6 @@ let Places = props => {
       <Route
         exact path='/app'
         render={() => <Redirect to='/app/table' />}
-      />
-      <Route
-        path={'/app/map'}
-        render={() =>
-          <LeafletMap
-            results={props.results}
-            mapMode={props.options.mapMode}
-            geoJSON={props.map.geoJSON}
-            geoJSONKey={props.map.geoJSONKey}
-            getGeoJSON={props.getGeoJSON}
-            bouncingMarker={props.map.bouncingMarker}
-            popupMarker={props.map.popupMarker}
-            bouncingMarkerKey={props.map.bouncingMarkerKey}
-            openPopupMarkerKey={props.map.openPopupMarkerKey}
-
-          />
-        }
       />
       <Route
         path={'/app/table'}
@@ -52,6 +35,34 @@ let Places = props => {
           />
         }
       />
+      <Route
+        path={'/app/map'}
+        render={() =>
+          <LeafletMap
+            results={props.results}
+            mapMode={props.options.mapMode}
+            geoJSON={props.map.geoJSON}
+            geoJSONKey={props.map.geoJSONKey}
+            getGeoJSON={props.getGeoJSON}
+            bouncingMarker={props.map.bouncingMarker}
+            popupMarker={props.map.popupMarker}
+            bouncingMarkerKey={props.map.bouncingMarkerKey}
+            openPopupMarkerKey={props.map.openPopupMarkerKey}
+          />
+        }
+      />
+      <Route
+        path={'/app/heatmap'}
+        render={() =>
+          <GMap
+            results={props.results}
+            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKWw5FjhwLsfp_l2gjVAifPkT3cxGXhA4&v=3.exp&libraries=geometry,drawing,places,visualization"
+            loadingElement={<div style={{ height: `100%` }} />}
+            containerElement={<div style={{ height: `calc(100% - 72px` }} />}
+            mapElement={<div style={{ height: `100%` }} />}
+          />
+        }
+      />
     </React.Fragment>
   );
 };
@@ -62,7 +73,6 @@ Places.propTypes = {
   map: PropTypes.object.isRequired,
   results: PropTypes.array,
   resultValues: PropTypes.object,
-
   updateQuery: PropTypes.func.isRequired,
   fetchSuggestions: PropTypes.func.isRequired,
   clearSuggestions: PropTypes.func.isRequired,
@@ -76,7 +86,6 @@ Places.propTypes = {
   updateResultFormat: PropTypes.func.isRequired,
   updateMapMode: PropTypes.func.isRequired,
   updateResultsFilter: PropTypes.func.isRequired,
-
   routeProps: PropTypes.object.isRequired
 };
 

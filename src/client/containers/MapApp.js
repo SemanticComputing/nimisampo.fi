@@ -83,18 +83,8 @@ const styles = theme => ({
 });
 
 let MapApp = (props) => {
-  const { classes, options, browser, search, map, results, resultValues } = props;
+  const { classes, options, search, results, resultValues } = props;
   //error,
-
-
-  //     <GMap
-  //       results={props.results}
-  //       googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKWw5FjhwLsfp_l2gjVAifPkT3cxGXhA4&v=3.exp&libraries=geometry,drawing,places,visualization"
-  //       loadingElement={<div style={{ height: `100%` }} />}
-  //       containerElement={<div style={{ height: `100%` }} />}
-  //       mapElement={<div style={{ height: `100%` }} />}
-  //     />
-
   return (
     <div className={classes.root}>
       <div className={classes.appFrame}>

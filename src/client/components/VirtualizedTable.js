@@ -2,7 +2,7 @@ import React from 'react';
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import ResultFilterDialogSingle from './ResultFilterDialogSingle';
+// import ResultFilterDialogSingle from './ResultFilterDialogSingle';
 import IconButton from '@material-ui/core/IconButton';
 import PlaceIcon from '@material-ui/icons/Place';
 import { has } from 'lodash';
