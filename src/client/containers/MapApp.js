@@ -9,8 +9,11 @@ import Immutable from 'immutable';
 import VirtualizedTable from '../components/VirtualizedTable';
 import LeafletMap from '../components/map/LeafletMap';
 import GMap from '../components/map/GMap';
-import Pie from '../components/Pie';
+import Grid from '@material-ui/core/Grid';
 import TopBar from '../components/TopBar';
+import Footer from '../components/Footer';
+import FacetBar from '../components/FacetBar';
+import ViewTabs from '../components/ViewTabs';
 
 import {
   getVisibleResults,
@@ -49,186 +52,75 @@ const styles = theme => ({
     position: 'relative',
     display: 'flex',
     width: '100%',
-    minWidth: 640,
-    minHeight: 700
+    minWidth: 300,
+    //minHeight: 700
   },
   mainContainer: {
-    display: 'flex',
-    width: '100%',
     marginTop: 64,
-    height: 'calc(100% - 128px)',
-    borderRight: '4px solid' + theme.palette.primary.main,
-    borderLeft: '4px solid' + theme.palette.primary.main,
+    height: 'calc(100% - 122px)',
+    [theme.breakpoints.down(600)]: {
+      marginTop: 56,
+      height: 'calc(100% - 122px)',
+    },
+    backgroundColor: '#bdbdbd',
+    padding: theme.spacing.unit,
   },
-  resultTable: {
-    width: 1024,
-    height: 'calc(100% - 5px)',
-    borderRight: '4px solid' + theme.palette.primary.main,
-
-  },
-  resultTableOneColumn: {
-    width: 1024,
-    height: 'calc(100% - 5px)',
-  },
-  rightColumn: {
+  facetBarContainer: {
     height: '100%',
-    width: 'calc(100% - 1024px)',
+    overflow: 'auto',
+    paddingTop: '0px !important',
+    paddingBottom: '0px !important'
   },
-  map: {
-    width: '100%',
-    height: '50%',
-    borderBottom: '4px solid' + theme.palette.primary.main,
-  },
-  fullMap: {
-    width: '100%',
+  resultsContainer: {
     height: '100%',
+    //overflow: 'auto',
+    paddingTop: '0px !important',
+    //paddingBottom: '0px !important'
   },
-  statistics: {
-    width: '100%',
-    height: '50%',
-  },
-  statisticsOneColumn: {
-    width: '100%',
+  resultsContainerPaper: {
     height: '100%',
-  },
-  footer: {
-    position: 'absolute',
-    borderTop: '4px solid' + theme.palette.primary.main,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    bottom: 0,
-    width: '100%',
-    height: 64,
-    background: theme.palette.primary.main,
-    borderRadius: 0,
-  },
-  aaltoLogo: {
-    //paddingLeft: 24,
-    height: 37
-  },
-  uhLogo: {
-    paddingLeft: 44,
-    height: 52
-  },
-  secoLogo: {
-    paddingLeft: 44,
-    height: 52
-  },
-  heldigLogo: {
-    paddingLeft: 44,
-    height: 37
-  },
-  kotusLogo: {
-    paddingLeft: 44,
-    height: 50
-  },
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+  }
 });
 
 let MapApp = (props) => {
   const { classes, options, browser, search, map, results, resultValues } = props;
   //error,
 
-  let oneColumnView = browser.lessThan.extraLarge;
-
-  // console.log('oneColumnView', oneColumnView)
-  // console.log('resultFormat', resultFormat)
-  // console.log('mapMode', mapMode)
-  // console.log(results)
-
-  let table = '';
-  if ((oneColumnView && options.resultFormat === 'table') || (!oneColumnView)) {
-    table = (
-      <div className={oneColumnView ? classes.resultTableOneColumn : classes.resultTable}>
-        <VirtualizedTable
-          list={Immutable.List(results)}
-          resultValues={resultValues}
-          search={search}
-          sortResults={props.sortResults}
-          updateResultsFilter={props.updateResultsFilter}
-          updateQuery={props.updateQuery}
-          fetchResults={props.fetchResults}
-          clearResults={props.clearResults}
-          fetchSuggestions={props.fetchSuggestions}
-          clearSuggestions={props.clearSuggestions}
-          bounceMarker={props.bounceMarker}
-          openMarkerPopup={props.openMarkerPopup}
-          removeTempMarker={props.removeTempMarker}
-        />
-      </div>
-    );
-  }
-
-  let mapElement = '';
-  if ((oneColumnView && options.resultFormat === 'map') || (!oneColumnView)) {
-    if (options.mapMode === 'heatmap') {
-      mapElement = (
-        <GMap
-          results={props.results}
-          googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKWw5FjhwLsfp_l2gjVAifPkT3cxGXhA4&v=3.exp&libraries=geometry,drawing,places,visualization"
-          loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div style={{ height: `100%` }} />}
-          mapElement={<div style={{ height: `100%` }} />}
-        />
-      );
-    } else {
-      mapElement = (
-        <LeafletMap
-          results={props.results}
-          mapMode={options.mapMode}
-          geoJSON={map.geoJSON}
-          geoJSONKey={map.geoJSONKey}
-          getGeoJSON={props.getGeoJSON}
-          bouncingMarker={map.bouncingMarker}
-          popupMarker={map.popupMarker}
-          bouncingMarkerKey={map.bouncingMarkerKey}
-          openPopupMarkerKey={map.openPopupMarkerKey}
-        />
-      );
-    }
-  }
-
-  let statistics = '';
-  if ((oneColumnView && options.resultFormat === 'statistics') || (!oneColumnView)) {
-    statistics = (
-      <div className={oneColumnView ? classes.statisticsOneColumn : classes.statistics}>
-        <Pie data={props.results} groupBy={props.search.groupBy} query={props.search.query} />
-      </div>
-    );
-  }
-
-  let mainResultsView = '';
-  if (oneColumnView) {
-    switch(options.resultFormat) {
-      case 'table': {
-        mainResultsView = table;
-        break;
-      }
-      case 'map': {
-        mainResultsView = (
-          <div className={classes.fullMap}>
-            {mapElement}
-          </div>
-        );
-        break;
-      }
-      case 'statistics': {
-        mainResultsView = statistics;
-        break;
-      }
-    }
-  } else {
-    mainResultsView = table;
-  }
-
-  // map = '';
+  // let mapElement = '';
+  // if (options.mapMode === 'heatmap') {
+  //   mapElement = (
+  //     <GMap
+  //       results={props.results}
+  //       googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKWw5FjhwLsfp_l2gjVAifPkT3cxGXhA4&v=3.exp&libraries=geometry,drawing,places,visualization"
+  //       loadingElement={<div style={{ height: `100%` }} />}
+  //       containerElement={<div style={{ height: `100%` }} />}
+  //       mapElement={<div style={{ height: `100%` }} />}
+  //     />
+  //   );
+  // } else {
+  //   mapElement = (
+  //     <LeafletMap
+  //       results={props.results}
+  //       mapMode={options.mapMode}
+  //       geoJSON={map.geoJSON}
+  //       geoJSONKey={map.geoJSONKey}
+  //       getGeoJSON={props.getGeoJSON}
+  //       bouncingMarker={map.bouncingMarker}
+  //       popupMarker={map.popupMarker}
+  //       bouncingMarkerKey={map.bouncingMarkerKey}
+  //       openPopupMarkerKey={map.openPopupMarkerKey}
+  //     />
+  //   );
+  // }
 
   return (
     <div className={classes.root}>
       <div className={classes.appFrame}>
         <TopBar
           results={results}
-          oneColumnView={oneColumnView}
+          oneColumnView={false}
           mapMode={options.mapMode}
           resultFormat={options.resultFormat}
           updateMapMode={props.updateMapMode}
@@ -236,24 +128,37 @@ let MapApp = (props) => {
           datasets={search.datasets}
           toggleDataset={props.toggleDataset}
         />
-        <div className={classes.mainContainer}>
-          {mainResultsView}
-          {!oneColumnView &&
-            <div className={classes.rightColumn}>
-              <div className={classes.map}>
-                {mapElement}
-              </div>
-              {statistics}
-            </div>
-          }
-        </div>
-        <Paper className={classes.footer}>
-          <img className={classes.aaltoLogo} src='img/logos/aalto-logo-white-no-background-small.png' alt='Aalto University logo'/>
-          <img className={classes.uhLogo} src='img/logos/university-of-helsinki-logo-white-no-background-small.png' alt='University of Helsinki logo'/>
-          {/* <img className={classes.secoLogo} src='img/logos/seco-logo-white-no-background-small.png' alt='SeCo logo'/> */}
-          <img className={classes.heldigLogo} src='img/logos/heldig-logo-small.png' alt='HELDIG logo'/>
-          <img className={classes.kotusLogo} src='img/logos/kotus-logo-white-no-backgrounds-small.png' alt='Kotus logo'/>
-        </Paper>
+        <Grid container spacing={8} className={classes.mainContainer}>
+          <Grid item sm={12} md={3} className={classes.facetBarContainer}>
+            <FacetBar
+              search={search}
+              fetchResults={props.fetchResults}
+              updateQuery={props.updateQuery}
+              clearResults={props.clearResults}
+            />
+          </Grid>
+          <Grid item sm={12} md={9} className={classes.resultsContainer}>
+            <Paper className={classes.resultsContainerPaper}>
+              {/* <ViewTabs routeProps={props.routeProps} /> */}
+              <VirtualizedTable
+                list={Immutable.List(results)}
+                resultValues={resultValues}
+                search={search}
+                sortResults={props.sortResults}
+                updateResultsFilter={props.updateResultsFilter}
+                updateQuery={props.updateQuery}
+                fetchResults={props.fetchResults}
+                clearResults={props.clearResults}
+                fetchSuggestions={props.fetchSuggestions}
+                clearSuggestions={props.clearSuggestions}
+                bounceMarker={props.bounceMarker}
+                openMarkerPopup={props.openMarkerPopup}
+                removeTempMarker={props.removeTempMarker}
+              />
+            </Paper>
+          </Grid>
+        </Grid>
+        <Footer />
       </div>
     </div>
   );

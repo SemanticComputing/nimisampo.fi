@@ -1,9 +1,7 @@
 import React from 'react';
 import Immutable from 'immutable';
 import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-import SearchField from '../components/SearchField';
 import ResultFilterDialogSingle from './ResultFilterDialogSingle';
 import IconButton from '@material-ui/core/IconButton';
 import PlaceIcon from '@material-ui/icons/Place';
@@ -21,22 +19,12 @@ import {
 const styles = () => ({
   root: {
     display: 'flex',
-    height: '100%',
+    height: 'calc(100% - 2px)',
+    width: 'calc(100% - 1px)',
     flexGrow: 1,
-  },
-  container: {
-    height: '100%',
-    width: '100%',
-    flexDirection: 'column'
   },
   resultsInfo: {
     flexGrow: 0
-  },
-  searchField: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 70
   },
 });
 
@@ -164,7 +152,7 @@ class VirtualizedTable extends React.PureComponent {
     // Some extra columns for analysis view
     let modifier = '';
     let base = '';
-    let collector = '';
+    //let collector = '';
     let collectionYear = '';
     if (analysisView) {
       modifier = (
@@ -185,15 +173,15 @@ class VirtualizedTable extends React.PureComponent {
           width={columnWidth}
         />
       );
-      collector = (
-        <Column
-          label="Collector"
-          cellDataGetter={({rowData}) => rowData.collector}
-          dataKey="collector"
-          headerRenderer={headerRenderer}
-          width={columnWidth}
-        />
-      );
+      // collector = (
+      //   <Column
+      //     label="Collector"
+      //     cellDataGetter={({rowData}) => rowData.collector}
+      //     dataKey="collector"
+      //     headerRenderer={headerRenderer}
+      //     width={columnWidth}
+      //   />
+      // );
       collectionYear = (
         <Column
           label="Year"
@@ -205,88 +193,74 @@ class VirtualizedTable extends React.PureComponent {
       );
     }
 
-    const searchField = (
-      <SearchField
-        search={this.props.search}
-        fetchResults={this.props.fetchResults}
-        updateQuery={this.props.updateQuery}
-        clearResults={this.props.clearResults}
-      />
-    );
+
 
     return (
       <div className={classes.root}>
-        <Grid container className={classes.container}>
-          <div className={classes.resultsInfo}>
-            <div className={classes.searchField}>
-              {searchField}
-            </div>
+        {this.props.list.size > 0 &&
+          <div style={{ flex: '1 1 auto' }}>
+            <AutoSizer>
+              {({ height, width }) => (
+                <Table
+                  overscanRowCount={10}
+                  rowHeight={40}
+                  rowGetter={rowGetter}
+                  rowCount={this.props.list.size}
+                  sort={this._sort}
+                  sortBy={this.props.search.sortBy}
+                  sortDirection={this.props.search.sortDirection.toUpperCase()}
+                  width={width}
+                  height={height}
+                  headerHeight={50}
+                  noRowsRenderer={this._noRowsRenderer}
+                  style={tableStyles.tableRoot}
+                  rowStyle={calculateRowStyle}
+                >
+                  <Column
+                    label="Name"
+                    cellDataGetter={({rowData}) => rowData.label}
+                    dataKey="label"
+                    headerRenderer={headerRenderer}
+                    cellRenderer={labelRenderer}
+                    width={columnWidth + 70}
+                  />
+                  {modifier}
+                  {base}
+                  <Column
+                    label="PNR type"
+                    cellDataGetter={({rowData}) => rowData.broaderTypeLabel}
+                    dataKey="broaderTypeLabel"
+                    headerRenderer={headerRenderer}
+                    width={columnWidth + 10}
+                  />
+                  <Column
+                    label="NA type"
+                    cellDataGetter={({rowData}) => rowData.typeLabel}
+                    dataKey="typeLabel"
+                    headerRenderer={headerRenderer}
+                    width={columnWidth}
+                  />
+                  <Column
+                    label="Area"
+                    cellDataGetter={({rowData}) => rowData.broaderAreaLabel}
+                    dataKey="broaderAreaLabel"
+                    headerRenderer={headerRenderer}
+                    width={columnWidth}
+                  />
+                  {/*{collector}  */}
+                  {collectionYear}
+                  <Column
+                    label="Source"
+                    cellDataGetter={({rowData}) => rowData.source}
+                    dataKey="source"
+                    headerRenderer={headerRenderer}
+                    width={columnWidth}
+                  />
+                </Table>
+              )}
+            </AutoSizer>
           </div>
-          {this.props.list.size > 0 &&
-            <div style={{ flex: '1 1 auto' }}>
-              <AutoSizer>
-                {({ height, width }) => (
-                  <Table
-                    overscanRowCount={10}
-                    rowHeight={40}
-                    rowGetter={rowGetter}
-                    rowCount={this.props.list.size}
-                    sort={this._sort}
-                    sortBy={this.props.search.sortBy}
-                    sortDirection={this.props.search.sortDirection.toUpperCase()}
-                    width={width}
-                    height={height}
-                    headerHeight={50}
-                    noRowsRenderer={this._noRowsRenderer}
-                    style={tableStyles.tableRoot}
-                    rowStyle={calculateRowStyle}
-                  >
-                    <Column
-                      label="Name"
-                      cellDataGetter={({rowData}) => rowData.label}
-                      dataKey="label"
-                      headerRenderer={headerRenderer}
-                      cellRenderer={labelRenderer}
-                      width={columnWidth + 70}
-                    />
-                    {modifier}
-                    {base}
-                    <Column
-                      label="PNR type"
-                      cellDataGetter={({rowData}) => rowData.broaderTypeLabel}
-                      dataKey="broaderTypeLabel"
-                      headerRenderer={headerRenderer}
-                      width={columnWidth + 10}
-                    />
-                    <Column
-                      label="NA type"
-                      cellDataGetter={({rowData}) => rowData.typeLabel}
-                      dataKey="typeLabel"
-                      headerRenderer={headerRenderer}
-                      width={columnWidth}
-                    />
-                    <Column
-                      label="Area"
-                      cellDataGetter={({rowData}) => rowData.broaderAreaLabel}
-                      dataKey="broaderAreaLabel"
-                      headerRenderer={headerRenderer}
-                      width={columnWidth}
-                    />
-                    {/*{collector}  */}
-                    {collectionYear}
-                    <Column
-                      label="Source"
-                      cellDataGetter={({rowData}) => rowData.source}
-                      dataKey="source"
-                      headerRenderer={headerRenderer}
-                      width={columnWidth}
-                    />
-                  </Table>
-                )}
-              </AutoSizer>
-            </div>
-          }
-        </Grid>
+        }
       </div>
     );
   }
