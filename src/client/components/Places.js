@@ -6,6 +6,7 @@ import ViewTabs from './ViewTabs';
 import LeafletMap from './map/LeafletMap';
 import GMap from '../components/map/GMap';
 import VirtualizedTable from './VirtualizedTable';
+import Pie from './Pie.js';
 
 let Places = props => {
   return (
@@ -61,6 +62,12 @@ let Places = props => {
             containerElement={<div style={{ height: `calc(100% - 72px` }} />}
             mapElement={<div style={{ height: `100%` }} />}
           />
+        }
+      />
+      <Route
+        path={'/app/statistics'}
+        render={() =>
+          <Pie data={props.results} groupBy={props.search.groupBy} query={props.search.query} />
         }
       />
     </React.Fragment>

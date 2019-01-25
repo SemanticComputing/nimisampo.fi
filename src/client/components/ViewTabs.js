@@ -5,6 +5,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay';
 import AddLocationIcon from '@material-ui/icons/AddLocation';
+import PieChartIcon from '@material-ui/icons/PieChart';
 import { Link } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
@@ -41,6 +42,9 @@ class ViewTabs extends React.Component {
       case '/app/heatmap':
         value = 2;
         break;
+      case '/app/statistics':
+        value = 3;
+        break;
       default:
         value = 0;
     }
@@ -65,6 +69,7 @@ class ViewTabs extends React.Component {
           <Tab icon={<CalendarViewDayIcon />} label="table" component={Link} to="/app" />
           <Tab icon={<AddLocationIcon />} label="map" component={Link} to="/app/map" />
           <Tab icon={<AddLocationIcon />} label="heatmap" component={Link} to="/app/heatmap" />
+          <Tab icon={<PieChartIcon />} label="statistics" component={Link} to="/app/statistics" />
         </Tabs>
       </Paper>
     );
