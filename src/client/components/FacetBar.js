@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import FacetHeader from './FacetHeader';
 import SearchField from './SearchField';
+import Typography from '@material-ui/core/Typography';
 
 
 const styles = theme => ({
@@ -39,7 +40,11 @@ const styles = theme => ({
   },
   facetHeaderButtons: {
     marginLeft: 'auto'
+  },
+  resultsText: {
+    paddingLeft: theme.spacing.unit
   }
+
 });
 
 let FacetBar = props => {
@@ -62,6 +67,9 @@ let FacetBar = props => {
               updateQuery={props.updateQuery}
               clearResults={props.clearResults}
             />
+            {props.search.results.length > 0 &&
+              <Typography className={classes.resultsText} variant="h6">{props.search.results.length} results</Typography>
+            }
           </div>
         </Paper>
       </React.Fragment>
