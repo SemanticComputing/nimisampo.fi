@@ -232,7 +232,7 @@ module.exports = {
     'title': 'Institute for the Languages of Finland (Kotus) Digital Names archive',
     'shortTitle': 'DNA',
     'timePeriod': '',
-    'endpoint': 'http://ldf.fi/kotus-digital-names-archive/sparql',
+    'endpoint': 'http://ldf.fi/kotus-names-archive/sparql',
     // 'endpoint': 'http://localhost:3037/ds/sparql',
     // 'suggestionQuery': `
     //   PREFIX text: <http://jena.apache.org/text#>
