@@ -17,7 +17,8 @@ import { CSVLink } from 'react-csv';
 import Button from '@material-ui/core/Button';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
-import namesampoLogo from '../img/logos/namesampo.png';
+import namesampoLogoEn from '../img/logos/namesampo.png';
+import namesampoLogoFi from '../img/logos/nimisampo-logo.png';
 
 const styles = theme => ({
   toolBar: {
@@ -83,6 +84,69 @@ class TopBar extends React.Component {
     this.props.toggleDataset(value);
   };
 
+  // <IconButton
+  //   className={classes.menuButton}
+  //   color="inherit"
+  //   aria-label="Menu"
+  //   onClick={this.handleClick}
+  // >
+  //   <MenuIcon />
+  // </IconButton>
+  //
+  // <Menu
+  //   id="simple-menu"
+  //   anchorEl={anchorEl}
+  //   open={Boolean(anchorEl)}
+  //   onClose={this.handleClose}
+  // >
+  //   <div className={classes.menuContent}>
+  //     <FormControl component="fieldset" className={classes.formControl}>
+  //       <FormLabel component="legend">Source datasets</FormLabel>
+  //       <FormGroup className={classes.formGroup}>
+  //         {Object.keys(this.props.datasets).map(id => (
+  //           <FormControlLabel
+  //             key={id}
+  //             control={
+  //               <Checkbox
+  //                 checked={this.props.datasets[id].selected}
+  //                 onChange={this.handleToggleDataset(id)}
+  //                 tabIndex={-1}
+  //                 disableRipple
+  //               />
+  //             }
+  //             label={this.props.datasets[id].title}
+  //           />
+  //
+  //         ))}
+  //       </FormGroup>
+  //     </FormControl>
+  //
+  //     <FormControl component="fieldset" className={classes.formControl}>
+  //       <FormLabel component="legend">Map mode</FormLabel>
+  //       <RadioGroup
+  //         className={classes.formGroup}
+  //         aria-label="Map mode"
+  //         name="map"
+  //         value={this.props.mapMode}
+  //         onChange={this.handleChange}
+  //       >
+  //         <FormControlLabel value="cluster" control={<Radio />} label="Clustered markers" />
+  //         <FormControlLabel value="noCluster" control={<Radio />} label="Markers" />
+  //         <FormControlLabel value="heatmap" control={<Radio />} label="Heatmap" />
+  //       </RadioGroup>
+  //     </FormControl>
+  //
+  //
+  //     <CSVLink data={this.props.results}>
+  //       <Button variant="contained" color="primary" className={classes.button}>
+  //         Results as CSV
+  //         <CloudDownloadIcon className={classes.rightIcon} />
+  //       </Button>
+  //     </CSVLink>
+  //   </div>
+  //
+  // </Menu>
+
   render() {
     const { anchorEl } = this.state;
     const { classes } = this.props;
@@ -90,70 +154,7 @@ class TopBar extends React.Component {
     return (
       <AppBar position="absolute">
         <Toolbar className={classes.toolBar}>
-
-          <IconButton
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Menu"
-            onClick={this.handleClick}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={this.handleClose}
-          >
-            <div className={classes.menuContent}>
-              <FormControl component="fieldset" className={classes.formControl}>
-                <FormLabel component="legend">Source datasets</FormLabel>
-                <FormGroup className={classes.formGroup}>
-                  {Object.keys(this.props.datasets).map(id => (
-                    <FormControlLabel
-                      key={id}
-                      control={
-                        <Checkbox
-                          checked={this.props.datasets[id].selected}
-                          onChange={this.handleToggleDataset(id)}
-                          tabIndex={-1}
-                          disableRipple
-                        />
-                      }
-                      label={this.props.datasets[id].title}
-                    />
-
-                  ))}
-                </FormGroup>
-              </FormControl>
-
-              <FormControl component="fieldset" className={classes.formControl}>
-                <FormLabel component="legend">Map mode</FormLabel>
-                <RadioGroup
-                  className={classes.formGroup}
-                  aria-label="Map mode"
-                  name="map"
-                  value={this.props.mapMode}
-                  onChange={this.handleChange}
-                >
-                  <FormControlLabel value="cluster" control={<Radio />} label="Clustered markers" />
-                  <FormControlLabel value="noCluster" control={<Radio />} label="Markers" />
-                  <FormControlLabel value="heatmap" control={<Radio />} label="Heatmap" />
-                </RadioGroup>
-              </FormControl>
-
-
-              <CSVLink data={this.props.results}>
-                <Button variant="contained" color="primary" className={classes.button}>
-                  Results as CSV
-                  <CloudDownloadIcon className={classes.rightIcon} />
-                </Button>
-              </CSVLink>
-            </div>
-
-          </Menu>
-          <img className={classes.namesampoLogo} src={namesampoLogo} alt='NameSampo logo'/>
+          <img className={classes.namesampoLogo} src={namesampoLogoFi} alt='NameSampo logo'/>
           {this.props.oneColumnView &&
             <div className={classes.navTabs}>
               <NavTabs
