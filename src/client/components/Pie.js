@@ -64,7 +64,7 @@ const combineSmallGroups = (dataArray) => {
 };
 
 let Pie = (props) => {
-  const { classes, data, query, groupBy } = props;
+  const { classes, data, groupBy } = props;
   const resultCount = data.length;
   if (resultCount < 1) {
     return '';
@@ -81,7 +81,7 @@ let Pie = (props) => {
   }
   dataArray = _.orderBy(dataArray, 'y', 'desc');
   dataArray = combineSmallGroups(dataArray);
-  const legendArray = dataArray.map(group => ({ name: group.x + ' (' + group.y + ')' }));
+  const legendArray = dataArray.map(group => ({ name: group.x.toLowerCase() + ' (' + group.y + ')' }));
   const legendHeigth = legendArray.length * 33;
   // const pieTitle = resultCount + ' results for the query "' + query + '"';
   // <VictoryLabel
@@ -110,7 +110,7 @@ let Pie = (props) => {
           <Paper className={classes.legendPaper}>
             <VictoryLegend
               height={legendHeigth}
-              title={'Names archive place type'}
+              title={'Place type (NA)'}
               colorScale={'qualitative'}
               data={legendArray}
               style={{
@@ -120,7 +120,7 @@ let Pie = (props) => {
               containerComponent={
                 <VictoryContainer
                   responsive={false}
-                  width={175}
+                  width={200}
                 />
               }
             />
