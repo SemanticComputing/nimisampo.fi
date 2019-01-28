@@ -50,6 +50,7 @@ const styles = theme => ({
 let FacetBar = props => {
 
   const { classes } = props;
+  // console.log(props.resultValues)
 
   return (
     <div className={classes.root}>

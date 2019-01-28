@@ -109,6 +109,7 @@ let MapApp = (props) => {
               <Grid item sm={12} md={3} className={classes.facetBarContainer}>
                 <FacetBar
                   search={search}
+                  resultValues={resultValues}
                   fetchResults={props.fetchResults}
                   updateQuery={props.updateQuery}
                   clearResults={props.clearResults}
