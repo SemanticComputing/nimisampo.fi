@@ -17,6 +17,7 @@ app.use(function(req, res, next) {
   next();
 });
 
+// React app, static files
 app.use(express.static(__dirname + './../public/'));
 
 app.get('/suggest', (req, res) => {
@@ -72,6 +73,12 @@ app.get('/wfs', (req, res) => {
     });
 });
 
+/*  Routes are matched to a url in order of their definition
+    Redirect all the the rest for react-router to handle */
+app.get('*', function(request, response) {
+  response.sendFile(path.resolve(__dirname, './../public/', 'index.html'));
+});
+
 const getWFSLayers = (layerIDs) => {
   return Promise.all(layerIDs.map((layerID) => getWFSLayer(layerID)));
 };
@@ -91,4 +98,4 @@ const getWFSLayer = (layerID) => {
   });
 };
 
-app.listen(app.get('port'), () => console.log('Hipla app listening on port ' + app.get('port')));
+app.listen(app.get('port'), () => console.log('NameSampo backend listening on port ' + app.get('port')));
