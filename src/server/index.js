@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import request from 'superagent';
+import path from 'path';
 import _ from 'lodash';
 import sparqlSearchEngine from './SparqlSearchEngine';
 const DEFAULT_PORT = 3001;
