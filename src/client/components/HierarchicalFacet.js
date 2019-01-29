@@ -63,17 +63,17 @@ class HierarchicalFacet extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      treeData: [],
+      treeData: this.props.data,
       searchString: '',
       searchFocusIndex: 0,
       searchFoundCount: null,
     };
   }
 
-  componentDidMount = () => {
-    this.props.fetchFacet(this.props.property, this.props.sortBy, this.props.sortDirection);
-  }
-
+  // componentDidMount = () => {
+  //   this.props.fetchFacet(this.props.property, this.props.sortBy, this.props.sortDirection);
+  // }
+  //
   componentDidUpdate = prevProps => {
     if (prevProps.data != this.props.data) {
       //console.log(`adding new values for: ${this.props.property}`);
@@ -82,10 +82,10 @@ class HierarchicalFacet extends Component {
         treeData: this.props.data
       });
     }
-    if (this.props.updatedFacet !== '' && this.props.updatedFacet !== this.props.property && prevProps.facetFilters != this.props.facetFilters) {
-      // console.log(`fetching new values for ${this.props.property}`)
-      this.props.fetchFacet(this.props.property, this.props.sortBy, this.props.sortDirection);
-    }
+    // if (this.props.updatedFacet !== '' && this.props.updatedFacet !== this.props.property && prevProps.facetFilters != this.props.facetFilters) {
+    //   // console.log(`fetching new values for ${this.props.property}`)
+    //   this.props.fetchFacet(this.props.property, this.props.sortBy, this.props.sortDirection);
+    // }
   }
 
   handleCheckboxChange = treeObj => event => {
@@ -99,10 +99,11 @@ class HierarchicalFacet extends Component {
       },
     });
     this.setState({ treeData: newTreeData });
-    this.props.updateFilter({
-      property: this.props.property,
-      value: treeObj.node.id
-    });
+    //console.log(treeObj)
+    // this.props.updateFilter({
+    //   property: this.props.property,
+    //   value: treeObj.node.prefLabel
+    // });
   };
 
   handleSearchFieldOnChange = event => {
@@ -111,9 +112,10 @@ class HierarchicalFacet extends Component {
 
   generateLabel = node => {
     //let source = node.source == null ? '' : `(source: ${node.source.substring(node.source.lastIndexOf('/') + 1)}`;
-    //console.log(node)
-    let count = node.totalInstanceCount == null || node.totalInstanceCount == 0 ? node.instanceCount : node.totalInstanceCount;
-    return `${node.prefLabel} (${count})`;
+    // console.log(node)
+    //let count = node.totalInstanceCount == null || node.totalInstanceCount == 0 ? node.instanceCount : node.totalInstanceCount;
+    //return `${node.value} (${count})`;
+    return node.prefLabel;
   }
 
   generateLabelClass = (classes, node) => {
@@ -232,9 +234,8 @@ class HierarchicalFacet extends Component {
                         <Checkbox
                           className={classes.checkbox}
                           checked={n.node.selected == 'true' ? true : false}
-                          disabled={n.node.instanceCount == 0 || n.node.prefLabel == 'Unknown' ? true : false}
                           onChange={this.handleCheckboxChange(n)}
-                          value={n.node.id}
+                          value={n.node.prefLabel}
                           color="primary"
                         />
                       }
@@ -256,15 +257,15 @@ class HierarchicalFacet extends Component {
 
 HierarchicalFacet.propTypes = {
   classes: PropTypes.object.isRequired,
-  property: PropTypes.string.isRequired,
+  property: PropTypes.string,
   data: PropTypes.array.isRequired,
-  sortBy: PropTypes.string.isRequired,
-  sortDirection: PropTypes.string.isRequired,
-  fetchFacet: PropTypes.func.isRequired,
-  fetchingFacet: PropTypes.bool.isRequired,
-  facetFilters: PropTypes.object.isRequired,
-  updateFilter: PropTypes.func.isRequired,
-  updatedFacet: PropTypes.string.isRequired,
+  sortBy: PropTypes.string,
+  sortDirection: PropTypes.string,
+  fetchFacet: PropTypes.func,
+  fetchingFacet: PropTypes.bool,
+  facetFilters: PropTypes.object,
+  updateFilter: PropTypes.func,
+  updatedFacet: PropTypes.string,
   searchField: PropTypes.bool.isRequired,
 };
 

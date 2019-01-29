@@ -29,7 +29,7 @@ const filterVisibleResult = resultsFilter => (resultObj) => {
 export const getVisibleValues = createSelector(
   [ getResults, getResultsFilter ],
   (visibleResults, resultsFilter) => {
-    let label = [];
+    let prefLabel = [];
     let modifier = [];
     let basicElement = [];
     let typeLabel = [];
@@ -39,7 +39,7 @@ export const getVisibleValues = createSelector(
     let collectionYear = [];
     let source = [];
     for (const result of visibleResults) {
-      label.push({ value: result.label, selected: !resultsFilter.label.has(result.label) });
+      prefLabel.push({ prefLabel: result.prefLabel, selected: !resultsFilter.prefLabel.has(result.prefLabel) });
       modifier.push({ value: result.modifier, selected: !resultsFilter.modifier.has(result.modifier) });
       basicElement.push({ value: result.basicElement, selected: !resultsFilter.basicElement.has(result.basicElement) });
       typeLabel.push({ value: result.typeLabel, selected: !resultsFilter.typeLabel.has(result.typeLabel) });
@@ -50,7 +50,7 @@ export const getVisibleValues = createSelector(
       source.push({ value: result.source, selected: !resultsFilter.source.has(result.source) });
     }
     return {
-      label: _.sortBy(_.uniqBy(label, 'value'), 'value'),
+      prefLabel: _.sortBy(_.uniqBy(prefLabel, 'prefLabel'), 'prefLabel'),
       modifier: _.sortBy(_.uniqBy(modifier, 'value'), 'value'),
       basicElement: _.sortBy(_.uniqBy(basicElement, 'value'), 'value'),
       typeLabel: _.sortBy(_.uniqBy(typeLabel, 'value'), 'value'),

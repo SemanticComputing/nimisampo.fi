@@ -170,11 +170,11 @@ module.exports = {
       PREFIX sf: <http://ldf.fi/functions#>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
       PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
-      SELECT ?s ?label ?broaderTypeLabel ?typeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
+      SELECT ?s ?preflabel ?broaderTypeLabel ?typeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
         ?s text:query (skos:prefLabel '<QUERYTERM>' 100000) .
-        ?s skos:prefLabel ?prefLabel .
-        ?s sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?label) .
+        #?s skos:prefLabel ?prefLabel .
+        ?s sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?prefLabel) .
         ?s a ?type .
         ?type sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderTypeLabel) .
         BIND("-" as ?typeLabel)
@@ -276,11 +276,11 @@ module.exports = {
       PREFIX hipla-schema: <http://ldf.fi/schema/hipla/>
       PREFIX na-schema: <http://ldf.fi/schema/kotus-names-archive/>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-      SELECT ?s ?label ?typeLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector ?collectionYear ?markerColor
+      SELECT ?s ?prefLabel ?typeLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector ?collectionYear ?markerColor
       WHERE {
         ?s text:query (skos:prefLabel '<QUERYTERM>' 100000) .
         ?s a hipla-schema:Place .
-        ?s skos:prefLabel ?label .
+        ?s skos:prefLabel ?prefLabel .
         ?s na-schema:municipality ?broaderAreaLabel .
         BIND("NA" AS ?source)
         BIND("violet" AS ?markerColor)

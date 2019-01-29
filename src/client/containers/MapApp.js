@@ -111,6 +111,7 @@ let MapApp = (props) => {
                   search={search}
                   resultValues={resultValues}
                   fetchResults={props.fetchResults}
+                  updateResultsFilter={props.updateResultsFilter}
                   updateQuery={props.updateQuery}
                   clearResults={props.clearResults}
                 />

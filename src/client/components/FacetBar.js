@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-//import HierarchicalFacet from './HierarchicalFacet';
+import HierarchicalFacet from './HierarchicalFacet';
 import Paper from '@material-ui/core/Paper';
 import FacetHeader from './FacetHeader';
 import SearchField from './SearchField';
@@ -41,8 +41,9 @@ const styles = theme => ({
   facetHeaderButtons: {
     marginLeft: 'auto'
   },
-  resultsText: {
-    paddingLeft: theme.spacing.unit
+  resultTextContainer: {
+    paddingLeft: theme.spacing.unit,
+    height: 32
   }
 
 });
@@ -50,30 +51,85 @@ const styles = theme => ({
 let FacetBar = props => {
 
   const { classes } = props;
-  // console.log(props.resultValues)
+  const hasResults = props.search.results.length > 0 ? true : false;
 
   return (
     <div className={classes.root}>
-      <React.Fragment>
 
-        <Paper className={classes.facetContainer}>
-          <FacetHeader
-            label='Place name'
-            hierarchical={true}
+      <Paper className={classes.facetContainer}>
+        <div className={classes.facetSearchFieldContainer}>
+          <SearchField
+            search={props.search}
+            fetchResults={props.fetchResults}
+            updateQuery={props.updateQuery}
+            clearResults={props.clearResults}
           />
-          <div className={classes.facetSearchFieldContainer}>
-            <SearchField
-              search={props.search}
-              fetchResults={props.fetchResults}
-              updateQuery={props.updateQuery}
-              clearResults={props.clearResults}
-            />
-            {props.search.results.length > 0 &&
-              <Typography className={classes.resultsText} variant="h6">{props.search.results.length} results</Typography>
-            }
+          <div className={classes.resultTextContainer}>
+            <Typography variant="h6">{hasResults ? `${props.search.results.length} results` : ''}</Typography>
           </div>
-        </Paper>
-      </React.Fragment>
+        </div>
+      </Paper>
+
+      { hasResults &&
+        <React.Fragment>
+          <Paper className={classes.facetContainer}>
+            <FacetHeader
+              label='Name'
+              hierarchical={true}
+            />
+            <div className={classes.facetValuesContainerTen}>
+              <HierarchicalFacet
+                data={props.resultValues.prefLabel}
+                property='prefLabel'
+                searchField={true}
+                updateFilter={props.updateResultsFilter}
+              />
+            </div>
+          </Paper>
+
+          { /* <Paper className={classes.facetContainer}>
+            <FacetHeader
+              label='Type (PNR)'
+              hierarchical={true}
+            />
+          </Paper>
+
+          <Paper className={classes.facetContainer}>
+            <FacetHeader
+              label='Type (NA)'
+              hierarchical={true}
+            />
+          </Paper>
+
+          <Paper className={classes.facetContainer}>
+            <FacetHeader
+              label='Area'
+              hierarchical={true}
+            />
+          </Paper>
+
+          <Paper className={classes.facetContainer}>
+            <FacetHeader
+              label='Year'
+              hierarchical={true}
+            />
+          </Paper>
+
+          <Paper className={classes.facetContainer}>
+            <FacetHeader
+              label='Modifier'
+              hierarchical={true}
+            />
+          </Paper>
+
+          <Paper className={classes.facetContainer}>
+            <FacetHeader
+              label='Base'
+              hierarchical={true}
+            />
+          </Paper> */}
+        </React.Fragment>
+      }
     </div>
   );
 };
@@ -81,7 +137,9 @@ let FacetBar = props => {
 FacetBar.propTypes = {
   classes: PropTypes.object.isRequired,
   search: PropTypes.object.isRequired,
+  resultValues: PropTypes.object.isRequired,
   fetchResults: PropTypes.func.isRequired,
+  updateResultsFilter: PropTypes.func.isRequired,
   updateQuery: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired
 };

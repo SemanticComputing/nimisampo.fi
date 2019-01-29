@@ -53,7 +53,7 @@ export const INITIAL_STATE = {
   results: [],
   //results: sampleResults,
   resultsFilter: {
-    'label': new Set(),
+    'prefLabel': new Set(),
     'modifier': new Set(),
     'basicElement': new Set(),
     'typeLabel': new Set(),
@@ -135,7 +135,10 @@ const search = (state = INITIAL_STATE, action) => {
 
 const updateResultsFilter = (state, action) => {
   const { property, value } = action.filter;
+  console.log(property)
+  console.log(value)
   let nSet = state.resultsFilter[property];
+  console.log(nSet)
   if (nSet.has(value)) {
     nSet.delete(value);
   } else {

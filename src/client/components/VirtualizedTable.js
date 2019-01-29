@@ -218,7 +218,7 @@ class VirtualizedTable extends React.PureComponent {
                 >
                   <Column
                     label="Name"
-                    cellDataGetter={({rowData}) => rowData.label}
+                    cellDataGetter={({rowData}) => rowData.prefLabel}
                     dataKey="label"
                     headerRenderer={headerRenderer}
                     cellRenderer={labelRenderer}
