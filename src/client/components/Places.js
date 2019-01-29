@@ -7,6 +7,8 @@ import LeafletMap from './map/LeafletMap';
 import GMap from '../components/map/GMap';
 import VirtualizedTable from './VirtualizedTable';
 import Pie from './Pie.js';
+import CSVButton from './CSVButton';
+import ResultInfo from './ResultInfo';
 
 let Places = props => {
   return (
@@ -37,11 +39,11 @@ let Places = props => {
         }
       />
       <Route
-        path={'/app/map'}
+        path={'/app/map_clusters'}
         render={() =>
           <LeafletMap
             results={props.results}
-            mapMode={props.options.mapMode}
+            mapMode="cluster"
             geoJSON={props.map.geoJSON}
             geoJSONKey={props.map.geoJSONKey}
             getGeoJSON={props.getGeoJSON}
@@ -51,6 +53,28 @@ let Places = props => {
             openPopupMarkerKey={props.map.openPopupMarkerKey}
           />
         }
+      />
+      <Route
+        path={'/app/map_markers'}
+        render={() => {
+          if (props.results.length > 5000) {
+            return <ResultInfo message="Over 5000 results, clustered map should be used instead." />;
+          } else {
+            return(
+              <LeafletMap
+                results={props.results}
+                mapMode="noCluster"
+                geoJSON={props.map.geoJSON}
+                geoJSONKey={props.map.geoJSONKey}
+                getGeoJSON={props.getGeoJSON}
+                bouncingMarker={props.map.bouncingMarker}
+                popupMarker={props.map.popupMarker}
+                bouncingMarkerKey={props.map.bouncingMarkerKey}
+                openPopupMarkerKey={props.map.openPopupMarkerKey}
+              />
+            );
+          }
+        }}
       />
       <Route
         path={'/app/heatmap'}
@@ -68,6 +92,12 @@ let Places = props => {
         path={'/app/statistics'}
         render={() =>
           <Pie data={props.results} groupBy={props.search.groupBy} query={props.search.query} />
+        }
+      />
+      <Route
+        path={'/app/download'}
+        render={() =>
+          <CSVButton results={props.results} />
         }
       />
     </React.Fragment>

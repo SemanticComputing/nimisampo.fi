@@ -4,20 +4,20 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import NavTabs from '../components/NavTabs';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import { CSVLink } from 'react-csv';
-import Button from '@material-ui/core/Button';
-import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import namesampoLogoEn from '../img/logos/namesampo.png';
+// import IconButton from '@material-ui/core/IconButton';
+// import Menu from '@material-ui/core/Menu';
+// import MenuIcon from '@material-ui/icons/Menu';
+//
+// import Radio from '@material-ui/core/Radio';
+// import RadioGroup from '@material-ui/core/RadioGroup';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormControl from '@material-ui/core/FormControl';
+// import FormLabel from '@material-ui/core/FormLabel';
+// import { CSVLink } from 'react-csv';
+// import Button from '@material-ui/core/Button';
+// import FormGroup from '@material-ui/core/FormGroup';
+// import Checkbox from '@material-ui/core/Checkbox';
+// import namesampoLogoEn from '../img/logos/namesampo.png';
 import namesampoLogoFi from '../img/logos/nimisampo-logo.png';
 
 const styles = theme => ({

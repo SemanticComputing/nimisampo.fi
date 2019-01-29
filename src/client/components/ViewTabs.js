@@ -4,8 +4,12 @@ import { withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay';
-import AddLocationIcon from '@material-ui/icons/AddLocation';
+// import AddLocationIcon from '@material-ui/icons/AddLocation';
+import PlaceIcon from '@material-ui/icons/Place';
+import TripOriginIcon from '@material-ui/icons/TripOrigin';
+import SettingsBrightnessIcon from '@material-ui/icons/SettingsBrightness';
 import PieChartIcon from '@material-ui/icons/PieChart';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import { Link } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
@@ -36,14 +40,20 @@ class ViewTabs extends React.Component {
   pathnameToValue = pathname => {
     let value;
     switch (pathname) {
-      case '/app/map':
+      case '/app/map_clusters':
         value = 1;
         break;
-      case '/app/heatmap':
+      case '/app/map_markers':
         value = 2;
         break;
-      case '/app/statistics':
+      case '/app/heatmap':
         value = 3;
+        break;
+      case '/app/statistics':
+        value = 4;
+        break;
+      case '/app/download':
+        value = 5;
         break;
       default:
         value = 0;
@@ -67,9 +77,11 @@ class ViewTabs extends React.Component {
           variant="fullWidth"
         >
           <Tab icon={<CalendarViewDayIcon />} label="table" component={Link} to="/app" />
-          <Tab icon={<AddLocationIcon />} label="map" component={Link} to="/app/map" />
-          <Tab icon={<AddLocationIcon />} label="heatmap" component={Link} to="/app/heatmap" />
+          <Tab icon={<TripOriginIcon />} label="clustered map" component={Link} to="/app/map_clusters" />
+          <Tab icon={<PlaceIcon />} label="marker map" component={Link} to="/app/map_markers" />
+          <Tab icon={<SettingsBrightnessIcon />} label="heatmap" component={Link} to="/app/heatmap" />
           <Tab icon={<PieChartIcon />} label="statistics" component={Link} to="/app/statistics" />
+          <Tab icon={<CloudDownloadIcon />} label="download" component={Link} to="/app/download" />
         </Tabs>
       </Paper>
     );

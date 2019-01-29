@@ -4,7 +4,7 @@ import {
   VictoryPie,
   VictoryLegend,
   VictoryContainer,
-  VictoryLabel,
+  //VictoryLabel,
 } from 'victory';
 import PieTooltip from './PieTooltip';
 import _ from 'lodash';
