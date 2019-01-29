@@ -17,8 +17,8 @@ import NavTabs from '../components/NavTabs';
 // import Button from '@material-ui/core/Button';
 // import FormGroup from '@material-ui/core/FormGroup';
 // import Checkbox from '@material-ui/core/Checkbox';
-// import namesampoLogoEn from '../img/logos/namesampo.png';
-import namesampoLogoFi from '../img/logos/nimisampo-logo.png';
+import namesampoLogoEn from '../img/logos/namesampo.png';
+//import namesampoLogoFi from '../img/logos/nimisampo-logo.png';
 
 const styles = theme => ({
   toolBar: {
@@ -148,13 +148,13 @@ class TopBar extends React.Component {
   // </Menu>
 
   render() {
-    const { anchorEl } = this.state;
+    //const { anchorEl } = this.state;
     const { classes } = this.props;
 
     return (
       <AppBar position="absolute">
         <Toolbar className={classes.toolBar}>
-          <img className={classes.namesampoLogo} src={namesampoLogoFi} alt='NameSampo logo'/>
+          <img className={classes.namesampoLogo} src={namesampoLogoEn} alt='NameSampo logo'/>
           {this.props.oneColumnView &&
             <div className={classes.navTabs}>
               <NavTabs
