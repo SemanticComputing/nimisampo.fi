@@ -70,14 +70,8 @@ class HierarchicalFacet extends Component {
     };
   }
 
-  // componentDidMount = () => {
-  //   this.props.fetchFacet(this.props.property, this.props.sortBy, this.props.sortDirection);
-  // }
-  //
   componentDidUpdate = prevProps => {
     if (prevProps.data != this.props.data) {
-      //console.log(`adding new values for: ${this.props.property}`);
-      //console.log(this.props.data)
       this.setState({
         treeData: this.props.data
       });
@@ -95,15 +89,16 @@ class HierarchicalFacet extends Component {
       path: treeObj.path,
       newNode: {
         ...treeObj.node,
-        selected: event.target.checked ? 'true' : 'false'
+        selected: event.target.checked
       },
     });
+
     this.setState({ treeData: newTreeData });
     //console.log(treeObj)
-    // this.props.updateFilter({
-    //   property: this.props.property,
-    //   value: treeObj.node.prefLabel
-    // });
+    this.props.updateFilter({
+      property: this.props.property,
+      value: treeObj.node.prefLabel
+    });
   };
 
   handleSearchFieldOnChange = event => {
@@ -137,7 +132,7 @@ class HierarchicalFacet extends Component {
   render() {
     const { classes } = this.props;
     const { searchString, searchFocusIndex, searchFoundCount } = this.state;
-    //console.log(this.props.data)
+    // console.log(this.state.treeData)
 
     // Case insensitive search of `node.title`
     const customSearchMethod = ({ node, searchQuery }) =>
@@ -233,7 +228,7 @@ class HierarchicalFacet extends Component {
                       control={
                         <Checkbox
                           className={classes.checkbox}
-                          checked={n.node.selected == 'true' ? true : false}
+                          checked={n.node.selected}
                           onChange={this.handleCheckboxChange(n)}
                           value={n.node.prefLabel}
                           color="primary"

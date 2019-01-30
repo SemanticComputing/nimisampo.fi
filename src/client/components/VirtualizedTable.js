@@ -100,15 +100,6 @@ class VirtualizedTable extends React.PureComponent {
           <SortIndicator key="SortIndicator" sortDirection={sortDirection} />,
         );
       }
-      // children.push(
-      //   <ResultFilterDialogSingle
-      //     key="resultFilter"
-      //     propertyLabel={label}
-      //     property={dataKey}
-      //     resultValues={this.props.resultValues[dataKey]}
-      //     updateResultsFilter={this.props.updateResultsFilter}
-      //   />
-      // );
       return children;
     };
 
@@ -219,7 +210,7 @@ class VirtualizedTable extends React.PureComponent {
                   <Column
                     label="Name"
                     cellDataGetter={({rowData}) => rowData.prefLabel}
-                    dataKey="label"
+                    dataKey="prefLabel"
                     headerRenderer={headerRenderer}
                     cellRenderer={labelRenderer}
                     width={columnWidth + 70}
@@ -307,14 +298,7 @@ VirtualizedTable.propTypes = {
   classes: PropTypes.object.isRequired,
   list: PropTypes.instanceOf(Immutable.List).isRequired,
   search: PropTypes.object.isRequired,
-  resultValues: PropTypes.object.isRequired,
   sortResults: PropTypes.func.isRequired,
-  updateResultsFilter: PropTypes.func.isRequired,
-  updateQuery: PropTypes.func.isRequired,
-  fetchSuggestions: PropTypes.func.isRequired,
-  clearSuggestions: PropTypes.func.isRequired,
-  fetchResults: PropTypes.func.isRequired,
-  clearResults: PropTypes.func.isRequired,
   bounceMarker: PropTypes.func.isRequired,
   openMarkerPopup: PropTypes.func.isRequired,
   removeTempMarker: PropTypes.func.isRequired,

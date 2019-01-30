@@ -11,6 +11,7 @@ import CSVButton from './CSVButton';
 import ResultInfo from './ResultInfo';
 
 let Places = props => {
+  //console.log(props.results)
   return (
     <React.Fragment>
       <ViewTabs routeProps={props.routeProps} />
@@ -27,11 +28,6 @@ let Places = props => {
             search={props.search}
             sortResults={props.sortResults}
             updateResultsFilter={props.updateResultsFilter}
-            updateQuery={props.updateQuery}
-            fetchResults={props.fetchResults}
-            clearResults={props.clearResults}
-            fetchSuggestions={props.fetchSuggestions}
-            clearSuggestions={props.clearSuggestions}
             bounceMarker={props.bounceMarker}
             openMarkerPopup={props.openMarkerPopup}
             removeTempMarker={props.removeTempMarker}

@@ -135,10 +135,10 @@ const search = (state = INITIAL_STATE, action) => {
 
 const updateResultsFilter = (state, action) => {
   const { property, value } = action.filter;
-  console.log(property)
-  console.log(value)
+  //console.log(property)
+  //console.log(value)
   let nSet = state.resultsFilter[property];
-  console.log(nSet)
+  //console.log(nSet)
   if (nSet.has(value)) {
     nSet.delete(value);
   } else {

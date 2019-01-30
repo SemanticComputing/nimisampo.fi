@@ -11,19 +11,30 @@ const getSortDirection = (state) => state.sortDirection;
 export const getVisibleResults = createSelector(
   [ getResults, getResultsFilter, getSortBy, getSortDirection ],
   (results, resultsFilter, sortBy, sortDirection) => {
-    const filteredResults =  results.filter(filterVisibleResult(resultsFilter));
-    return _.orderBy(filteredResults, sortBy, sortDirection);
+    if (activeFilters(resultsFilter)) {
+      results = results.filter(filterVisibleResult(resultsFilter));
+    }
+    return _.orderBy(results, sortBy, sortDirection);
   }
 );
 
-const filterVisibleResult = resultsFilter => (resultObj) => {
+const filterVisibleResult = resultsFilter => resultObj => {
   for (const property in resultsFilter) {
     const filterValues = resultsFilter[property];
     if (filterValues.has(resultObj[property])) {
-      return false;
+      return true;
     }
   }
-  return true;
+  return false;
+};
+
+const activeFilters = resultsFilter => {
+  for (const property in resultsFilter) {
+    if (resultsFilter[property].size != 0) {
+      return true;
+    }
+  }
+  return false;
 };
 
 export const getVisibleValues = createSelector(
@@ -39,7 +50,7 @@ export const getVisibleValues = createSelector(
     let collectionYear = [];
     let source = [];
     for (const result of visibleResults) {
-      prefLabel.push({ prefLabel: result.prefLabel, selected: !resultsFilter.prefLabel.has(result.prefLabel) });
+      prefLabel.push({ prefLabel: result.prefLabel, selected: resultsFilter.prefLabel.has(result.prefLabel) });
       modifier.push({ value: result.modifier, selected: !resultsFilter.modifier.has(result.modifier) });
       basicElement.push({ value: result.basicElement, selected: !resultsFilter.basicElement.has(result.basicElement) });
       typeLabel.push({ value: result.typeLabel, selected: !resultsFilter.typeLabel.has(result.typeLabel) });

@@ -290,7 +290,7 @@ class LeafletMap extends React.Component {
 
   createPopUpContent(result) {
     const popUpTemplate = `
-      <h3>{label}</h3>
+      <h3>{prefLabel}</h3>
       <p>Type: {typeLabel}</p>
       <p>Area: {broaderAreaLabel}</p>
       <p>Source: <a target='_blank' rel='noopener noreferrer' href={s}>{source}</a></p>
