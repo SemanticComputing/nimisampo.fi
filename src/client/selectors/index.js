@@ -3,10 +3,10 @@ import { orderBy, has } from 'lodash';
 
 // https://redux.js.org/recipes/computing-derived-data
 
-const getResultsFilter = (state) => state.resultsFilter;
-const getLatestFilter = (state) => state.latestFilter;
-const getResults = (state) => state.results;
-const getSortBy = (state) => state.sortBy;
+const getResultsFilter = state => state.resultsFilter;
+const getLatestFilter = state => state.latestFilter;
+const getResults = state => state.results;
+const getSortBy = state => state.sortBy;
 const getSortDirection = (state) => state.sortDirection;
 
 export const getVisibleResults = createSelector(
@@ -21,23 +21,42 @@ export const getVisibleResults = createSelector(
 
 export const getVisibleValues = createSelector(
   [ getVisibleResults, getResults, getResultsFilter, getLatestFilter ],
-  (visibleResults, results, resultsFilter, /*latestFilter*/) => {
+  (visibleResults, results, resultsFilter, latestFilter) => {
     let visibleValues = {};
     for (const property in resultsFilter) {
       visibleValues[property] = {};
     }
-    // TODO: for latest property, filter all results, not visible results
-    for (const result of visibleResults) {
-      for (const property in resultsFilter) {
-        if (!has(visibleValues[property], result[property])) {
-          visibleValues[property][result[property]] = {
-            id: result[property],
-            prefLabel: result[property],
-            selected: resultsFilter[property].has(result[property]),
+    console.log(latestFilter)
+    console.log(resultsFilter[latestFilter])
+    if (latestFilter !== '') {
+      // for latest filter update, filter all results, not visible results
+      for (const result of results) {
+        if (!has(visibleValues[latestFilter], result[latestFilter])) {
+          visibleValues[latestFilter][result[latestFilter]] = {
+            id: result[latestFilter],
+            prefLabel: result[latestFilter],
+            selected: resultsFilter[latestFilter].has(result[latestFilter]),
             instanceCount: 1
           };
         } else {
-          visibleValues[property][result[property]].instanceCount += 1;
+          visibleValues[latestFilter][result[latestFilter]].instanceCount += 1;
+        }
+      }
+    }
+
+    for (const result of visibleResults) {
+      for (const property in resultsFilter) {
+        if (property !== latestFilter) {
+          if (!has(visibleValues[property], result[property])) {
+            visibleValues[property][result[property]] = {
+              id: result[property],
+              prefLabel: result[property],
+              selected: resultsFilter[property].has(result[property]),
+              instanceCount: 1
+            };
+          } else {
+            visibleValues[property][result[property]].instanceCount += 1;
+          }
         }
       }
     }
