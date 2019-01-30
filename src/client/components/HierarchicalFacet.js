@@ -71,6 +71,7 @@ class HierarchicalFacet extends Component {
   }
 
   componentDidUpdate = prevProps => {
+    //console.log(this.props.data)
     if (prevProps.data != this.props.data) {
       this.setState({
         treeData: this.props.data
@@ -109,8 +110,8 @@ class HierarchicalFacet extends Component {
     //let source = node.source == null ? '' : `(source: ${node.source.substring(node.source.lastIndexOf('/') + 1)}`;
     // console.log(node)
     //let count = node.totalInstanceCount == null || node.totalInstanceCount == 0 ? node.instanceCount : node.totalInstanceCount;
-    //return `${node.value} (${count})`;
-    return node.prefLabel;
+    return `${node.prefLabel} (${node.instanceCount})`;
+
   }
 
   generateLabelClass = (classes, node) => {
@@ -132,7 +133,7 @@ class HierarchicalFacet extends Component {
   render() {
     const { classes } = this.props;
     const { searchString, searchFocusIndex, searchFoundCount } = this.state;
-    // console.log(this.state.treeData)
+    //console.log(this.state.treeData)
 
     // Case insensitive search of `node.title`
     const customSearchMethod = ({ node, searchQuery }) =>

@@ -1,9 +1,10 @@
 import { createSelector } from 'reselect';
-import _ from 'lodash';
+import { orderBy, has } from 'lodash';
 
 // https://redux.js.org/recipes/computing-derived-data
 
 const getResultsFilter = (state) => state.resultsFilter;
+const getLatestFilter = (state) => state.latestFilter;
 const getResults = (state) => state.results;
 const getSortBy = (state) => state.sortBy;
 const getSortDirection = (state) => state.sortDirection;
@@ -14,7 +15,33 @@ export const getVisibleResults = createSelector(
     if (activeFilters(resultsFilter)) {
       results = results.filter(filterVisibleResult(resultsFilter));
     }
-    return _.orderBy(results, sortBy, sortDirection);
+    return orderBy(results, sortBy, sortDirection);
+  }
+);
+
+export const getVisibleValues = createSelector(
+  [ getVisibleResults, getResults, getResultsFilter, getLatestFilter ],
+  (visibleResults, results, resultsFilter, /*latestFilter*/) => {
+    let visibleValues = {};
+    for (const property in resultsFilter) {
+      visibleValues[property] = {};
+    }
+    // TODO: for latest property, filter all results, not visible results
+    for (const result of visibleResults) {
+      for (const property in resultsFilter) {
+        if (!has(visibleValues[property], result[property])) {
+          visibleValues[property][result[property]] = {
+            id: result[property],
+            prefLabel: result[property],
+            selected: resultsFilter[property].has(result[property]),
+            instanceCount: 1
+          };
+        } else {
+          visibleValues[property][result[property]].instanceCount += 1;
+        }
+      }
+    }
+    return visibleValues;
   }
 );
 
@@ -36,40 +63,3 @@ const activeFilters = resultsFilter => {
   }
   return false;
 };
-
-export const getVisibleValues = createSelector(
-  [ getResults, getResultsFilter ],
-  (visibleResults, resultsFilter) => {
-    let prefLabel = [];
-    let modifier = [];
-    let basicElement = [];
-    let typeLabel = [];
-    let broaderTypeLabel = [];
-    let broaderAreaLabel = [];
-    let collector = [];
-    let collectionYear = [];
-    let source = [];
-    for (const result of visibleResults) {
-      prefLabel.push({ prefLabel: result.prefLabel, selected: resultsFilter.prefLabel.has(result.prefLabel) });
-      modifier.push({ value: result.modifier, selected: !resultsFilter.modifier.has(result.modifier) });
-      basicElement.push({ value: result.basicElement, selected: !resultsFilter.basicElement.has(result.basicElement) });
-      typeLabel.push({ value: result.typeLabel, selected: !resultsFilter.typeLabel.has(result.typeLabel) });
-      broaderTypeLabel.push({ value: result.broaderTypeLabel, selected: !resultsFilter.broaderTypeLabel.has(result.broaderTypeLabel) });
-      broaderAreaLabel.push({ value: result.broaderAreaLabel, selected: !resultsFilter.broaderAreaLabel.has(result.broaderAreaLabel) });
-      collector.push({ value: result.collector, selected: !resultsFilter.collector.has(result.collector) });
-      collectionYear.push({ value: result.collectionYear, selected: !resultsFilter.collectionYear.has(result.collectionYear) });
-      source.push({ value: result.source, selected: !resultsFilter.source.has(result.source) });
-    }
-    return {
-      prefLabel: _.sortBy(_.uniqBy(prefLabel, 'prefLabel'), 'prefLabel'),
-      modifier: _.sortBy(_.uniqBy(modifier, 'value'), 'value'),
-      basicElement: _.sortBy(_.uniqBy(basicElement, 'value'), 'value'),
-      typeLabel: _.sortBy(_.uniqBy(typeLabel, 'value'), 'value'),
-      broaderTypeLabel: _.sortBy(_.uniqBy(broaderTypeLabel, 'value'), 'value'),
-      broaderAreaLabel:  _.sortBy(_.uniqBy(broaderAreaLabel, 'value'), 'value'),
-      collector: _.sortBy(_.uniqBy(collector, 'value'), 'value'),
-      collectionYear: _.sortBy(_.uniqBy(collectionYear, 'value'), 'value'),
-      source:  _.sortBy(_.uniqBy(source, 'value'), 'value'),
-    };
-  }
-);

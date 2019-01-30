@@ -52,16 +52,17 @@ export const INITIAL_STATE = {
   fetchingSuggestions: false,
   results: [],
   //results: sampleResults,
+  latestFilter: '',
   resultsFilter: {
-    'prefLabel': new Set(),
-    'modifier': new Set(),
-    'basicElement': new Set(),
-    'typeLabel': new Set(),
-    'broaderTypeLabel': new Set(),
-    'broaderAreaLabel': new Set(),
-    'collector': new Set(),
-    'collectionYear': new Set(),
-    'source': new Set(),
+    prefLabel: new Set(),
+    modifier: new Set(),
+    basicElement: new Set(),
+    typeLabel: new Set(),
+    broaderTypeLabel: new Set(),
+    broaderAreaLabel: new Set(),
+    collector: new Set(),
+    collectionYear: new Set(),
+    source: new Set(),
   },
   sortBy: 'broaderAreaLabel',
   sortDirection: 'asc',
@@ -145,7 +146,10 @@ const updateResultsFilter = (state, action) => {
     nSet.add(value);
   }
   const newFilter = updateObject(state.resultsFilter, { [property]: nSet });
-  return updateObject(state, { resultsFilter: newFilter });
+  return updateObject(state, {
+    resultsFilter: newFilter,
+    latestFilter: property
+  });
 };
 
 const updateObject = (oldObject, newValues) => {
