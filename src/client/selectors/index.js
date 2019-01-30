@@ -5,9 +5,10 @@ import { orderBy, has } from 'lodash';
 
 const getResultsFilter = state => state.resultsFilter;
 const getLatestFilter = state => state.latestFilter;
+const getLatestFilterValues = state => state.latestFilterValues;
 const getResults = state => state.results;
 const getSortBy = state => state.sortBy;
-const getSortDirection = (state) => state.sortDirection;
+const getSortDirection = state => state.sortDirection;
 
 export const getVisibleResults = createSelector(
   [ getResults, getResultsFilter, getSortBy, getSortDirection ],
@@ -20,30 +21,23 @@ export const getVisibleResults = createSelector(
 );
 
 export const getVisibleValues = createSelector(
-  [ getVisibleResults, getResults, getResultsFilter, getLatestFilter ],
-  (visibleResults, results, resultsFilter, latestFilter) => {
+  [ getVisibleResults, getResults, getResultsFilter, getLatestFilter, getLatestFilterValues ],
+  (visibleResults, results, resultsFilter, latestFilter, latestFilterValues) => {
     let visibleValues = {};
     for (const property in resultsFilter) {
       visibleValues[property] = {};
     }
-    console.log(latestFilter)
-    console.log(resultsFilter[latestFilter])
+
+    // First handle the filter that was updated
     if (latestFilter !== '') {
-      // for latest filter update, filter all results, not visible results
-      for (const result of results) {
-        if (!has(visibleValues[latestFilter], result[latestFilter])) {
-          visibleValues[latestFilter][result[latestFilter]] = {
-            id: result[latestFilter],
-            prefLabel: result[latestFilter],
-            selected: resultsFilter[latestFilter].has(result[latestFilter]),
-            instanceCount: 1
-          };
-        } else {
-          visibleValues[latestFilter][result[latestFilter]].instanceCount += 1;
-        }
-      }
+      latestFilterValues = latestFilterValues.map(value => ({
+        ...value,
+        selected: resultsFilter[latestFilter].has(value.id)
+      }));
+      visibleValues[latestFilter] = latestFilterValues;
     }
 
+    // Then handle all the remainder filters
     for (const result of visibleResults) {
       for (const property in resultsFilter) {
         if (property !== latestFilter) {
@@ -60,6 +54,7 @@ export const getVisibleValues = createSelector(
         }
       }
     }
+
     return visibleValues;
   }
 );

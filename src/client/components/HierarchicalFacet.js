@@ -98,7 +98,8 @@ class HierarchicalFacet extends Component {
     //console.log(treeObj)
     this.props.updateFilter({
       property: this.props.property,
-      value: treeObj.node.prefLabel
+      value: treeObj.node.prefLabel,
+      latestValues: this.props.data
     });
   };
 

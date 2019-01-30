@@ -53,6 +53,7 @@ export const INITIAL_STATE = {
   results: [],
   //results: sampleResults,
   latestFilter: '',
+  latestFilterValues: [],
   resultsFilter: {
     prefLabel: new Set(),
     modifier: new Set(),
@@ -135,7 +136,7 @@ const search = (state = INITIAL_STATE, action) => {
 };
 
 const updateResultsFilter = (state, action) => {
-  const { property, value } = action.filter;
+  const { property, value, latestValues } = action.filterObj;
   //console.log(property)
   //console.log(value)
   let nSet = state.resultsFilter[property];
@@ -148,7 +149,8 @@ const updateResultsFilter = (state, action) => {
   const newFilter = updateObject(state.resultsFilter, { [property]: nSet });
   return updateObject(state, {
     resultsFilter: newFilter,
-    latestFilter: property
+    latestFilter: property,
+    latestFilterValues: latestValues
   });
 };
 

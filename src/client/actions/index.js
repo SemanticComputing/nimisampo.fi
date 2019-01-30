@@ -22,22 +22,22 @@ export const GET_GEOJSON = 'GET_GEOJSON';
 export const UPDATE_GEOJSON = 'UPDATE_GEOJSON';
 export const GET_GEOJSON_FAILED = 'GET_GEOJSON_FAILED';
 
-export const updateQuery = (query) => ({
+export const updateQuery = query => ({
   type: UPDATE_QUERY,
   query
 });
 
-export const toggleDataset = (dataset) => ({
+export const toggleDataset = dataset => ({
   type: TOGGLE_DATASET,
   dataset
 });
 
-export const bounceMarker = (uri) => ({
+export const bounceMarker = uri => ({
   type: BOUNCE_MARKER,
   uri
 });
 
-export const openMarkerPopup = (uri) => ({
+export const openMarkerPopup = uri => ({
   type: OPEN_MARKER_POPUP,
   uri
 });
@@ -54,12 +54,12 @@ export const fetchSuggestions = () => ({
   type: FETCH_SUGGESTIONS,
 });
 
-export const fetchSuggestionsFailed = (error) => ({
+export const fetchSuggestionsFailed = error => ({
   type: FETCH_SUGGESTIONS_FAILED,
   error
 });
 
-export const fetchResultsFailed = (error) => ({
+export const fetchResultsFailed = error => ({
   type: FETCH_RESULTS_FAILED,
   error
 });
@@ -86,12 +86,12 @@ export const clearResults = () => ({
   type: CLEAR_RESULTS,
 });
 
-export const updateResultsFilter = (filter) => ({
+export const updateResultsFilter = filterObj => ({
   type: UPDATE_RESULTS_FILTER,
-  filter
+  filterObj
 });
 
-export const sortResults = (options) => ({
+export const sortResults = options => ({
   type: SORT_RESULTS,
   options
 });
@@ -100,32 +100,32 @@ export const clearError = () => ({
   type: CLEAR_ERROR,
 });
 
-export const updateLanguage = (language) => ({
+export const updateLanguage = language => ({
   type: UPDATE_LANGUAGE,
   language
 });
 
-export const updateResultFormat = (resultFormat) => ({
+export const updateResultFormat = resultFormat => ({
   type: UPDATE_RESULT_FORMAT,
   resultFormat
 });
 
-export const updateMapMode = (mapMode) => ({
+export const updateMapMode = mapMode => ({
   type: UPDATE_MAP_MODE,
   mapMode
 });
 
-export const getGeoJSON = (layerIDs) => ({
+export const getGeoJSON = layerIDs => ({
   type: GET_GEOJSON,
   layerIDs
 });
 
-export const updateGeoJSON = (geoJSON) => ({
+export const updateGeoJSON = geoJSON => ({
   type: UPDATE_GEOJSON,
   geoJSON
 });
 
-export const getGeoJSONFailed = (error) => ({
+export const getGeoJSONFailed = error => ({
   type: GET_GEOJSON_FAILED,
   error
 });
