@@ -24,7 +24,7 @@ const styles = theme => ({
     marginBottom: theme.spacing.unit,
   },
   facetContainerLast: {
-    marginBottom: 2,
+    marginBottom: 4,
   },
   facetSearchFieldContainer: {
     // height: 345,
@@ -87,7 +87,7 @@ let FacetBar = props => {
             </div>
           </Paper>
 
-          <Paper className={classes.facetContainerLast}>
+          <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Type (PNR)'
               hierarchical={true}
@@ -96,6 +96,21 @@ let FacetBar = props => {
               <HierarchicalFacet
                 data={Object.values(props.resultValues.broaderTypeLabel)}
                 property='broaderTypeLabel'
+                searchField={true}
+                updateFilter={props.updateResultsFilter}
+              />
+            </div>
+          </Paper>
+
+          <Paper className={classes.facetContainerLast}>
+            <FacetHeader
+              label='Area'
+              hierarchical={true}
+            />
+            <div className={classes.facetValuesContainerTen}>
+              <HierarchicalFacet
+                data={Object.values(props.resultValues.broaderAreaLabel)}
+                property='broaderAreaLabel'
                 searchField={true}
                 updateFilter={props.updateResultsFilter}
               />

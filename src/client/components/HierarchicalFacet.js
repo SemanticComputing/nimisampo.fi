@@ -135,6 +135,7 @@ class HierarchicalFacet extends Component {
     const { classes } = this.props;
     const { searchString, searchFocusIndex, searchFoundCount } = this.state;
     //console.log(this.state.treeData)
+    // console.log(this.props.data.length)
 
     // Case insensitive search of `node.title`
     const customSearchMethod = ({ node, searchQuery }) =>
@@ -156,6 +157,8 @@ class HierarchicalFacet extends Component {
             ? (searchFocusIndex + 1) % searchFoundCount
             : 0,
       });
+
+      //{/* disabled={this.props.data.length < 2 ? true : false} */}
 
     return (
       <React.Fragment>
@@ -231,6 +234,7 @@ class HierarchicalFacet extends Component {
                         <Checkbox
                           className={classes.checkbox}
                           checked={n.node.selected}
+
                           onChange={this.handleCheckboxChange(n)}
                           value={n.node.prefLabel}
                           color="primary"

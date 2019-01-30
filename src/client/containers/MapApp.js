@@ -14,8 +14,7 @@ import FacetBar from '../components/FacetBar';
 import Places from '../components/Places';
 
 import {
-  getVisibleResults,
-  getVisibleValues
+  filterResults
 } from '../selectors';
 
 import {
@@ -151,13 +150,14 @@ let MapApp = (props) => {
 };
 
 const mapStateToProps = (state) => {
+  const { results, resultValues } = filterResults(state.search);
   return {
     options: state.options,
     browser: state.browser,
     search: state.search,
     map: state.map,
-    results: getVisibleResults(state.search),
-    resultValues: getVisibleValues(state.search),
+    results: results,
+    resultValues: resultValues,
   };
 };
 

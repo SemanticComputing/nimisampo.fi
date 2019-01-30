@@ -10,25 +10,30 @@ const getResults = state => state.results;
 const getSortBy = state => state.sortBy;
 const getSortDirection = state => state.sortDirection;
 
-export const getVisibleResults = createSelector(
-  [ getResults, getResultsFilter, getSortBy, getSortDirection ],
-  (results, resultsFilter, sortBy, sortDirection) => {
-    if (activeFilters(resultsFilter)) {
-      results = results.filter(filterVisibleResult(resultsFilter));
-    }
-    return orderBy(results, sortBy, sortDirection);
-  }
-);
+export const filterResults = createSelector(
+  [getResults, getResultsFilter, getLatestFilter, getLatestFilterValues, getSortBy, getSortDirection],
+  (results, resultsFilter, latestFilter, latestFilterValues, sortBy, sortDirection) => {
 
-export const getVisibleValues = createSelector(
-  [ getVisibleResults, getResults, getResultsFilter, getLatestFilter, getLatestFilterValues ],
-  (visibleResults, results, resultsFilter, latestFilter, latestFilterValues) => {
+    // Apply result filters
+    Object.entries(resultsFilter).forEach(([key, value]) => {
+      if (value.size === 0) {
+        return;
+      } else {
+        results = results.filter(result => {
+          if (value.has(result[key])) {
+            return true;
+          }
+        });
+      }
+    });
+
+    results = orderBy(results, sortBy, sortDirection);
+
+    // Calculate result values, first handle the filter that was updated
     let visibleValues = {};
     for (const property in resultsFilter) {
       visibleValues[property] = {};
     }
-
-    // First handle the filter that was updated
     if (latestFilter !== '') {
       latestFilterValues = latestFilterValues.map(value => ({
         ...value,
@@ -38,7 +43,7 @@ export const getVisibleValues = createSelector(
     }
 
     // Then handle all the remainder filters
-    for (const result of visibleResults) {
+    for (const result of results) {
       for (const property in resultsFilter) {
         if (property !== latestFilter) {
           if (!has(visibleValues[property], result[property])) {
@@ -55,25 +60,9 @@ export const getVisibleValues = createSelector(
       }
     }
 
-    return visibleValues;
+    return {
+      results: results,
+      resultValues: visibleValues
+    };
   }
 );
-
-const filterVisibleResult = resultsFilter => resultObj => {
-  for (const property in resultsFilter) {
-    const filterValues = resultsFilter[property];
-    if (filterValues.has(resultObj[property])) {
-      return true;
-    }
-  }
-  return false;
-};
-
-const activeFilters = resultsFilter => {
-  for (const property in resultsFilter) {
-    if (resultsFilter[property].size != 0) {
-      return true;
-    }
-  }
-  return false;
-};
