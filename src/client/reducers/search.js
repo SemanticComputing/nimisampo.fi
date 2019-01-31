@@ -28,24 +28,24 @@ export const INITIAL_STATE = {
       'timePeriod': 'contemporary',
       'selected': true
     },
-    'tgn': {
-      'title': 'The Getty Thesaurus of Geographic Names',
-      'shortTitle': 'TGN',
-      'timePeriod': '?',
-      'selected': false
-    },
     'warsa_karelian_places': {
       'title': 'Karelian map names',
       'shortTitle': 'KMN',
       'timePeriod': '1922-1944',
       'selected': false
     },
-    'warsa_municipalities': {
-      'title': 'Finnish WW2 municipalities',
-      'shortTitle': 'FWM',
-      'timePeriod': '1939-1944',
+    'tgn': {
+      'title': 'The Getty Thesaurus of Geographic Names',
+      'shortTitle': 'TGN',
+      'timePeriod': '?',
       'selected': false
     },
+    // 'warsa_municipalities': {
+    //   'title': 'Finnish WW2 municipalities',
+    //   'shortTitle': 'FWM',
+    //   'timePeriod': '1939-1944',
+    //   'selected': false
+    // },
   },
   suggestions: [],
   suggestionsQuery: '',

@@ -6,6 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import FacetHeader from './FacetHeader';
 import SearchField from './SearchField';
 import Typography from '@material-ui/core/Typography';
+import DatasetSelector from '../components/DatasetSelector';
 
 
 const styles = theme => ({
@@ -56,6 +57,20 @@ let FacetBar = props => {
   return (
     <div className={classes.root}>
 
+
+      <Paper className={classes.facetContainer}>
+        <FacetHeader
+          label='Select data sources'
+          hierarchical={true}
+        />
+        <div className={classes.facetSearchFieldContainer}>
+          <DatasetSelector
+            search={props.search}
+            toggleDataset={props.toggleDataset}
+          />
+        </div>
+      </Paper>
+
       <Paper className={classes.facetContainer}>
         <div className={classes.facetSearchFieldContainer}>
           <SearchField
@@ -63,6 +78,7 @@ let FacetBar = props => {
             fetchResults={props.fetchResults}
             updateQuery={props.updateQuery}
             clearResults={props.clearResults}
+            datasets={props.search.datasets}
           />
           <div className={classes.resultTextContainer}>
             <Typography variant="h6">{hasResults ? `${props.search.results.length} results` : ''}</Typography>
@@ -168,6 +184,7 @@ FacetBar.propTypes = {
   resultValues: PropTypes.object.isRequired,
   fetchResults: PropTypes.func.isRequired,
   updateResultsFilter: PropTypes.func.isRequired,
+  toggleDataset: PropTypes.func.isRequired,
   updateQuery: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired
 };

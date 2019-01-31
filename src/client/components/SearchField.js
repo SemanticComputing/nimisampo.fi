@@ -48,7 +48,13 @@ class SearchField extends React.Component {
   };
 
   handleClick = () => {
-    if (this.state.value != '') {
+    let hasDatasets = false;
+    Object.values(this.props.datasets).forEach(value => {
+      if (value.selected) {
+        hasDatasets = true;
+      }
+    });
+    if (this.state.value != '' && hasDatasets) {
       this.props.updateQuery(this.state.value);
       this.props.clearResults();
       this.props.fetchResults();
@@ -106,7 +112,8 @@ SearchField.propTypes = {
   search: PropTypes.object.isRequired,
   fetchResults: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
-  updateQuery: PropTypes.func.isRequired
+  updateQuery: PropTypes.func.isRequired,
+  datasets: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(SearchField);

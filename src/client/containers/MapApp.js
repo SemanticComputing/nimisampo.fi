@@ -95,20 +95,13 @@ const styles = theme => ({
 });
 
 let MapApp = (props) => {
-  const { classes, options, search, results, resultValues } = props;
+  const { classes, search, results, resultValues } = props;
   //error,
   return (
     <div className={classes.root}>
       <div className={classes.appFrame}>
         <TopBar
           results={results}
-          oneColumnView={false}
-          mapMode={options.mapMode}
-          resultFormat={options.resultFormat}
-          updateMapMode={props.updateMapMode}
-          updateResultFormat={props.updateResultFormat}
-          datasets={search.datasets}
-          toggleDataset={props.toggleDataset}
           clearResults={props.clearResults}
         />
         <Route
@@ -127,6 +120,7 @@ let MapApp = (props) => {
                   updateResultsFilter={props.updateResultsFilter}
                   updateQuery={props.updateQuery}
                   clearResults={props.clearResults}
+                  toggleDataset={props.toggleDataset}
                 />
               </Grid>
               <Grid item sm={12} md={9} className={classes.resultsContainer}>
