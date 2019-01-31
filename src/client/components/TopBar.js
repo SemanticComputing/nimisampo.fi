@@ -4,6 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import NavTabs from '../components/NavTabs';
+import Button from '@material-ui/core/Button';
+import { Link } from 'react-router-dom';
 // import IconButton from '@material-ui/core/IconButton';
 // import Menu from '@material-ui/core/Menu';
 // import MenuIcon from '@material-ui/icons/Menu';
@@ -154,7 +156,15 @@ class TopBar extends React.Component {
     return (
       <AppBar position="absolute">
         <Toolbar className={classes.toolBar}>
-          <img className={classes.namesampoLogo} src={namesampoLogoEn} alt='NameSampo logo'/>
+          <Button
+            className={classes.appBarButton}
+            component={Link}
+            to='/'
+            onClick={() => this.props.clearResults()}
+          >
+            <img className={classes.namesampoLogo} src={namesampoLogoEn} alt='NameSampo logo'/>
+          </Button>
+
           {this.props.oneColumnView &&
             <div className={classes.navTabs}>
               <NavTabs
@@ -179,6 +189,7 @@ TopBar.propTypes = {
   updateMapMode: PropTypes.func.isRequired,
   datasets: PropTypes.object.isRequired,
   toggleDataset: PropTypes.func.isRequired,
+  clearResults: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(TopBar);

@@ -12,6 +12,7 @@ import TopBar from '../components/TopBar';
 import Footer from '../components/Footer';
 import FacetBar from '../components/FacetBar';
 import Places from '../components/Places';
+import Front from '../components/Front';
 
 import {
   filterResults
@@ -78,6 +79,18 @@ const styles = theme => ({
     height: '100%',
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+  },
+  frontContainerPaper: {
+    height: '100%',
+    //width: '100%',
+    display: 'flex',
+    //alignItems: 'center',
+    justifyContent: 'center',
+    //paddingTop: theme.spacing.unit * 5,
+    //paddingLeft: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   }
 });
 
@@ -96,6 +109,7 @@ let MapApp = (props) => {
           updateResultFormat={props.updateResultFormat}
           datasets={search.datasets}
           toggleDataset={props.toggleDataset}
+          clearResults={props.clearResults}
         />
         <Route
           exact path='/'
@@ -116,6 +130,12 @@ let MapApp = (props) => {
                 />
               </Grid>
               <Grid item sm={12} md={9} className={classes.resultsContainer}>
+                {props.results.length == 0 && !props.search.fetchingResults &&
+                  <Paper className={classes.frontContainerPaper}>
+                    <Front />
+                  </Paper>
+                }
+                {props.results.length > 0 &&
                 <Paper className={classes.resultsContainerPaper}>
                   <Places
                     results={results}
@@ -139,6 +159,7 @@ let MapApp = (props) => {
                     routeProps={routeProps}
                   />
                 </Paper>
+                }
               </Grid>
             </Grid>
           }

@@ -155,6 +155,7 @@ class LeafletMap extends React.Component {
       //'Western Front July 1917 (MapWarper)': westernFront
     };
 
+    //https://plnkr.co/edit/Se17LxLjqGg6sJTYNCoq?p=preview
     this.layerControl = L.control.layers(
       baseMaps,
       overlayMaps,
