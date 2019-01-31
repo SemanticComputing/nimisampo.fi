@@ -29,6 +29,8 @@ export const filterResults = createSelector(
 
     results = orderBy(results, sortBy, sortDirection);
 
+    //console.log(latestFilterValues)
+
     // Calculate result values, first handle the filter that was updated
     let visibleValues = {};
     for (const property in resultsFilter) {
@@ -39,6 +41,7 @@ export const filterResults = createSelector(
         ...value,
         selected: resultsFilter[latestFilter].has(value.id)
       }));
+      visibleValues[latestFilter] = latestFilterValues;
     }
 
     // Then handle all the remainder filters
