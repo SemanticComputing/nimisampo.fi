@@ -26,7 +26,7 @@ export const INITIAL_STATE = {
       'title': 'Finnish Geographic Names Registry',
       'shortTitle': 'FGN',
       'timePeriod': 'contemporary',
-      'selected': false
+      'selected': true
     },
     'tgn': {
       'title': 'The Getty Thesaurus of Geographic Names',

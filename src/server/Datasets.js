@@ -145,7 +145,7 @@ module.exports = {
     'title': 'Finnish Geographic Names Registry (contemporary)',
     'shortTitle': 'FGN',
     'timePeriod': 'contemporary',
-    'endpoint': 'http://ldf.fi/pnr/sparql',
+    'endpoint': 'http://ldf.fi/pnr-keyword-index/sparql',
     'simpleSuggestionQuery': `
       PREFIX text: <http://jena.apache.org/text#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -170,14 +170,12 @@ module.exports = {
       PREFIX sf: <http://ldf.fi/functions#>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
       PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
-      SELECT ?s ?preflabel ?broaderTypeLabel ?typeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
+      SELECT ?s ?prefLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
         ?s text:query (skos:prefLabel '<QUERYTERM>' 100000) .
-        #?s skos:prefLabel ?prefLabel .
         ?s sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?prefLabel) .
         ?s a ?type .
         ?type sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderTypeLabel) .
-        BIND("-" as ?typeLabel)
         ?s wgs84:lat ?lat .
         ?s wgs84:long ?long .
         OPTIONAL {
@@ -279,7 +277,6 @@ module.exports = {
       SELECT ?s ?prefLabel ?typeLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector ?collectionYear ?markerColor
       WHERE {
         ?s text:query (skos:prefLabel '<QUERYTERM>' 100000) .
-        ?s a hipla-schema:Place .
         ?s skos:prefLabel ?prefLabel .
         ?s na-schema:municipality ?broaderAreaLabel .
         BIND("NA" AS ?source)
