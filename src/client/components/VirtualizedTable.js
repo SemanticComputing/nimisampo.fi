@@ -192,13 +192,6 @@ class VirtualizedTable extends React.PureComponent {
                     width={columnWidth}
                   />
                   <Column
-                    label="Base"
-                    cellDataGetter={({rowData}) => rowData.basicElement}
-                    dataKey="basicElement"
-                    headerRenderer={headerRenderer}
-                    width={columnWidth}
-                  />
-                  <Column
                     label="Modifier"
                     cellDataGetter={({rowData}) => rowData.modifier}
                     dataKey="modifier"
@@ -206,12 +199,20 @@ class VirtualizedTable extends React.PureComponent {
                     width={columnWidth + 10}
                   />
                   <Column
+                    label="Base"
+                    cellDataGetter={({rowData}) => rowData.basicElement}
+                    dataKey="basicElement"
+                    headerRenderer={headerRenderer}
+                    width={columnWidth}
+                  />
+                  { /*
+                  <Column
                     label="Collector"
                     cellDataGetter={({rowData}) => rowData.collector}
                     dataKey="collector"
                     headerRenderer={headerRenderer}
                     width={columnWidth}
-                  />
+                  /> */}
                   <Column
                     label="Year"
                     cellDataGetter={({rowData}) => rowData.collectionYear}
