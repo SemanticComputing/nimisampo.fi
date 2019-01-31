@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { has } from 'lodash';
 import L from 'leaflet';
 import 'leaflet-fullscreen/dist/fullscreen.png';
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';
@@ -279,7 +280,7 @@ class LeafletMap extends React.Component {
       return null;
     } else {
       const latLng = [+lat, +long];
-      if (result.typeLabel == '-') {
+      if (!has(result, 'typeLabel') || result.typeLabel == '-') {
         result.typeLabel = result.broaderTypeLabel;
       }
       const marker = L.marker(latLng, {icon: icon})
