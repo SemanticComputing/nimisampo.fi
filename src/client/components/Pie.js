@@ -11,6 +11,7 @@ import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import ResultInfo from './ResultInfo';
 
 const styles = theme => ({
   root: {
@@ -66,8 +67,8 @@ const combineSmallGroups = (dataArray) => {
 let Pie = (props) => {
   const { classes, data, groupBy } = props;
   const resultCount = data.length;
-  if (resultCount < 1) {
-    return '';
+  if (resultCount < 10) {
+    return <ResultInfo message="Need over 10 results to create a distribution." />;
   }
   const grouped = _.groupBy(data, groupBy);
   let dataArray = [];
@@ -82,7 +83,7 @@ let Pie = (props) => {
   dataArray = _.orderBy(dataArray, 'y', 'desc');
   dataArray = combineSmallGroups(dataArray);
   const legendArray = dataArray.map(group => ({ name: group.x.toLowerCase() + ' (' + group.y + ')' }));
-  const legendHeigth = legendArray.length * 33;
+  const legendHeigth = legendArray.length * 35;
   // const pieTitle = resultCount + ' results for the query "' + query + '"';
   // <VictoryLabel
   //   style={{
@@ -110,7 +111,7 @@ let Pie = (props) => {
           <Paper className={classes.legendPaper}>
             <VictoryLegend
               height={legendHeigth}
-              title={'Place type (NA)'}
+              title={props.groupByLabel}
               colorScale={'qualitative'}
               data={legendArray}
               style={{
@@ -120,7 +121,7 @@ let Pie = (props) => {
               containerComponent={
                 <VictoryContainer
                   responsive={false}
-                  width={200}
+                  width={275}
                 />
               }
             />
@@ -129,12 +130,14 @@ let Pie = (props) => {
       </Grid>
     </div>
   );
+
 };
 
 Pie.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.array.isRequired,
   groupBy: PropTypes.string.isRequired,
+  groupByLabel: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired,
 };
 

@@ -86,8 +86,13 @@ let Places = props => {
       />
       <Route
         path={'/app/statistics'}
-        render={() =>
-          <Pie data={props.results} groupBy={props.search.groupBy} query={props.search.query} />
+        render={() => 
+          <Pie
+            data={props.results}
+            groupBy={props.search.groupBy}
+            groupByLabel={props.search.groupByLabel}
+            query={props.search.query}
+          />
         }
       />
       <Route
