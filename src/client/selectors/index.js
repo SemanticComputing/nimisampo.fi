@@ -29,8 +29,6 @@ export const filterResults = createSelector(
 
     results = orderBy(results, sortBy, sortDirection);
 
-    //console.log(latestFilterValues)
-
     // Calculate result values, first handle the filter that was updated
     let visibleValues = {};
     for (const property in resultsFilter) {
@@ -47,7 +45,7 @@ export const filterResults = createSelector(
     // Then handle all the remainder filters
     for (const result of results) {
       for (const property in resultsFilter) {
-        if (property !== latestFilter) {
+        if (property !== latestFilter && has(result, property)) {
           if (!has(visibleValues[property], result[property])) {
             visibleValues[property][result[property]] = {
               id: result[property],
@@ -66,6 +64,8 @@ export const filterResults = createSelector(
       visibleValues[property] = orderBy(visibleValues[property], 'prefLabel');
     }
 
+    //console.log(results)
+    //console.log(visibleValues)
     return {
       results: results,
       resultValues: visibleValues
