@@ -17,25 +17,29 @@ export const INITIAL_STATE = {
   query: '',
   datasets: {
     'kotus': {
-      'title': 'Names Archive of the Institute for the Languages of Finland',
+      'titleEn': 'Names Archive of the Institute for the Languages of Finland',
+      'titleFi': 'Kotimaisten kielten keskuksen Nimiarkisto (NA)',
       'shortTitle': 'DNA',
       'timePeriod': '1900s',
       'selected': true
     },
     'pnr': {
-      'title': 'Finnish Geographic Names Registry',
-      'shortTitle': 'FGN',
+      'titleEn': 'Finnish Geographic Names Registry',
+      'titleFi': 'Maanmittauslaitoksen paikannimirekisteri (PNR)',
+      'shortTitle': 'PNR',
       'timePeriod': 'contemporary',
       'selected': true
     },
     'warsa_karelian_places': {
-      'title': 'Karelian map names',
-      'shortTitle': 'KMN',
+      'titleEn': 'Karelian map names',
+      'titleFi': 'Karjalan karttanimet (KK)',
+      'shortTitle': 'KK',
       'timePeriod': '1922-1944',
       'selected': false
     },
     'tgn': {
-      'title': 'The Getty Thesaurus of Geographic Names',
+      'titleEn': 'The Getty Thesaurus of Geographic Names (TGN)',
+      'titleFi': 'The Getty Thesaurus of Geographic Names (TGN)',
       'shortTitle': 'TGN',
       'timePeriod': '?',
       'selected': false
@@ -68,7 +72,7 @@ export const INITIAL_STATE = {
   sortBy: 'broaderAreaLabel',
   sortDirection: 'asc',
   groupBy: 'broaderTypeLabel',
-  groupByLabel: 'Type',
+  groupByLabel: 'Paikanlaji',
   resultsQuery: '',
   fetchingResults: false,
 };

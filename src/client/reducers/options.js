@@ -4,14 +4,67 @@ import {
   UPDATE_MAP_MODE,
 } from '../actions';
 
-const DEFAULT_LANGUAGE = 'en';
+const DEFAULT_LANGUAGE = 'fi';
 const DEFAULT_RESULT_FORMAT = 'table';
 const DEFAULT_MAP_MODE = 'cluster';
 
 export const INITIAL_STATE = {
   language: DEFAULT_LANGUAGE,
   resultFormat: DEFAULT_RESULT_FORMAT,
-  mapMode: DEFAULT_MAP_MODE
+  mapMode: DEFAULT_MAP_MODE,
+  strings: {
+    en: {
+      nameSampo: 'NameSampo',
+      nameSampoDesc: `A web application for searching, analyzing, and
+      visualizing geospatial data.`,
+      selectDataSources: 'Select data sources',
+      results: 'results',
+      searchPlaceNames: 'Search place names',
+      name: 'Name',
+      type: 'Type',
+      area: 'Area',
+      modifier: 'Modifier',
+      base: 'Base',
+      year: 'Year',
+      table: 'table',
+      clusteredMap: 'clustered map',
+      markerMap: 'marker map',
+      heatmap: 'heatmap',
+      statistics: 'statistics',
+      download: 'download',
+      source: 'Source',
+      resultsAsCSV: 'results as csv table'
+    },
+    fi: {
+      nameSampo: 'Nimisampo: nimistön tutkijan työpöytä',
+      nameSampoDesc1: `Nimisampo on kaikille avoin verkkopalvelu
+      suomalaisesta paikannimistöstä kiinnostuneiden tutkijoiden ja
+      suuren yleisön käytettäväksi. Nimistöä voi tarkastella kartoilla,
+      datana ja tilastollisesti. Nykyisten karttapohjien ohella voi käyttää
+      myös historiallisia luovutetun Karjalan karttoja ja 1900-luvun vaihteen
+      venäläisiä Senaatin kartastoja eli Venäjän armeijan 1800–1900-luvulla
+      laatimia Etelä-Suomen karttoja.`,
+      nameSampoDesc2: `Aloita haku valitsemalla vasemmalta lähdeaineisto ja
+      syöttämällä paikannimi.`,
+      selectDataSources: 'Valitse lähdeaineistot',
+      results: 'hakutulosta',
+      searchPlaceNames: 'Hae paikannnimellä',
+      name: 'Nimi',
+      type: 'Paikanlaji',
+      area: 'Alue',
+      modifier: 'Määriteosa',
+      base: 'Perusosa',
+      year: 'Keruuvuosi',
+      table: 'taulukko',
+      clusteredMap: 'klusteroitu kartta',
+      markerMap: 'kartta',
+      heatmap: 'lämpökartta',
+      statistics: 'tilastot',
+      download: 'lataus',
+      source: 'Lähde',
+      resultsAsCSV: 'lataa hakutulokset csv-taulukkona'
+    }
+  }
 };
 
 const options = (state = INITIAL_STATE, action) => {

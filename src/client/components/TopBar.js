@@ -6,7 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import namesampoLogoEn from '../img/logos/namesampo.png';
-//import namesampoLogoFi from '../img/logos/nimisampo-logo.png';
+import namesampoLogoFi from '../img/logos/nimisampo-logo.png';
 
 const styles = theme => ({
   toolBar: {
@@ -64,7 +64,7 @@ class TopBar extends React.Component {
             to='/'
             onClick={() => this.props.clearResults()}
           >
-            <img className={classes.namesampoLogo} src={namesampoLogoEn} alt='NameSampo logo'/>
+            <img className={classes.namesampoLogo} src={this.props.language == 'fi' ? namesampoLogoFi : namesampoLogoEn} alt='NameSampo logo'/>
           </Button>
         </Toolbar>
       </AppBar>
@@ -74,7 +74,8 @@ class TopBar extends React.Component {
 
 TopBar.propTypes = {
   classes: PropTypes.object.isRequired,
-  clearResults: PropTypes.func.isRequired
+  clearResults: PropTypes.func.isRequired,
+  language: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(TopBar);

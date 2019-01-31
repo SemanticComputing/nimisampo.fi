@@ -1,7 +1,7 @@
 module.exports = {
   'warsa_karelian_places': {
     'title': 'Karelian map names',
-    'shortTitle': 'KMN',
+    'shortTitle': 'KK',
     'timePeriod': '1922-1944',
     'endpoint': 'http://ldf.fi/warsa/sparql',
     // 'suggestionQuery': `
@@ -57,7 +57,7 @@ module.exports = {
         ?s skos:prefLabel ?prefLabel .
         ?s a/skos:prefLabel ?broaderTypeLabel .
         ?s gs:sfWithin/skos:prefLabel ?broaderAreaLabel .
-        BIND("KMN" AS ?source)
+        BIND("KK" AS ?source)
         BIND("blue" AS ?markerColor)
         OPTIONAL {
           ?s wgs84:lat ?lat .

@@ -21,6 +21,7 @@ const styles = theme => ({
     paddingLeft: theme.spacing.unit,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+    height: 48
   },
   facetContainer: {
     marginBottom: theme.spacing.unit,
@@ -119,9 +120,9 @@ class FacetHeader extends React.Component {
               </Menu>
             </React.Fragment>
           }
-          <IconButton disabled aria-label="Expand">
+          {/*<IconButton disabled aria-label="Expand">
             <ExpandLess />
-          </IconButton>
+          </IconButton>*/}
         </div>
       </Paper>
     );

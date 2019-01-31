@@ -14,7 +14,7 @@ let Places = props => {
   //console.log(props.results)
   return (
     <React.Fragment>
-      <ViewTabs routeProps={props.routeProps} />
+      <ViewTabs routeProps={props.routeProps} strings={props.strings} />
       <Route
         exact path='/app'
         render={() => <Redirect to='/app/table' />}
@@ -31,6 +31,7 @@ let Places = props => {
             bounceMarker={props.bounceMarker}
             openMarkerPopup={props.openMarkerPopup}
             removeTempMarker={props.removeTempMarker}
+            strings={props.strings}
           />
         }
       />
@@ -47,6 +48,7 @@ let Places = props => {
             popupMarker={props.map.popupMarker}
             bouncingMarkerKey={props.map.bouncingMarkerKey}
             openPopupMarkerKey={props.map.openPopupMarkerKey}
+            strings={props.strings}
           />
         }
       />
@@ -67,6 +69,7 @@ let Places = props => {
                 popupMarker={props.map.popupMarker}
                 bouncingMarkerKey={props.map.bouncingMarkerKey}
                 openPopupMarkerKey={props.map.openPopupMarkerKey}
+                strings={props.strings}
               />
             );
           }
@@ -81,24 +84,26 @@ let Places = props => {
             loadingElement={<div style={{ height: `100%` }} />}
             containerElement={<div style={{ height: `calc(100% - 72px` }} />}
             mapElement={<div style={{ height: `100%` }} />}
+            strings={props.strings}
           />
         }
       />
       <Route
         path={'/app/statistics'}
-        render={() => 
+        render={() =>
           <Pie
             data={props.results}
             groupBy={props.search.groupBy}
             groupByLabel={props.search.groupByLabel}
             query={props.search.query}
+            strings={props.strings}
           />
         }
       />
       <Route
         path={'/app/download'}
         render={() =>
-          <CSVButton results={props.results} />
+          <CSVButton results={props.results} strings={props.strings} />
         }
       />
     </React.Fragment>
@@ -124,7 +129,8 @@ Places.propTypes = {
   updateResultFormat: PropTypes.func.isRequired,
   updateMapMode: PropTypes.func.isRequired,
   updateResultsFilter: PropTypes.func.isRequired,
-  routeProps: PropTypes.object.isRequired
+  routeProps: PropTypes.object.isRequired,
+  strings: PropTypes.object.isRequired
 };
 
 export default Places;

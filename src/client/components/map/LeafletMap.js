@@ -295,11 +295,12 @@ class LeafletMap extends React.Component {
   }
 
   createPopUpContent(result) {
+    const { strings } = this.props;
     const popUpTemplate = `
       <h3>{prefLabel}</h3>
-      <p>Type: {typeLabel}</p>
-      <p>Area: {broaderAreaLabel}</p>
-      <p>Source: <a target='_blank' rel='noopener noreferrer' href={s}>{source}</a></p>
+      <p>${strings.type}: {typeLabel}</p>
+      <p>${strings.area}: {broaderAreaLabel}</p>
+      <p>${strings.source}: <a target='_blank' rel='noopener noreferrer' href={s}>{source}</a></p>
       `;
     return L.Util.template(popUpTemplate, result);
   }
@@ -370,6 +371,7 @@ LeafletMap.propTypes = {
   popupMarker: PropTypes.string.isRequired,
   bouncingMarkerKey: PropTypes.number.isRequired,
   openPopupMarkerKey: PropTypes.number.isRequired,
+  strings: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(LeafletMap);

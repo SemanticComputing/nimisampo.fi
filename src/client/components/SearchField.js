@@ -88,7 +88,7 @@ class SearchField extends React.Component {
     return (
       <div className={classes.root}>
         <FormControl className={classNames(classes.margin, classes.textField)}>
-          <InputLabel htmlFor="adornment-search">Search place names</InputLabel>
+          <InputLabel htmlFor="adornment-search">{this.props.strings.searchPlaceNames}</InputLabel>
           <Input
             id="adornment-search"
             type='text'
@@ -113,7 +113,8 @@ SearchField.propTypes = {
   fetchResults: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
   updateQuery: PropTypes.func.isRequired,
-  datasets: PropTypes.object.isRequired
+  datasets: PropTypes.object.isRequired,
+  strings: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(SearchField);

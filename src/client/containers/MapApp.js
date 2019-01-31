@@ -97,12 +97,15 @@ const styles = theme => ({
 let MapApp = (props) => {
   const { classes, search, results, resultValues } = props;
   //error,
+  const strings = props.options.strings[props.options.language];
+
   return (
     <div className={classes.root}>
       <div className={classes.appFrame}>
         <TopBar
           results={results}
           clearResults={props.clearResults}
+          language={props.options.language}
         />
         <Route
           exact path='/'
@@ -121,12 +124,14 @@ let MapApp = (props) => {
                   updateQuery={props.updateQuery}
                   clearResults={props.clearResults}
                   toggleDataset={props.toggleDataset}
+                  strings={strings}
+                  language={props.options.language}
                 />
               </Grid>
               <Grid item sm={12} md={9} className={classes.resultsContainer}>
                 {props.results.length == 0 && !props.search.fetchingResults &&
                   <Paper className={classes.frontContainerPaper}>
-                    <Front />
+                    <Front strings={strings} />
                   </Paper>
                 }
                 {props.results.length > 0 &&
@@ -151,6 +156,7 @@ let MapApp = (props) => {
                     updateResultFormat={props.updateResultFormat}
                     updateMapMode={props.updateMapMode}
                     routeProps={routeProps}
+                    strings={strings}
                   />
                 </Paper>
                 }

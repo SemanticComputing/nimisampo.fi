@@ -11,7 +11,7 @@ const styles = theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    marginLeft: theme.spacing.unit * 2 
+    marginLeft: theme.spacing.unit * 2
   },
 
   textField: {
@@ -42,7 +42,7 @@ class DatasetSelector extends React.Component {
                     disableRipple
                   />
                 }
-                label={this.props.search.datasets[id].title}
+                label={this.props.language == 'fi' ? this.props.search.datasets[id].titleFi : this.props.search.datasets[id].titleEn }
               />
 
             ))}
@@ -56,7 +56,9 @@ class DatasetSelector extends React.Component {
 DatasetSelector.propTypes = {
   classes: PropTypes.object.isRequired,
   search: PropTypes.object.isRequired,
-  toggleDataset: PropTypes.func.isRequired
+  toggleDataset: PropTypes.func.isRequired,
+  strings: PropTypes.object.isRequired,
+  language: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(DatasetSelector);

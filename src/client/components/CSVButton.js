@@ -25,13 +25,13 @@ const styles = theme => ({
 });
 
 let CSVButton = props => {
-  const { classes } = props;
+  const { classes, strings } = props;
 
   return (
     <div className={classes.root}>
       <CSVLink className={classes.csvLink} data={props.results}>
         <Button variant="contained" color="primary" className={classes.csvButton}>
-              Results as CSV
+          {strings.resultsAsCSV}
           <CloudDownloadIcon className={classes.rightIcon} />
         </Button>
       </CSVLink>
@@ -41,7 +41,8 @@ let CSVButton = props => {
 
 CSVButton.propTypes = {
   classes: PropTypes.object.isRequired,
-  results: PropTypes.array.isRequired
+  results: PropTypes.array.isRequired,
+  strings: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(CSVButton);

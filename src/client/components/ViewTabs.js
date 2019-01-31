@@ -66,7 +66,7 @@ class ViewTabs extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, strings } = this.props;
     return (
       <Paper className={classes.root}>
         <Tabs
@@ -77,12 +77,12 @@ class ViewTabs extends React.Component {
           variant="scrollable"
           scrollButtons="auto"
         >
-          <Tab icon={<CalendarViewDayIcon />} label="table" component={Link} to="/app" />
-          <Tab icon={<TripOriginIcon />} label="clustered map" component={Link} to="/app/map_clusters" />
-          <Tab icon={<PlaceIcon />} label="marker map" component={Link} to="/app/map_markers" />
-          <Tab icon={<SettingsBrightnessIcon />} label="heatmap" component={Link} to="/app/heatmap" />
-          <Tab icon={<PieChartIcon />} label="statistics" component={Link} to="/app/statistics" />
-          <Tab icon={<CloudDownloadIcon />} label="download" component={Link} to="/app/download" />
+          <Tab icon={<CalendarViewDayIcon />} label={strings.table} component={Link} to="/app" />
+          <Tab icon={<TripOriginIcon />} label={strings.clusteredMap} component={Link} to="/app/map_clusters" />
+          <Tab icon={<PlaceIcon />} label={strings.markerMap} component={Link} to="/app/map_markers" />
+          <Tab icon={<SettingsBrightnessIcon />} label={strings.heatmap} component={Link} to="/app/heatmap" />
+          <Tab icon={<PieChartIcon />} label={strings.statistics} component={Link} to="/app/statistics" />
+          <Tab icon={<CloudDownloadIcon />} label={strings.download} component={Link} to="/app/download" />
         </Tabs>
       </Paper>
     );
@@ -91,7 +91,8 @@ class ViewTabs extends React.Component {
 
 ViewTabs.propTypes = {
   classes: PropTypes.object.isRequired,
-  routeProps: PropTypes.object.isRequired
+  routeProps: PropTypes.object.isRequired,
+  strings: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(ViewTabs);

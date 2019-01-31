@@ -51,7 +51,7 @@ const styles = theme => ({
 
 let FacetBar = props => {
 
-  const { classes } = props;
+  const { classes, strings } = props;
   const hasResults = props.search.results.length > 0 ? true : false;
 
   return (
@@ -60,13 +60,15 @@ let FacetBar = props => {
 
       <Paper className={classes.facetContainer}>
         <FacetHeader
-          label='Select data sources'
+          label={strings.selectDataSources}
           hierarchical={true}
         />
         <div className={classes.facetSearchFieldContainer}>
           <DatasetSelector
             search={props.search}
             toggleDataset={props.toggleDataset}
+            strings={strings}
+            language={props.language}
           />
         </div>
       </Paper>
@@ -79,9 +81,10 @@ let FacetBar = props => {
             updateQuery={props.updateQuery}
             clearResults={props.clearResults}
             datasets={props.search.datasets}
+            strings={strings}
           />
           <div className={classes.resultTextContainer}>
-            <Typography variant="h6">{hasResults ? `${props.search.results.length} results` : ''}</Typography>
+            <Typography variant="h6">{hasResults ? `${props.search.results.length} ${strings.results}` : ''}</Typography>
           </div>
         </div>
       </Paper>
@@ -90,7 +93,7 @@ let FacetBar = props => {
         <React.Fragment>
           <Paper className={classes.facetContainer}>
             <FacetHeader
-              label='Name'
+              label={strings.name}
               hierarchical={true}
             />
             <div className={classes.facetValuesContainerTen}>
@@ -105,7 +108,7 @@ let FacetBar = props => {
 
           <Paper className={classes.facetContainer}>
             <FacetHeader
-              label='Type'
+              label={strings.type}
               hierarchical={true}
             />
             <div className={classes.facetValuesContainerTen}>
@@ -120,7 +123,7 @@ let FacetBar = props => {
 
           <Paper className={classes.facetContainerLast}>
             <FacetHeader
-              label='Area'
+              label={strings.area}
               hierarchical={true}
             />
             <div className={classes.facetValuesContainerTen}>
@@ -186,7 +189,9 @@ FacetBar.propTypes = {
   updateResultsFilter: PropTypes.func.isRequired,
   toggleDataset: PropTypes.func.isRequired,
   updateQuery: PropTypes.func.isRequired,
-  clearResults: PropTypes.func.isRequired
+  clearResults: PropTypes.func.isRequired,
+  strings: PropTypes.object.isRequired,
+  language: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FacetBar);
