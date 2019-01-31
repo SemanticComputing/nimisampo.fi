@@ -141,54 +141,6 @@ class VirtualizedTable extends React.PureComponent {
     //   this.props.removeTempMarker();
     // };
 
-    // always render extra columns for now
-    const analysisView = true;
-    // Some extra columns for analysis view
-    let modifier = '';
-    let base = '';
-    //let collector = '';
-    let collectionYear = '';
-    if (analysisView) {
-      modifier = (
-        <Column
-          label="Modifier"
-          cellDataGetter={({rowData}) => rowData.modifier}
-          dataKey="modifier"
-          headerRenderer={headerRenderer}
-          width={columnWidth + 10}
-        />
-      );
-      base = (
-        <Column
-          label="Base"
-          cellDataGetter={({rowData}) => rowData.basicElement}
-          dataKey="basicElement"
-          headerRenderer={headerRenderer}
-          width={columnWidth}
-        />
-      );
-      // collector = (
-      //   <Column
-      //     label="Collector"
-      //     cellDataGetter={({rowData}) => rowData.collector}
-      //     dataKey="collector"
-      //     headerRenderer={headerRenderer}
-      //     width={columnWidth}
-      //   />
-      // );
-      collectionYear = (
-        <Column
-          label="Year"
-          cellDataGetter={({rowData}) => rowData.collectionYear}
-          dataKey="collectionYear"
-          headerRenderer={headerRenderer}
-          width={columnWidth}
-        />
-      );
-    }
-
-
-
     return (
       <div className={classes.root}>
         {this.props.list.size > 0 &&
@@ -218,8 +170,6 @@ class VirtualizedTable extends React.PureComponent {
                     cellRenderer={labelRenderer}
                     width={columnWidth + 70}
                   />
-                  {modifier}
-                  {base}
                   <Column
                     label="Type"
                     cellDataGetter={({rowData}) => has(rowData,'broaderTypeLabel') ? rowData.broaderTypeLabel.toLowerCase() : ''}
@@ -241,8 +191,34 @@ class VirtualizedTable extends React.PureComponent {
                     headerRenderer={headerRenderer}
                     width={columnWidth}
                   />
-                  {/*{collector}  */}
-                  {collectionYear}
+                  <Column
+                    label="Base"
+                    cellDataGetter={({rowData}) => rowData.basicElement}
+                    dataKey="basicElement"
+                    headerRenderer={headerRenderer}
+                    width={columnWidth}
+                  />
+                  <Column
+                    label="Modifier"
+                    cellDataGetter={({rowData}) => rowData.modifier}
+                    dataKey="modifier"
+                    headerRenderer={headerRenderer}
+                    width={columnWidth + 10}
+                  />
+                  <Column
+                    label="Collector"
+                    cellDataGetter={({rowData}) => rowData.collector}
+                    dataKey="collector"
+                    headerRenderer={headerRenderer}
+                    width={columnWidth}
+                  />
+                  <Column
+                    label="Year"
+                    cellDataGetter={({rowData}) => rowData.collectionYear}
+                    dataKey="collectionYear"
+                    headerRenderer={headerRenderer}
+                    width={columnWidth}
+                  />
                   <Column
                     label="Source"
                     cellDataGetter={({rowData}) => rowData.source}
