@@ -109,9 +109,15 @@ class HierarchicalFacet extends Component {
 
   generateLabel = node => {
     //let source = node.source == null ? '' : `(source: ${node.source.substring(node.source.lastIndexOf('/') + 1)}`;
-    // console.log(node)
+    //console.log(node)
+    let label = '';
+    if (this.props.property === 'broaderTypeLabel') {
+      label = node.prefLabel.toLowerCase();
+    } else {
+      label = node.prefLabel;
+    }
     //let count = node.totalInstanceCount == null || node.totalInstanceCount == 0 ? node.instanceCount : node.totalInstanceCount;
-    return `${node.prefLabel} (${node.instanceCount})`;
+    return `${label} (${node.instanceCount})`;
 
   }
 
