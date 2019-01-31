@@ -283,7 +283,7 @@ module.exports = {
         BIND("violet" AS ?markerColor)
         BIND("-" AS ?missingValue)
         OPTIONAL {
-          ?s na-schema:type ?type .
+          ?s a ?type .
           OPTIONAL {
             ?type skos:prefLabel ?tLbl .
             ?type rdfs:subClassOf/skos:prefLabel ?btLbl .

@@ -89,7 +89,7 @@ let FacetBar = props => {
 
           <Paper className={classes.facetContainer}>
             <FacetHeader
-              label='Type (PNR)'
+              label='Type'
               hierarchical={true}
             />
             <div className={classes.facetValuesContainerTen}>

@@ -221,19 +221,19 @@ class VirtualizedTable extends React.PureComponent {
                   {modifier}
                   {base}
                   <Column
-                    label="PNR type"
+                    label="Type"
                     cellDataGetter={({rowData}) => has(rowData,'broaderTypeLabel') ? rowData.broaderTypeLabel.toLowerCase() : ''}
                     dataKey="broaderTypeLabel"
                     headerRenderer={headerRenderer}
                     width={columnWidth + 10}
                   />
-                  <Column
+                  {/*<Column
                     label="NA type"
                     cellDataGetter={({rowData}) => has(rowData,'typeLabel') ? rowData.typeLabel.toLowerCase() : ''}
                     dataKey="typeLabel"
                     headerRenderer={headerRenderer}
                     width={columnWidth}
-                  />
+                  /> */}
                   <Column
                     label="Area"
                     cellDataGetter={({rowData}) => rowData.broaderAreaLabel}
