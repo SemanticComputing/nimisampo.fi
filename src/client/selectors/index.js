@@ -39,7 +39,6 @@ export const filterResults = createSelector(
         ...value,
         selected: resultsFilter[latestFilter].has(value.id)
       }));
-      visibleValues[latestFilter] = latestFilterValues;
     }
 
     // Then handle all the remainder filters
@@ -58,6 +57,10 @@ export const filterResults = createSelector(
           }
         }
       }
+    }
+
+    for (const property in visibleValues) {
+      visibleValues[property] = orderBy(visibleValues[property], 'prefLabel');
     }
 
     return {
