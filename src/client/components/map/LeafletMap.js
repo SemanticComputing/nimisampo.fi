@@ -41,11 +41,11 @@ const styles = () => ({
 });
 
 const kotusLayers = {
-  'kotus:pitajat': 'Finnish parishes in 1938',
+  'kotus:pitajat': 'Finnish parishes in 1938 (Institute for the Languages of Finland)',
   // https://www.kotus.fi/en/on_language/dialects/finnish_dialects_7541
-  'kotus:rajat-sms-alueet': 'Dialectical regions in Finland',
-  'kotus:rajat-sms-alueosat': 'Dialectical subregions in Finland',
-  'kotus:rajat-lansi-ita': 'Border between western and eastern dialects in Finland'
+  'kotus:rajat-sms-alueet': 'Dialectical regions in Finland (Institute for the Languages of Finland)',
+  'kotus:rajat-sms-alueosat': 'Dialectical subregions in Finland (Institute for the Languages of Finland)',
+  'kotus:rajat-lansi-ita': 'Border between western and eastern dialects in Finland (Institute for the Languages of Finland)'
 };
 
 // https://github.com/pointhi/leaflet-color-markers
@@ -150,8 +150,8 @@ class LeafletMap extends React.Component {
       //'Search results': this.resultMarkerLayer,
       //'Real estate boundaries (National Land Survey of Finland)': realEstateMapNLS,
       //'Real estate ids (National Land Survey of Finland)': realEstateIdMapNLS,
-      'Karelian maps (MapWarper)': karelianMaps,
-      'Senate atlas (MapWarper)': senateAtlas,
+      'Karelian maps (Map Warper)': karelianMaps,
+      'Senate atlas (Map Warper)': senateAtlas,
       //'Western Front July 1917 (MapWarper)': westernFront
     };
 
