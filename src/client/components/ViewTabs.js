@@ -74,7 +74,8 @@ class ViewTabs extends React.Component {
           onChange={this.handleChange}
           indicatorColor="secondary"
           textColor="secondary"
-          variant="fullWidth"
+          variant="scrollable"
+          scrollButtons="auto"
         >
           <Tab icon={<CalendarViewDayIcon />} label="table" component={Link} to="/app" />
           <Tab icon={<TripOriginIcon />} label="clustered map" component={Link} to="/app/map_clusters" />
