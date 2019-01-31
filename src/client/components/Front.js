@@ -5,9 +5,14 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   root: {
-    paddingTop: theme.spacing.unit * 7,
-    paddingLeft: theme.spacing.unit * 10,
-    paddingRight: theme.spacing.unit * 10,
+    paddingTop: theme.spacing.unit * 6,
+    paddingLeft: theme.spacing.unit * 9,
+    paddingRight: theme.spacing.unit * 9,
+    //backgroundColor: 'white'
+  },
+  textContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: theme.spacing.unit * 3
   }
 });
 
@@ -15,15 +20,17 @@ let Front = props => {
   const { classes, strings } = props;
   return (
     <div className={classes.root}>
-      <Typography component="h1" variant="h3" align="center" color="textPrimary" gutterBottom>
-        {strings.nameSampo}
-      </Typography>
-      <Typography variant="h6" align="left" color="textSecondary" paragraph>
-        {strings.nameSampoDesc1}
-      </Typography>
-      <Typography variant="h6" align="left" color="textSecondary" paragraph>
-        {strings.nameSampoDesc2}
-      </Typography>
+      <div className={classes.textContainer}>
+        <Typography component="h1" variant="h3" align="center" color="textPrimary" gutterBottom>
+          {strings.nameSampo}
+        </Typography>
+        <Typography variant="h5" align="left" color="textPrimary" paragraph>
+          {strings.nameSampoDesc1}
+        </Typography>
+        <Typography variant="h5" align="left" color="textPrimary" paragraph>
+          {strings.nameSampoDesc2}
+        </Typography>
+      </div>
     </div>
   );
 };

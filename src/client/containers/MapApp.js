@@ -13,6 +13,7 @@ import Footer from '../components/Footer';
 import FacetBar from '../components/FacetBar';
 import Places from '../components/Places';
 import Front from '../components/Front';
+import bgImage from '../img/bg2.jpg';
 
 import {
   filterResults
@@ -91,6 +92,10 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit * 2,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
+    backgroundImage: `url(${bgImage})`,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover'
   }
 });
 
