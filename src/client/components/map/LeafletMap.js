@@ -163,7 +163,7 @@ class LeafletMap extends React.Component {
     L.control.opacity(
       overlayMaps, {
         collapsed: true,
-        position: 'bottomleft'
+        position: 'topright'
       }).addTo(this.leafletMap);
 
     L.Marker.setBouncingOptions({ exclusive: true });
@@ -326,24 +326,24 @@ class LeafletMap extends React.Component {
     '&format=image/png&TileMatrixSet=WGS84_Pseudo-Mercator&TileMatrix={z}&TileRow={y}&TileCol={x}';
   }
 
-  createOpacitySlider() {
-    L.Control.OpacitySlider = L.Control.extend({
-      onAdd: function() {
-        const slider = L.DomUtil.create('input', 'opacity-slider');
-        slider.type = 'range';
-        slider.min = 0;
-        slider.max = 100;
-        slider.value = 100;
-        return slider;
-      },
-    });
-
-    L.control.opacitySlider = function(opts) {
-      return new L.Control.OpacitySlider(opts);
-    };
-
-    L.control.opacitySlider({ position: 'bottomleft' }).addTo(this.leafletMap);
-  }
+  // createOpacitySlider() {
+  //   L.Control.OpacitySlider = L.Control.extend({
+  //     onAdd: function() {
+  //       const slider = L.DomUtil.create('input', 'opacity-slider');
+  //       slider.type = 'range';
+  //       slider.min = 0;
+  //       slider.max = 100;
+  //       slider.value = 100;
+  //       return slider;
+  //     },
+  //   });
+  //
+  //   L.control.opacitySlider = function(opts) {
+  //     return new L.Control.OpacitySlider(opts);
+  //   };
+  //
+  //   L.control.opacitySlider({ position: 'bottomleft' }).addTo(this.leafletMap);
+  // }
 
   render() {
     return (
