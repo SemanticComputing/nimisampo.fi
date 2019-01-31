@@ -97,13 +97,13 @@ class LeafletMap extends React.Component {
     //console.log(this.createNLSUrl('kiinteistojaotus'));
 
     // Overlays
-    const realEstateMapNLS = L.tileLayer(this.createNLSUrl('kiinteistojaotus'), {
-      attribution: 'National Land Survey of Finland'
-    });
-
-    const realEstateIdMapNLS = L.tileLayer(this.createNLSUrl('kiinteistotunnukset'), {
-      attribution: 'National Land Survey of Finland'
-    });
+    // const realEstateMapNLS = L.tileLayer(this.createNLSUrl('kiinteistojaotus'), {
+    //   attribution: 'National Land Survey of Finland'
+    // });
+    //
+    // const realEstateIdMapNLS = L.tileLayer(this.createNLSUrl('kiinteistotunnukset'), {
+    //   attribution: 'National Land Survey of Finland'
+    // });
 
     const karelianMaps = L.tileLayer('http:///mapwarper.onki.fi/mosaics/tile/4/{z}/{x}/{y}.png', {
       attribution: 'SeCo'
@@ -113,9 +113,9 @@ class LeafletMap extends React.Component {
       attribution: 'SeCo'
     });
 
-    const westernFront = L.tileLayer('http://mapwarper.net/mosaics/tile/844/{z}/{x}/{y}.png', {
-      attribution: 'SeCo'
-    });
+    // const westernFront = L.tileLayer('http://mapwarper.net/mosaics/tile/844/{z}/{x}/{y}.png', {
+    //   attribution: 'SeCo'
+    // });
 
     // Marker layers
     this.resultMarkerLayer = L.layerGroup();
@@ -147,12 +147,12 @@ class LeafletMap extends React.Component {
       'Background map (National Land Survey of Finland)': backgroundMapNLS,
     };
     const overlayMaps = {
-      'Search results': this.resultMarkerLayer,
-      'Real estate boundaries (National Land Survey of Finland)': realEstateMapNLS,
-      'Real estate ids (National Land Survey of Finland)': realEstateIdMapNLS,
+      //'Search results': this.resultMarkerLayer,
+      //'Real estate boundaries (National Land Survey of Finland)': realEstateMapNLS,
+      //'Real estate ids (National Land Survey of Finland)': realEstateIdMapNLS,
       'Karelian maps (MapWarper)': karelianMaps,
       'Senate atlas (MapWarper)': senateAtlas,
-      'Western Front July 1917 (MapWarper)': westernFront
+      //'Western Front July 1917 (MapWarper)': westernFront
     };
 
     this.layerControl = L.control.layers(
