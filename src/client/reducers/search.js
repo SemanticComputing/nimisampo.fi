@@ -32,7 +32,7 @@ export const INITIAL_STATE = {
       'title': 'The Getty Thesaurus of Geographic Names',
       'shortTitle': 'TGN',
       'timePeriod': '?',
-      'selected': false
+      'selected': true
     },
     'warsa_karelian_places': {
       'title': 'Karelian map names',
