@@ -17,7 +17,7 @@ export const INITIAL_STATE = {
   query: '',
   datasets: {
     'kotus': {
-      'title': 'Institute for the Languages of Finland (Kotus) Digital Names archive',
+      'title': 'Names Archive of the Institute for the Languages of Finland',
       'shortTitle': 'DNA',
       'timePeriod': '1900s',
       'selected': true
@@ -26,13 +26,13 @@ export const INITIAL_STATE = {
       'title': 'Finnish Geographic Names Registry',
       'shortTitle': 'FGN',
       'timePeriod': 'contemporary',
-      'selected': true
+      'selected': false
     },
     'tgn': {
       'title': 'The Getty Thesaurus of Geographic Names',
       'shortTitle': 'TGN',
       'timePeriod': '?',
-      'selected': true
+      'selected': false
     },
     'warsa_karelian_places': {
       'title': 'Karelian map names',

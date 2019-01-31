@@ -45,7 +45,7 @@ module.exports = {
       PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
       PREFIX gs: <http://www.opengis.net/ont/geosparql#>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-      SELECT ?s ?label ?typeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
+      SELECT ?s ?prefLabel ?typeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
         {
           SELECT DISTINCT ?s {
@@ -54,7 +54,7 @@ module.exports = {
             }
           }
         }
-        ?s skos:prefLabel ?label .
+        ?s skos:prefLabel ?prefLabel .
         ?s a/skos:prefLabel ?typeLabel .
         ?s gs:sfWithin/skos:prefLabel ?broaderAreaLabel .
         BIND("KMN" AS ?source)
@@ -63,8 +63,8 @@ module.exports = {
           ?s wgs84:lat ?lat .
           ?s wgs84:long ?long .
         }
-        FILTER(LCASE(STR(?label))='<QUERYTERM>')
-        FILTER(LANGMATCHES(LANG(?label), 'fi'))
+        #FILTER(LCASE(STR(?prefLabel))='<QUERYTERM>')
+        FILTER(LANGMATCHES(LANG(?prefLabel), 'fi'))
         FILTER(LANGMATCHES(LANG(?typeLabel), 'fi'))
         FILTER(LANGMATCHES(LANG(?broaderAreaLabel), 'fi'))
       }

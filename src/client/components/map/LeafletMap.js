@@ -18,6 +18,7 @@ import markerShadowIcon from '../../img/markers/marker-shadow.png';
 import markerIconViolet from '../../img/markers/marker-icon-violet.png';
 import markerIconYellow from '../../img/markers/marker-icon-yellow.png';
 import markerIconGrey from '../../img/markers/marker-icon-grey.png';
+import markerIconBlue from '../../img/markers/marker-icon-blue.png';
 
 const style = {
   width: '100%',
@@ -272,6 +273,9 @@ class LeafletMap extends React.Component {
         break;
       case 'grey':
         markerIcon = markerIconGrey;
+        break;
+      case 'blue':
+        markerIcon = markerIconBlue;
         break;
     }
     const icon = new ColorIcon({iconUrl: markerIcon });
