@@ -108,11 +108,14 @@ class VirtualizedTable extends React.PureComponent {
       const label = <a target='_blank' rel='noopener noreferrer' href={rowData.s}>{cellData}</a>;
       let  marker = '';
       if (typeof rowData.lat !== 'undefined' || typeof rowData.long !== 'undefined') {
+
+        // onMouseOver={handleMarkerMouseOver(rowData.s)}
+        // onMouseOut={handleMarkerMouseOut(rowData.s)}
+        // onClick={handleMarkerClick(rowData.s)}
+
         marker = (
           <IconButton
-            onMouseOver={handleMarkerMouseOver(rowData.s)}
-            onMouseOut={handleMarkerMouseOut(rowData.s)}
-            onClick={handleMarkerClick(rowData.s)}
+            disabled={true}
             aria-label="Marker"
           >
             <PlaceIcon />
@@ -126,17 +129,17 @@ class VirtualizedTable extends React.PureComponent {
       );
     };
 
-    const handleMarkerClick = value => () => {
-      this.props.openMarkerPopup(value);
-    };
-
-    const handleMarkerMouseOver = value => () => {
-      this.props.bounceMarker(value);
-    };
-
-    const handleMarkerMouseOut = () => () => {
-      this.props.removeTempMarker();
-    };
+    // const handleMarkerClick = value => () => {
+    //   this.props.openMarkerPopup(value);
+    // };
+    //
+    // const handleMarkerMouseOver = value => () => {
+    //   this.props.bounceMarker(value);
+    // };
+    //
+    // const handleMarkerMouseOut = () => () => {
+    //   this.props.removeTempMarker();
+    // };
 
     // always render extra columns for now
     const analysisView = true;
@@ -226,7 +229,7 @@ class VirtualizedTable extends React.PureComponent {
                   />
                   <Column
                     label="NA type"
-                    cellDataGetter={({rowData}) => rowData.typeLabel.toLowerCase()}
+                    cellDataGetter={({rowData}) => has(rowData,'typeLabel') ? rowData.typeLabel.toLowerCase() : ''}
                     dataKey="typeLabel"
                     headerRenderer={headerRenderer}
                     width={columnWidth}
