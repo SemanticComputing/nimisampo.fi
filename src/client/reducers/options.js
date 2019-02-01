@@ -46,6 +46,11 @@ export const INITIAL_STATE = {
       laatimia Etelä-Suomen karttoja.`,
       nameSampoDesc2: `Aloita haku valitsemalla vasemmalta lähdeaineisto ja
       syöttämällä paikannimi.`,
+      nameSampoDesc3: `Paikannimien haussa voi käyttää jokerimerkkiä (*), esimerkiksi
+      haulla "orava*" löytyvät kaikki orava-alkuiset ja haulla "*haara" kaikki
+      haara-loppuiset nimet.`,
+      nameSampoDesc4: `Hakutermejä voi myös yhdistellä käyttämällä "or"-sanaa, esimerkiksi
+      "ukko* or ukon*" löytää kaikki ukko- tai ukon-alkuiset nimet.`,
       selectDataSources: 'Valitse lähdeaineistot',
       results: 'hakutulosta',
       searchPlaceNames: 'Hae paikannnimellä',

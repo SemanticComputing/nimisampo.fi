@@ -30,6 +30,12 @@ let Front = props => {
         <Typography variant="h5" align="left" color="textPrimary" paragraph>
           {strings.nameSampoDesc2}
         </Typography>
+        <Typography variant="h5" align="left" color="textPrimary" paragraph>
+          {strings.nameSampoDesc3}
+        </Typography>
+        <Typography variant="h5" align="left" color="textPrimary" paragraph>
+          {strings.nameSampoDesc4}
+        </Typography>
       </div>
     </div>
   );
