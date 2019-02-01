@@ -55,6 +55,7 @@ const styles = theme => ({
     //minHeight: 700
   },
   mainContainer: {
+    flexWrap: 'nowrap',
     marginTop: 64,
     height: 'calc(100% - 122px)',
     [theme.breakpoints.down(600)]: {
