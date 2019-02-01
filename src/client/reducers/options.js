@@ -54,7 +54,7 @@ export const INITIAL_STATE = {
       "ukko* or ukon*" löytää kaikki ukko- tai ukon-alkuiset nimet.`,
       selectDataSources: 'Valitse lähdeaineistot',
       results: 'hakutulosta',
-      searchPlaceNames: 'Hae paikannnimellä',
+      searchPlaceNames: 'Hae paikannimellä',
       name: 'Nimi',
       type: 'Paikanlaji',
       area: 'Alue',
