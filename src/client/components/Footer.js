@@ -42,17 +42,61 @@ const styles = theme => ({
     paddingLeft: 44,
     height: 50
   },
+  link: {
+    textDecoration: 'none'
+  },
 });
 
 const Footer = props => {
   const { classes } = props;
   return (
     <Paper className={classes.root}>
-      <img className={classes.aaltoLogo} src={aaltoLogo} alt='Aalto University logo'/>
-      <img className={classes.uhLogo} src={uhLogo} alt='University of Helsinki logo'/>
-      <img className={classes.heldigLogo} src={heldigLogo} alt='HELDIG logo'/>
-      <img className={classes.secoLogo} src={secoLogo} alt='SeCo logo'/> 
-      <img className={classes.kotusLogo} src={kotusLogo} alt='Kotus logo'/>
+
+      <a
+        className={classes.link}
+        href="https://www.aalto.fi/"
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        <img className={classes.aaltoLogo} src={aaltoLogo} alt='Aalto University logo'/>
+      </a>
+
+      <a
+        className={classes.link}
+        href="https://www.helsinki.fi/"
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        <img className={classes.uhLogo} src={uhLogo} alt='University of Helsinki logo'/>
+      </a>
+
+      <a
+        className={classes.link}
+        href="http://www.heldig.fi/"
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        <img className={classes.heldigLogo} src={heldigLogo} alt='HELDIG logo'/>
+      </a>
+
+      <a
+        className={classes.link}
+        href="https://seco.cs.aalto.fi/"
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        <img className={classes.secoLogo} src={secoLogo} alt='SeCo logo'/>
+      </a>
+
+      <a
+        className={classes.link}
+        href="https://www.kotus.fi/"
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        <img className={classes.kotusLogo} src={kotusLogo} alt='Kotus logo'/>
+      </a>
+
     </Paper>
   );
 };
