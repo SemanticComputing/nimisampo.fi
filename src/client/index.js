@@ -9,7 +9,6 @@ import { Router } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css';
 import 'react-virtualized/styles.css';
-import 'babel-polyfill'; // https://stackoverflow.com/questions/42091600/how-to-merge-object-in-ie-11
 
 import reducer from './reducers';
 import rootEpic from './epics';

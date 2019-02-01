@@ -5,6 +5,7 @@
   ],
   "plugins": [
     "@babel/plugin-proposal-class-properties",
-    "@babel/plugin-transform-template-literals"
+    "@babel/plugin-transform-template-literals",
+    "@babel/plugin-transform-object-assign"
   ]
 }
