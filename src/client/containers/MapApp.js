@@ -111,6 +111,7 @@ let MapApp = (props) => {
         <TopBar
           results={results}
           clearResults={props.clearResults}
+          strings={strings}
           language={props.options.language}
         />
         <Route
