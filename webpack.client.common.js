@@ -12,7 +12,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
-      title: 'Namesampo',
+      title: 'Nimisampo',
       // Load a custom template
       template: 'src/client/index.html',
     }),
