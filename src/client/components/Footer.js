@@ -6,6 +6,7 @@ import aaltoLogo from '../img/logos/aalto-logo-white-no-background-small.png';
 import uhLogo from '../img/logos/university-of-helsinki-logo-white-no-background-small.png';
 import heldigLogo from '../img/logos/heldig-logo-small.png';
 import kotusLogo from '../img/logos/kotus-logo-white-no-backgrounds-small.png';
+import secoLogo from '../img/logos/seco-logo-white-no-background-small.png';
 
 
 const styles = theme => ({
@@ -49,8 +50,8 @@ const Footer = props => {
     <Paper className={classes.root}>
       <img className={classes.aaltoLogo} src={aaltoLogo} alt='Aalto University logo'/>
       <img className={classes.uhLogo} src={uhLogo} alt='University of Helsinki logo'/>
-      {/* <img className={classes.secoLogo} src='img/logos/seco-logo-white-no-background-small.png' alt='SeCo logo'/> */}
       <img className={classes.heldigLogo} src={heldigLogo} alt='HELDIG logo'/>
+      <img className={classes.secoLogo} src={secoLogo} alt='SeCo logo'/> 
       <img className={classes.kotusLogo} src={kotusLogo} alt='Kotus logo'/>
     </Paper>
   );
