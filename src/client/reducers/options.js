@@ -33,10 +33,11 @@ export const INITIAL_STATE = {
       statistics: 'statistics',
       download: 'download',
       source: 'Source',
-      resultsAsCSV: 'results as csv table'
+      resultsAsCSV: 'results as csv table',
+      search: 'Search...'
     },
     fi: {
-      nameSampo: 'Nimisampo: nimistön tutkijan työpöytä',
+      nameSampo: 'Nimisampo: nimistöntutkijan työpöytä',
       nameSampoDesc1: `Nimisampo on kaikille avoin verkkopalvelu
       suomalaisesta paikannimistöstä kiinnostuneiden tutkijoiden ja
       suuren yleisön käytettäväksi. Nimistöä voi tarkastella kartoilla,
@@ -67,7 +68,8 @@ export const INITIAL_STATE = {
       statistics: 'tilastot',
       download: 'lataus',
       source: 'Lähde',
-      resultsAsCSV: 'lataa hakutulokset csv-taulukkona'
+      resultsAsCSV: 'lataa hakutulokset csv-taulukkona',
+      search: 'Hae...'
     }
   }
 };

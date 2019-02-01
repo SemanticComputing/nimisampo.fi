@@ -102,6 +102,7 @@ let FacetBar = props => {
                 property='prefLabel'
                 searchField={true}
                 updateFilter={props.updateResultsFilter}
+                strings={strings}
               />
             </div>
           </Paper>
@@ -117,6 +118,7 @@ let FacetBar = props => {
                 property='broaderTypeLabel'
                 searchField={true}
                 updateFilter={props.updateResultsFilter}
+                strings={strings}
               />
             </div>
           </Paper>
@@ -132,6 +134,7 @@ let FacetBar = props => {
                 property='broaderAreaLabel'
                 searchField={true}
                 updateFilter={props.updateResultsFilter}
+                strings={strings}
               />
             </div>
           </Paper>

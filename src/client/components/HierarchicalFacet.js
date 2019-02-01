@@ -177,7 +177,7 @@ class HierarchicalFacet extends Component {
             {this.props.searchField &&
               <div className={classes.facetSearchContainer}>
                 <Input
-                  placeholder={`Search...`}
+                  placeholder={this.props.strings.search}
                   onChange={this.handleSearchFieldOnChange}
                 >
                 </Input>
@@ -274,6 +274,7 @@ HierarchicalFacet.propTypes = {
   updateFilter: PropTypes.func,
   updatedFacet: PropTypes.string,
   searchField: PropTypes.bool.isRequired,
+  strings: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(HierarchicalFacet);
