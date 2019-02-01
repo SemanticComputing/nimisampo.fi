@@ -151,19 +151,23 @@ const updateResultsFilter = (state, action) => {
   } else {
     nSet.add(value);
   }
-  const newFilter = updateObject(state.resultsFilter, { [property]: nSet });
-  return updateObject(state, {
+  const newFilter = {
+    ...state.resultsFilter,
+    [property]: nSet
+  };
+  return {
+    ...state,
     resultsFilter: newFilter,
     latestFilter: property,
     latestFilterValues: latestValues
-  });
+  };
 };
 
-const updateObject = (oldObject, newValues) => {
-  // Encapsulate the idea of passing a new object as the first parameter
-  // to Object.assign to ensure we correctly copy data instead of mutating
-  //console.log(Object.assign({}, oldObject, newValues));
-  return Object.assign({}, oldObject, newValues);
-};
+// const updateObject = (oldObject, newValues) => {
+//   // Encapsulate the idea of passing a new object as the first parameter
+//   // to Object.assign to ensure we correctly copy data instead of mutating
+//   //console.log(Object.assign({}, oldObject, newValues));
+//   return Object.assign({}, oldObject, newValues);
+// };
 
 export default search;
