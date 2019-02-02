@@ -34,7 +34,8 @@ export const INITIAL_STATE = {
       download: 'download',
       source: 'Source',
       resultsAsCSV: 'results as csv table',
-      search: 'Search...'
+      search: 'Search...',
+      tooManyResults: 'Over 5000 results, please use clustered map or heatmap.'
     },
     fi: {
       nameSampo: 'Nimisampo: nimistöntutkijan työpöytä',
@@ -69,7 +70,8 @@ export const INITIAL_STATE = {
       download: 'lataus',
       source: 'Lähde',
       resultsAsCSV: 'lataa hakutulokset csv-taulukkona',
-      search: 'Hae...'
+      search: 'Hae...',
+      tooManyResults: 'Hakutuloksia on yli 5000, jolloin täytyy käyttää joko klusteroitua karttaa tai lämpökartta.'
     }
   }
 };

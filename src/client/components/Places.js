@@ -56,7 +56,7 @@ let Places = props => {
         path={'/app/map_markers'}
         render={() => {
           if (props.results.length > 5000) {
-            return <ResultInfo message="Over 5000 results, clustered map should be used instead." />;
+            return <ResultInfo message={props.strings.tooManyResults} />;
           } else {
             return(
               <LeafletMap
