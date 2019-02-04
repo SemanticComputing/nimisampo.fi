@@ -37,7 +37,7 @@ export const INITIAL_STATE = {
       titleFi: 'Maanmittauslaitoksen Karjalan karttanimet (KK)',
       shortTitle: 'KK',
       timePeriod: '1922-1944',
-      link: 'https://www.sttinfo.fi/tiedote/karjalankartatfi-haku-loytaa-nyt-myos-enson-kirvun-ja-ilomantsin?publisherId=2109&releaseId=4203216',
+      link: 'https://www.suomi.fi/palvelut/verkkoasiointi/vanhat-karjalan-kartat-maanmittauslaitos/f51d72a2-510c-4c34-bb3e-b752f5d38250',
       selected: false
     },
     tgn: {
