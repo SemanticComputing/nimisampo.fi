@@ -6,6 +6,7 @@ import FormControl from '@material-ui/core/FormControl';
 // import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import Checkbox from '@material-ui/core/Checkbox';
+import InfoIcon from '@material-ui/icons/Info';
 
 const styles = theme => ({
   root: {
@@ -13,10 +14,13 @@ const styles = theme => ({
     flexWrap: 'wrap',
     marginLeft: theme.spacing.unit * 2
   },
-
-  textField: {
-    flexBasis: 200,
+  formControl: {
+    width: '100%'
   },
+  checkboxLabel: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  }
 });
 
 class DatasetSelector extends React.Component {
@@ -24,6 +28,25 @@ class DatasetSelector extends React.Component {
   handleToggleDataset = value => () => {
     this.props.toggleDataset(value);
   };
+
+  generateLabel = id => {
+    const title = this.props.language == 'fi' ? this.props.search.datasets[id].titleFi : this.props.search.datasets[id].titleEn;
+    return (
+      <div className={this.props.classes.checkboxLabel}>
+        <span>{title}</span>
+        <a
+          href={this.props.search.datasets[id].link}
+          target='_blank'
+          rel='noopener noreferrer'
+        >
+          <InfoIcon />
+        </a>
+      </div>
+    );
+  }
+
+
+  //label=
 
   render() {
     const { classes } = this.props;
@@ -42,7 +65,7 @@ class DatasetSelector extends React.Component {
                     disableRipple
                   />
                 }
-                label={this.props.language == 'fi' ? this.props.search.datasets[id].titleFi : this.props.search.datasets[id].titleEn }
+                label={this.generateLabel(id)}
               />
 
             ))}
