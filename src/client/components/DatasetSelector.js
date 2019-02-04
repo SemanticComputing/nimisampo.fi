@@ -17,10 +17,21 @@ const styles = theme => ({
   formControl: {
     width: '100%'
   },
+  formControlLabel: {
+    width: '100%'
+  },
   checkboxLabel: {
+    width: '100%',
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between'
-  }
+  },
+  link: {
+    display: 'flex',
+    textDecoration: 'none',
+    alignItems: 'center'
+  },
+
 });
 
 class DatasetSelector extends React.Component {
@@ -35,6 +46,7 @@ class DatasetSelector extends React.Component {
       <div className={this.props.classes.checkboxLabel}>
         <span>{title}</span>
         <a
+          className={this.props.classes.link}
           href={this.props.search.datasets[id].link}
           target='_blank'
           rel='noopener noreferrer'
@@ -45,9 +57,6 @@ class DatasetSelector extends React.Component {
     );
   }
 
-
-  //label=
-
   render() {
     const { classes } = this.props;
     return (
@@ -56,6 +65,10 @@ class DatasetSelector extends React.Component {
           <FormGroup className={classes.formGroup}>
             {Object.keys(this.props.search.datasets).map(id => (
               <FormControlLabel
+                classes={{
+                  root: classes.formControlLabel,
+                  label: classes.formControlLabel
+                }}
                 key={id}
                 control={
                   <Checkbox
