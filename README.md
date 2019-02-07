@@ -2,9 +2,15 @@
 
 Project homepage: https://seco.cs.aalto.fi/projects/nimisampo/
 
-master branch visible at http://dev.nimisampo.fi/
+master branch visible at http://nimisampo.fi/
+
+dev branch visible at http://dev.nimisampo.fi/
 
 test branch visible at http://test.nimisampo.fi/
+
+## Requirements
+
+Node.js 8.x: https://nodejs.org/en/download/releases/
 
 ## Local development
 
