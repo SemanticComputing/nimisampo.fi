@@ -16,33 +16,37 @@ import {
 export const INITIAL_STATE = {
   query: '',
   datasets: {
-    'kotus': {
-      'titleEn': 'Names Archive of the Institute for the Languages of Finland',
-      'titleFi': 'Kotimaisten kielten keskuksen Nimiarkisto (NA)',
-      'shortTitle': 'DNA',
-      'timePeriod': '1900s',
-      'selected': true
+    kotus: {
+      titleEn: 'Names Archive of the Institute for the Languages of Finland',
+      titleFi: 'Kotimaisten kielten keskuksen Nimiarkisto (NA)',
+      shortTitle: 'DNA',
+      timePeriod: '1900s',
+      link: 'https://nimiarkisto.fi/wiki/Nimiarkisto:Tietoja',
+      selected: true
     },
-    'pnr': {
-      'titleEn': 'Finnish Geographic Names Registry',
-      'titleFi': 'Maanmittauslaitoksen paikannimirekisteri (PNR)',
-      'shortTitle': 'PNR',
-      'timePeriod': 'contemporary',
-      'selected': true
+    pnr: {
+      titleEn: 'Finnish Geographic Names Registry',
+      titleFi: 'Maanmittauslaitoksen paikannimirekisteri (PNR)',
+      shortTitle: 'PNR',
+      timePeriod: 'contemporary',
+      link: 'https://www.maanmittauslaitos.fi/kartat-ja-paikkatieto/asiantuntevalle-kayttajalle/tuotekuvaukset/nimisto',
+      selected: true
     },
-    'warsa_karelian_places': {
-      'titleEn': 'Karelian map names',
-      'titleFi': 'Karjalan karttanimet (KK)',
-      'shortTitle': 'KK',
-      'timePeriod': '1922-1944',
-      'selected': false
+    warsa_karelian_places: {
+      titleEn: 'Karelian map names',
+      titleFi: 'Maanmittauslaitoksen Karjalan karttanimet (KK)',
+      shortTitle: 'KK',
+      timePeriod: '1922-1944',
+      link: 'https://www.suomi.fi/palvelut/verkkoasiointi/vanhat-karjalan-kartat-maanmittauslaitos/f51d72a2-510c-4c34-bb3e-b752f5d38250',
+      selected: false
     },
-    'tgn': {
-      'titleEn': 'The Getty Thesaurus of Geographic Names (TGN)',
-      'titleFi': 'The Getty Thesaurus of Geographic Names (TGN)',
-      'shortTitle': 'TGN',
-      'timePeriod': '?',
-      'selected': false
+    tgn: {
+      titleEn: 'The Getty Thesaurus of Geographic Names (TGN)',
+      titleFi: 'The Getty Thesaurus of Geographic Names (TGN)',
+      shortTitle: 'TGN',
+      timePeriod: '?',
+      link: 'http://www.getty.edu/research/tools/vocabularies/tgn/about.html',
+      selected: false
     },
     // 'warsa_municipalities': {
     //   'title': 'Finnish WW2 municipalities',
