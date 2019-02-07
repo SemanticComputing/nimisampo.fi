@@ -8,12 +8,28 @@ const styles = theme => ({
     paddingTop: theme.spacing.unit * 6,
     paddingLeft: theme.spacing.unit * 9,
     paddingRight: theme.spacing.unit * 9,
-    //backgroundColor: 'white'
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing.unit,
+    },
   },
   textContainer: {
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    padding: theme.spacing.unit * 3
-  }
+    padding: theme.spacing.unit * 3,
+    [theme.breakpoints.down('md')]: {
+      padding: theme.spacing.unit,
+    },
+  },
+  frontPageHeading: {
+    [theme.breakpoints.down('md')]: {
+      fontSize: '1.2rem'
+    },
+  },
+  frontPageText: {
+    [theme.breakpoints.down('md')]: {
+      fontSize: '1.0rem'
+    },
+  },
+
 });
 
 let Front = props => {
@@ -21,19 +37,19 @@ let Front = props => {
   return (
     <div className={classes.root}>
       <div className={classes.textContainer}>
-        <Typography component="h1" variant="h3" align="center" color="textPrimary" gutterBottom>
+        <Typography className={classes.frontPageHeading} component="h1" variant="h3" align="center" color="textPrimary" gutterBottom>
           {strings.nameSampo}
         </Typography>
-        <Typography variant="h5" align="left" color="textPrimary" paragraph>
+        <Typography className={classes.frontPageText} variant="h5" align="left" color="textPrimary" paragraph>
           {strings.nameSampoDesc1}
         </Typography>
-        <Typography variant="h5" align="left" color="textPrimary" paragraph>
+        <Typography className={classes.frontPageText} variant="h5" align="left" color="textPrimary" paragraph>
           {strings.nameSampoDesc2}
         </Typography>
-        <Typography variant="h5" align="left" color="textPrimary" paragraph>
+        <Typography className={classes.frontPageText} variant="h5" align="left" color="textPrimary" paragraph>
           {strings.nameSampoDesc3}
         </Typography>
-        <Typography variant="h5" align="left" color="textPrimary" paragraph>
+        <Typography className={classes.frontPageText} variant="h5" align="left" color="textPrimary" paragraph>
           {strings.nameSampoDesc4}
         </Typography>
       </div>

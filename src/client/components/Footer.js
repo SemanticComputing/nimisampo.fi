@@ -8,6 +8,11 @@ import heldigLogo from '../img/logos/heldig-logo-small.png';
 import kotusLogo from '../img/logos/kotus-logo-white-no-backgrounds-small.png';
 import secoLogo from '../img/logos/seco-logo-white-no-background-small.png';
 
+const aaltoLogoHeight = 37;
+const uhLogoHeight = 44;
+const secoLogoHeight = 48;
+const heldigLogoHeight = 44;
+const kotusLogoHeight = 44;
 
 const styles = theme => ({
   root: {
@@ -21,26 +26,42 @@ const styles = theme => ({
     height: 64,
     background: theme.palette.primary.main,
     borderRadius: 0,
+    boxShadow: '0 -12px 12px -12px #333'
   },
   aaltoLogo: {
     //paddingLeft: 24,
-    height: 37
+    height: aaltoLogoHeight,
+    [theme.breakpoints.down('md')]: {
+      height: aaltoLogoHeight - 15
+    },
   },
   uhLogo: {
-    paddingLeft: 44,
-    height: 52
+    paddingLeft: uhLogoHeight,
+    height: 52,
+    [theme.breakpoints.down('md')]: {
+      height: uhLogoHeight - 15
+    },
   },
   secoLogo: {
     paddingLeft: 44,
-    height: 52
+    height: secoLogoHeight,
+    [theme.breakpoints.down('md')]: {
+      height: secoLogoHeight - 15
+    },
   },
   heldigLogo: {
     paddingLeft: 44,
-    height: 37
+    height: heldigLogoHeight,
+    [theme.breakpoints.down('md')]: {
+      height: heldigLogoHeight - 15
+    },
   },
   kotusLogo: {
     paddingLeft: 44,
-    height: 50
+    height: kotusLogoHeight,
+    [theme.breakpoints.down('md')]: {
+      height: kotusLogoHeight - 15
+    },
   },
   link: {
     textDecoration: 'none'
