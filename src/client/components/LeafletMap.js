@@ -14,11 +14,11 @@ import 'Leaflet.Control.Opacity/dist/L.Control.Opacity.css';
 import 'Leaflet.Control.Opacity/dist/L.Control.Opacity.js';
 import 'leaflet.smooth_marker_bouncing/leaflet.smoothmarkerbouncing.js';
 
-import markerShadowIcon from '../../img/markers/marker-shadow.png';
-import markerIconViolet from '../../img/markers/marker-icon-violet.png';
-import markerIconYellow from '../../img/markers/marker-icon-yellow.png';
-import markerIconGrey from '../../img/markers/marker-icon-grey.png';
-import markerIconBlue from '../../img/markers/marker-icon-blue.png';
+import markerShadowIcon from '../img/markers/marker-shadow.png';
+import markerIconViolet from '../img/markers/marker-icon-violet.png';
+import markerIconYellow from '../img/markers/marker-icon-yellow.png';
+import markerIconGrey from '../img/markers/marker-icon-grey.png';
+import markerIconBlue from '../img/markers/marker-icon-blue.png';
 
 const style = {
   width: '100%',
