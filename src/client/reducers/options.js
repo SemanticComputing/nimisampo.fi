@@ -20,6 +20,7 @@ export const INITIAL_STATE = {
       selectDataSources: 'Select data sources',
       results: 'results',
       searchPlaceNames: 'Search place names',
+      searchByArea: 'Search by area',
       name: 'Name',
       type: 'Type',
       area: 'Area',
@@ -35,7 +36,7 @@ export const INITIAL_STATE = {
       source: 'Source',
       resultsAsCSV: 'results as csv table',
       search: 'Search...',
-      tooManyResults: 'Over 5000 results, please use clustered map or heatmap.'
+      tooManyResults: 'Over 5000 results, please use clustered map or heatmap.',
     },
     fi: {
       nameSampo: 'Nimisampo: nimistöntutkijan työpöytä',
@@ -56,6 +57,7 @@ export const INITIAL_STATE = {
       selectDataSources: 'Valitse lähdeaineistot',
       results: 'hakutulosta',
       searchPlaceNames: 'Hae paikannimellä',
+      searchByArea: 'Rajaa alue kartalta',
       name: 'Nimi',
       type: 'Paikanlaji',
       area: 'Alue',

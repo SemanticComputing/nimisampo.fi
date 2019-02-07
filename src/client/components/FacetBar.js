@@ -43,6 +43,7 @@ const styles = theme => ({
     marginLeft: 'auto'
   },
   resultTextContainer: {
+    marginTop: theme.spacing.unit,
     paddingLeft: theme.spacing.unit,
     height: 32
   }
