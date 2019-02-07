@@ -9,7 +9,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
-import CropFreeIcon from '@material-ui/icons/CropFree';
+
 
 const styles = theme => ({
   root: {
@@ -18,16 +18,6 @@ const styles = theme => ({
   textSearch: {
     margin: theme.spacing.unit,
   },
-  mapSearch: {
-    margin: theme.spacing.unit,
-  },
-  buttonLabel: {
-    fontWeigth: 'normal',
-    textTransform: 'none',
-  },
-  rightIcon: {
-    marginLeft: theme.spacing.unit
-  }
 });
 
 class SearchField extends React.Component {
@@ -92,7 +82,7 @@ class SearchField extends React.Component {
     return (
       <div className={classes.root}>
         <FormControl className={classes.textSearch}>
-          <InputLabel htmlFor="adornment-search">{this.props.strings.searchPlaceNames}</InputLabel>
+          <InputLabel htmlFor="adornment-search">{strings.searchPlaceNames}</InputLabel>
           <Input
             id="adornment-search"
             type='text'
@@ -106,15 +96,6 @@ class SearchField extends React.Component {
             }
           />
         </FormControl>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.mapSearch}
-          classes={{ label: classes.buttonLabel }}
-        >
-          {strings.searchByArea}
-          <CropFreeIcon className={classes.rightIcon} />
-        </Button>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
+//import CircularProgress from '@material-ui/core/CircularProgress';
 import { has } from 'lodash';
 import L from 'leaflet';
 import 'leaflet-fullscreen/dist/fullscreen.png';
@@ -20,15 +20,7 @@ import markerIconYellow from '../img/markers/marker-icon-yellow.png';
 import markerIconGrey from '../img/markers/marker-icon-grey.png';
 import markerIconBlue from '../img/markers/marker-icon-blue.png';
 
-const style = {
-  width: '100%',
-  height: '100%'
-};
-
 const styles = () => ({
-  leafletContainer: {
-    height: 'calc(100% - 72px)'
-  },
   spinner: {
     height: 40,
     width: 40,
@@ -123,14 +115,16 @@ class LeafletMap extends React.Component {
     this.bouncingMarkerObj = null;
     this.popupMarkerObj = null;
 
-    if (this.props.mapMode === 'cluster') {
-      this.updateMarkersAndCluster(this.props.results);
-    } else {
-      this.updateMarkers(this.props.results);
+    if (has(this.props, 'results')) {
+      if (this.props.mapMode === 'cluster') {
+        this.updateMarkersAndCluster(this.props.results);
+      } else {
+        this.updateMarkers(this.props.results);
+      }
     }
 
     // create map
-    this.leafletMap = L.map('map', {
+    this.leafletMap = L.map(this.props.mapElementId, {
       center: [65.184809, 27.314050],
       zoom: 4,
       layers: [
@@ -228,38 +222,42 @@ class LeafletMap extends React.Component {
     }
   }
 
-  renderSpinner() {
-    if(this.props.fetchingPlaces) {
-      return (
-        <div className={this.props.classes.spinner}>
-          <CircularProgress style={{ color: purple[500] }} thickness={5} />
-        </div>
-      );
-    }
-    return null;
-  }
+  // renderSpinner() {
+  //   if(this.props.fetchingPlaces) {
+  //     return (
+  //       <div className={this.props.classes.spinner}>
+  //         <CircularProgress style={{ color: purple[500] }} thickness={5} />
+  //       </div>
+  //     );
+  //   }
+  //   return null;
+  // }
 
   updateMarkers(results) {
-    this.resultMarkerLayer.clearLayers();
-    this.markers = {};
-    results.forEach(result => {
-      const marker = this.createMarker(result);
-      //console.log(result.s);
-      this.markers[result.s] = marker;
-      marker == null ? null : marker.addTo(this.resultMarkerLayer);
-    });
+    if (results.length > 0) {
+      this.resultMarkerLayer.clearLayers();
+      this.markers = {};
+      results.forEach(result => {
+        const marker = this.createMarker(result);
+        //console.log(result.s);
+        this.markers[result.s] = marker;
+        marker == null ? null : marker.addTo(this.resultMarkerLayer);
+      });
+    }
   }
 
   updateMarkersAndCluster(results) {
-    this.resultMarkerLayer.clearLayers();
-    this.markers = {};
-    const clusterer = L.markerClusterGroup();
-    results.forEach(result => {
-      const marker = this.createMarker(result);
-      this.markers[result.s] = marker;
-      marker == null ? null : clusterer.addLayer(marker);
-    });
-    clusterer.addTo(this.resultMarkerLayer);
+    if (results.length > 0) {
+      this.resultMarkerLayer.clearLayers();
+      this.markers = {};
+      const clusterer = L.markerClusterGroup();
+      results.forEach(result => {
+        const marker = this.createMarker(result);
+        this.markers[result.s] = marker;
+        marker == null ? null : clusterer.addLayer(marker);
+      });
+      clusterer.addTo(this.resultMarkerLayer);
+    }
   }
 
   createMarker(result) {
@@ -347,14 +345,16 @@ class LeafletMap extends React.Component {
   //   L.control.opacitySlider({ position: 'bottomleft' }).addTo(this.leafletMap);
   // }
 
+  //{this.renderSpinner()}
+
   render() {
     return (
       <React.Fragment>
-        <div className={this.props.classes.leafletContainer}>
+        <div style={{ height: has(this.props, 'reduceHeight') ? `calc(100% - ${this.props.reduceHeight}px)` : '100%'}}>
           {/*<LeafletSidebar />*/}
-          <div id="map" style={style} />
+          <div id={this.props.mapElementId} style={{ width: '100%', height: '100%' }} />
         </div>
-        {this.renderSpinner()}
+
       </React.Fragment>
     );
   }
@@ -365,13 +365,15 @@ LeafletMap.propTypes = {
   results: PropTypes.array,
   mapMode: PropTypes.string.isRequired,
   geoJSON: PropTypes.array,
-  geoJSONKey: PropTypes.number.isRequired,
-  getGeoJSON: PropTypes.func.isRequired,
-  bouncingMarker: PropTypes.string.isRequired,
-  popupMarker: PropTypes.string.isRequired,
-  bouncingMarkerKey: PropTypes.number.isRequired,
-  openPopupMarkerKey: PropTypes.number.isRequired,
-  strings: PropTypes.object.isRequired
+  geoJSONKey: PropTypes.number,
+  getGeoJSON: PropTypes.func,
+  bouncingMarker: PropTypes.string,
+  popupMarker: PropTypes.string,
+  bouncingMarkerKey: PropTypes.number,
+  openPopupMarkerKey: PropTypes.number,
+  strings: PropTypes.object.isRequired,
+  reduceHeight: PropTypes.number,
+  mapElementId: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(LeafletMap);

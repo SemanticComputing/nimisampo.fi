@@ -49,6 +49,8 @@ let Places = props => {
             bouncingMarkerKey={props.map.bouncingMarkerKey}
             openPopupMarkerKey={props.map.openPopupMarkerKey}
             strings={props.strings}
+            reduceHeight={72}
+            mapElementId={'resultMap'}
           />
         }
       />
@@ -70,6 +72,8 @@ let Places = props => {
                 bouncingMarkerKey={props.map.bouncingMarkerKey}
                 openPopupMarkerKey={props.map.openPopupMarkerKey}
                 strings={props.strings}
+                reduceHeight={72}
+                mapElementId={'resultMap'}
               />
             );
           }

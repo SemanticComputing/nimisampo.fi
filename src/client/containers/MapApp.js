@@ -133,6 +133,8 @@ let MapApp = (props) => {
                   toggleDataset={props.toggleDataset}
                   strings={strings}
                   language={props.options.language}
+                  map={props.map}
+                  getGeoJSON={props.getGeoJSON}
                 />
               </Grid>
               <Grid item sm={12} md={9} className={classes.resultsContainer}>
