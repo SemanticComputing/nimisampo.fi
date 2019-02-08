@@ -1,5 +1,6 @@
 import {
   UPDATE_GEOJSON,
+  UPDATE_MAP_BOUNDS,
   BOUNCE_MARKER,
   OPEN_MARKER_POPUP,
   REMOVE_TEMP_MARKER
@@ -15,6 +16,10 @@ export const INITIAL_STATE = {
   popupMarker: '',
   bouncingMarkerKey: 0,
   openPopupMarkerKey: 0,
+  latMin: 0,
+  longMin: 0,
+  latMax: 0,
+  longMax: 0
 };
 
 const map = (state = INITIAL_STATE, action) => {
@@ -24,6 +29,14 @@ const map = (state = INITIAL_STATE, action) => {
         ...state,
         geoJSON: action.geoJSON.geoJSON,
         geoJSONKey: state.geoJSONKey + 1
+      };
+    case UPDATE_MAP_BOUNDS:
+      return {
+        ...state,
+        latMin: action.latMin,
+        longMin: action.longMin,
+        latMax: action.latMax,
+        longMax: action.longMax,
       };
     case BOUNCE_MARKER:
       return {

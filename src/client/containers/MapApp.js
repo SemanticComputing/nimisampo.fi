@@ -33,7 +33,8 @@ import {
   sortResults,
   bounceMarker,
   openMarkerPopup,
-  removeTempMarker
+  removeTempMarker,
+  updateMapBounds
 } from '../actions';
 
 const styles = theme => ({
@@ -135,6 +136,7 @@ let MapApp = (props) => {
                   language={props.options.language}
                   map={props.map}
                   getGeoJSON={props.getGeoJSON}
+                  updateMapBounds={props.updateMapBounds}
                 />
               </Grid>
               <Grid item sm={12} md={9} className={classes.resultsContainer}>
@@ -205,7 +207,8 @@ const mapDispatchToProps = ({
   updateResultsFilter,
   bounceMarker,
   openMarkerPopup,
-  removeTempMarker
+  removeTempMarker,
+  updateMapBounds
 });
 
 MapApp.propTypes = {
@@ -234,7 +237,7 @@ MapApp.propTypes = {
   updateResultFormat: PropTypes.func.isRequired,
   updateMapMode: PropTypes.func.isRequired,
   updateResultsFilter: PropTypes.func.isRequired,
-
+  updateMapBounds: PropTypes.func.isRequired
 };
 
 export default compose(

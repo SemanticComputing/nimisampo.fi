@@ -88,8 +88,11 @@ let FacetBar = props => {
           />
           <LeafletMapDialog
             map={props.map}
+            fetchResults={props.fetchResults}
+            updateMapBounds={props.updateMapBounds}
             getGeoJSON={props.getGeoJSON}
-            strings={strings} />
+            strings={strings}
+          />
           <div className={classes.resultTextContainer}>
             <Typography variant="h6">{hasResults ? `${props.search.results.length} ${strings.results}` : ''}</Typography>
           </div>
@@ -205,6 +208,7 @@ FacetBar.propTypes = {
   language: PropTypes.string.isRequired,
   map: PropTypes.object.isRequired,
   getGeoJSON: PropTypes.func.isRequired,
+  updateMapBounds: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(FacetBar);

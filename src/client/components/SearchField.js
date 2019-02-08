@@ -8,13 +8,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Button from '@material-ui/core/Button';
-
 
 const styles = theme => ({
-  root: {
-
-  },
   textSearch: {
     margin: theme.spacing.unit,
   },
@@ -34,26 +29,34 @@ class SearchField extends React.Component {
   };
 
   handleOnKeyDown = (event) => {
-    if (event.key === 'Enter' && this.state.value != '') {
+    if (event.key === 'Enter' && this.hasDatasets() && this.hasValidQuery()) {
       this.props.updateQuery(this.state.value);
       this.props.clearResults();
-      this.props.fetchResults();
+      this.props.fetchResults('text');
     }
   };
 
   handleClick = () => {
-    let hasDatasets = false;
-    Object.values(this.props.datasets).forEach(value => {
-      if (value.selected) {
-        hasDatasets = true;
-      }
-    });
-    if (this.state.value != '' && hasDatasets) {
+    if (this.hasDatasets() && this.hasValidQuery()) {
       this.props.updateQuery(this.state.value);
       this.props.clearResults();
-      this.props.fetchResults();
+      this.props.fetchResults('text');
     }
   };
+
+  hasDatasets = () => {
+    let hasDs = false;
+    Object.values(this.props.datasets).forEach(value => {
+      if (value.selected) {
+        hasDs = true;
+      }
+    });
+    return hasDs;
+  }
+
+  hasValidQuery = () => {
+    return this.state.value.length > 2;
+  }
 
   render() {
     const { classes, strings } = this.props;

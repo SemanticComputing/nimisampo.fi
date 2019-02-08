@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import request from 'superagent';
 import path from 'path';
-import _ from 'lodash';
+import { has, castArray} from 'lodash';
 import sparqlSearchEngine from './SparqlSearchEngine';
 const DEFAULT_PORT = 3001;
 const app = express();
@@ -22,9 +22,7 @@ app.use(function(req, res, next) {
 app.use(express.static(__dirname + './../public/'));
 
 app.get('/suggest', (req, res) => {
-  // https://softwareengineering.stackexchange.com/questions/233164/how-do-searches-fit-into-a-restful-interface
-  // example request: http://localhost:3000/search?dataset=warsa_karelian_places&dataset=pnr&q=viip
-  const queryDatasets = _.castArray(req.query.dataset);
+  const queryDatasets = castArray(req.query.dataset);
   const queryTerm = req.query.q;
   // console.log(queryDatasets);
 
@@ -41,11 +39,24 @@ app.get('/suggest', (req, res) => {
 app.get('/search', (req, res) => {
   // https://softwareengineering.stackexchange.com/questions/233164/how-do-searches-fit-into-a-restful-interface
   // example request: http://localhost:3000/search?dataset=warsa_karelian_places&dataset=pnr&q=viip
-  const queryDatasets = _.castArray(req.query.dataset);
-  const queryTerm = req.query.q;
-  // console.log(queryDatasets);
+  const queryDatasets = castArray(req.query.dataset);
+  let queryTerm = '';
+  let latMin = 0;
+  let longMin = 0;
+  let latMax = 0;
+  let longMax = 0;
 
-  return sparqlSearchEngine.getFederatedResults(queryTerm, queryDatasets).then((data) => {
+  if (has(req.query, 'q')) {
+    queryTerm = req.query.q;
+  }
+  if (has(req.query, 'latMin')) {
+    latMin = req.query.latMin;
+    longMin = req.query.longMin;
+    latMax = req.query.latMax;
+    longMax = req.query.longMax;
+  }
+
+  return sparqlSearchEngine.getFederatedResults(queryTerm, latMin, longMin, latMax, longMax, queryDatasets).then((data) => {
     // console.log(data);
     res.json(data);
   })
@@ -53,13 +64,6 @@ app.get('/search', (req, res) => {
       console.log(err);
       return res.sendStatus(500);
     });
-});
-
-app.get('/compare', (req, res) => {
-  //const queryTerm = req.query.q;
-  // console.log(queryDatasets);
-  const data = sparqlSearchEngine.getComparisonResults();
-  return res.json(data);
 });
 
 app.get('/wfs', (req, res) => {

@@ -44,6 +44,11 @@ class LeafletMapDialog extends React.Component {
     this.setState({ open: false });
   };
 
+  handleSearchByArea = () => {
+    this.props.fetchResults('spatial');
+    this.setState({ open: false });
+  }
+
   render() {
     const { classes, strings } = this.props;
 
@@ -79,9 +84,10 @@ class LeafletMapDialog extends React.Component {
             getGeoJSON={this.props.getGeoJSON}
             reduceHeight={128}
             mapElementId={'dialogMap'}
+            updateMapBounds={this.props.updateMapBounds}
           />
           <DialogActions>
-            <Button onClick={this.handleClose} variant="contained" color="primary" autoFocus>
+            <Button onClick={this.handleSearchByArea} variant="contained" color="primary" autoFocus>
               Rajaa
             </Button>
           </DialogActions>
@@ -95,7 +101,9 @@ LeafletMapDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   strings: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
-  getGeoJSON: PropTypes.func.isRequired
+  getGeoJSON: PropTypes.func.isRequired,
+  updateMapBounds: PropTypes.func.isRequired,
+  fetchResults: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(LeafletMapDialog);

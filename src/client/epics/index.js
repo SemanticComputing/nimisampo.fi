@@ -3,11 +3,8 @@ import { ajax } from 'rxjs/ajax';
 import { switchMap, map, debounceTime, withLatestFrom } from 'rxjs/operators';
 import { combineEpics, ofType } from 'redux-observable';
 import {
-  //updateSuggestions,
   updateResults,
   updateGeoJSON,
-  //FETCH_SUGGESTIONS,
-  //FETCH_SUGGESTIONS_FAILED,
   FETCH_RESULTS,
   //FETCH_RESULTS_FAILED,
   GET_GEOJSON,
@@ -28,38 +25,23 @@ const pickSelectedDatasets = (datasets) => {
   return selected;
 };
 
-// const getSuggestionsEpic = (action$, store) => {
-//   const searchUrl = apiUrl + 'suggest';
-//   return action$.ofType(FETCH_SUGGESTIONS)
-//     .debounceTime(1000)
-//     .switchMap(() => {
-//       const { query, datasets } = store.getState().search;
-//       if (query.length < 3) {
-//         return [];
-//       }
-//       const dsParams = _.map(pickSelectedDatasets(datasets), ds => `dataset=${ds}`).join('&');
-//       const requestUrl = `${searchUrl}?q=${query}&${dsParams}`;
-//       return ajax.getJSON(requestUrl)
-//         .map(response => updateSuggestions({ suggestions: response }))
-//         .catch(error => Observable.of({
-//           type: FETCH_SUGGESTIONS_FAILED,
-//           error: error,
-//         }));
-//     });
-// };
-
 const getResultsEpic = (action$, state$) => action$.pipe(
   ofType(FETCH_RESULTS),
   withLatestFrom(state$),
   debounceTime(500),
-  switchMap(([, state]) => {
+  switchMap(([action, state]) => {
     const searchUrl = apiUrl + 'search';
-    const { query, datasets } = state.search;
-    if (query.length < 3) {
+    const { datasets } = state.search;
+    const dsParams = lodashMap(pickSelectedDatasets(datasets), ds => `dataset=${ds}`).join('&');
+    let requestUrl = '';
+    if (action.jenaIndex === 'text') {
+      const { query } = state.search;
+      requestUrl = `${searchUrl}?q=${query}&${dsParams}`;
+    } else if (action.jenaIndex === 'spatial') {
+      const { latMin, longMin, latMax, longMax } = state.map;
+      requestUrl = `${searchUrl}?latMin=${latMin}&longMin=${longMin}&latMax=${latMax}&longMax=${longMax}&${dsParams}`;
       return [];
     }
-    const dsParams = lodashMap(pickSelectedDatasets(datasets), ds => `dataset=${ds}`).join('&');
-    const requestUrl = `${searchUrl}?q=${query}&${dsParams}`;
     return ajax.getJSON(requestUrl).pipe(
       map(response => updateResults({ results: response }))
       // .catch(error => Observable.of({
@@ -90,7 +72,6 @@ const getGeoJSONEpic = action$ => action$.pipe(
 );
 
 const rootEpic = combineEpics(
-  //getSuggestionsEpic,
   getResultsEpic,
   getGeoJSONEpic
 );

@@ -163,14 +163,21 @@ class LeafletMap extends React.Component {
 
     L.Marker.setBouncingOptions({ exclusive: true });
 
-  //     map.on('fullscreenchange', function () {
-  //     if (map.isFullscreen()) {
-  //         console.log('entered fullscreen');
-  //     } else {
-  //         console.log('exited fullscreen');
-  //     }
-  // });
+    if (this.props.mapElementId === 'dialogMap') {
+      this.props.updateMapBounds(this.boundsToValues());
+      this.leafletMap.on('moveend', () => {
+        this.props.updateMapBounds(this.boundsToValues());
+      });
+    }
+  }
 
+  boundsToValues = () => {
+    const bounds = this.leafletMap.getBounds();
+    const latMin = bounds._southWest.lat;
+    const longMin = bounds._southWest.lng;
+    const latMax = bounds._northEast.lat;
+    const longMax = bounds._northEast.lng;
+    return latMin, longMin, latMax, longMax;
   }
 
   componentDidUpdate({ results, mapMode, geoJSONKey, bouncingMarkerKey, openPopupMarkerKey }) {
@@ -373,7 +380,8 @@ LeafletMap.propTypes = {
   openPopupMarkerKey: PropTypes.number,
   strings: PropTypes.object.isRequired,
   reduceHeight: PropTypes.number,
-  mapElementId: PropTypes.string.isRequired
+  mapElementId: PropTypes.string.isRequired,
+  updateMapBounds: PropTypes.func
 };
 
 export default withStyles(styles)(LeafletMap);
