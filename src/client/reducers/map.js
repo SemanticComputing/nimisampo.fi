@@ -19,7 +19,8 @@ export const INITIAL_STATE = {
   latMin: 0,
   longMin: 0,
   latMax: 0,
-  longMax: 0
+  longMax: 0,
+  zoomLevel: 4
 };
 
 const map = (state = INITIAL_STATE, action) => {
@@ -37,6 +38,7 @@ const map = (state = INITIAL_STATE, action) => {
         longMin: action.bounds.longMin,
         latMax: action.bounds.latMax,
         longMax: action.bounds.longMax,
+        zoomLevel: action.bounds.zoom
       };
     case BOUNCE_MARKER:
       return {

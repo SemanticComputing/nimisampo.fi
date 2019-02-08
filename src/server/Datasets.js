@@ -40,6 +40,7 @@ module.exports = {
         `,
     'resultQuery': `
       PREFIX text: <http://jena.apache.org/text#>
+      PREFIX spatial: <http://jena.apache.org/spatial#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -111,11 +112,13 @@ module.exports = {
         OPTIONAL {
           ?s crm:P89_falls_within ?municipality .
           ?municipality a ?munType .
-          ?municipality sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderAreaLabel) .
+          ?municipality sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderAreaLabel_) .
           FILTER (?munType != <http://ldf.fi/pnr-schema#SubRegion>)
         }
+        BIND(COALESCE(?broaderAreaLabel_, ?missingValue) as ?broaderAreaLabel)
         BIND("PNR" AS ?source)
         BIND("yellow" AS ?markerColor)
+        BIND("-" AS ?missingValue)
       }
       `,
   },
@@ -216,12 +219,12 @@ module.exports = {
         OPTIONAL {
           ?s a ?type .
           OPTIONAL {
-            ?type skos:prefLabel ?tLbl .
-            ?type rdfs:subClassOf/skos:prefLabel ?btLbl .
+            ?type skos:prefLabel ?typeLabel_ .
+            ?type rdfs:subClassOf/skos:prefLabel ?broaderTypeLabel_ .
           }
         }
-        BIND(COALESCE(?tLbl, ?missingValue) as ?typeLabel)
-        BIND(COALESCE(?btLbl, ?missingValue) as ?broaderTypeLabel)
+        BIND(COALESCE(?typeLabel_, ?missingValue) as ?typeLabel)
+        BIND(COALESCE(?broaderTypeLabel_, ?missingValue) as ?broaderTypeLabel)
         OPTIONAL {
           ?s wgs84:lat ?lat .
           ?s wgs84:long ?long .

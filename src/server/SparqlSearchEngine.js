@@ -35,7 +35,7 @@ class SparqlSearchEngine {
     if (queryTerm !== '') {
       query = resultQuery.replace('<QUERY>', `?s text:query (skos:prefLabel '${queryTerm.toLowerCase()}' 100000) .`);
     } else if (latMin != 0) {
-      query = resultQuery.replace('<QUERY>', `?s spatial:withinBox (${latMin} ${longMin} ${latMax} ${longMax}) .`);
+      query = resultQuery.replace('<QUERY>', `?s spatial:withinBox (${latMin} ${longMin} ${latMax} ${longMax} 1000000) .`);
     }
     //console.log(query)
     const sparqlApi = new SparqlApi({ endpoint });

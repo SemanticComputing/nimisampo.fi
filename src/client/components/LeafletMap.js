@@ -190,7 +190,8 @@ class LeafletMap extends React.Component {
       latMin: latMin,
       longMin: longMin,
       latMax: latMax,
-      longMax: longMax
+      longMax: longMax,
+      zoom: this.leafletMap.getZoom()
     };
   }
 
@@ -307,6 +308,9 @@ class LeafletMap extends React.Component {
       if (!has(result, 'typeLabel') || result.typeLabel == '-') {
         result.typeLabel = result.broaderTypeLabel;
       }
+      if (!has(result, 'broaderAreaLabel')) {
+        result.broaderAreaLabel = '-';
+      }
       const marker = L.marker(latLng, {icon: icon})
         .bindPopup(this.createPopUpContent(result));
       return marker;
@@ -395,7 +399,7 @@ LeafletMap.propTypes = {
   strings: PropTypes.object.isRequired,
   reduceHeight: PropTypes.number,
   mapElementId: PropTypes.string.isRequired,
-  updateMapBounds: PropTypes.func
+  updateMapBounds: PropTypes.func,
 };
 
 export default withStyles(styles)(LeafletMap);

@@ -34,6 +34,7 @@ const styles = theme => ({
 class LeafletMapDialog extends React.Component {
   state = {
     open: false,
+    zoomMessage: ''
   };
 
   handleClickOpen = () => {
@@ -45,8 +46,10 @@ class LeafletMapDialog extends React.Component {
   };
 
   handleSearchByArea = () => {
-    this.props.fetchResults('spatial');
-    this.setState({ open: false });
+    if (this.props.map.zoomLevel > 9) {
+      this.props.fetchResults('spatial');
+      this.setState({ open: false });
+    }
   }
 
   render() {
@@ -103,7 +106,7 @@ LeafletMapDialog.propTypes = {
   map: PropTypes.object.isRequired,
   getGeoJSON: PropTypes.func.isRequired,
   updateMapBounds: PropTypes.func.isRequired,
-  fetchResults: PropTypes.func.isRequired
+  fetchResults: PropTypes.func.isRequired,
 };
 
 export default withStyles(styles)(LeafletMapDialog);
