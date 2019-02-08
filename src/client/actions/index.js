@@ -132,7 +132,7 @@ export const getGeoJSONFailed = error => ({
   error
 });
 
-export const updateMapBounds = (latMin, longMin, latMax, longMax) => ({
+export const updateMapBounds = bounds => ({
   type: UPDATE_MAP_BOUNDS,
-  latMin, longMin, latMax, longMax
+  bounds
 });

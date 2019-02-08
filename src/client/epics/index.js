@@ -40,7 +40,6 @@ const getResultsEpic = (action$, state$) => action$.pipe(
     } else if (action.jenaIndex === 'spatial') {
       const { latMin, longMin, latMax, longMax } = state.map;
       requestUrl = `${searchUrl}?latMin=${latMin}&longMin=${longMin}&latMax=${latMax}&longMax=${longMax}&${dsParams}`;
-      return [];
     }
     return ajax.getJSON(requestUrl).pipe(
       map(response => updateResults({ results: response }))

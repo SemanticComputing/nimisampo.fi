@@ -50,7 +50,7 @@ module.exports = {
         {
           SELECT DISTINCT ?s {
             GRAPH <http://ldf.fi/warsa/places/karelian_places> {
-              ?s text:query (skos:prefLabel '<QUERYTERM>') .
+              <QUERY>
             }
           }
         }
@@ -66,77 +66,6 @@ module.exports = {
         #FILTER(LCASE(STR(?prefLabel))='<QUERYTERM>')
         FILTER(LANGMATCHES(LANG(?prefLabel), 'fi'))
         FILTER(LANGMATCHES(LANG(?broaderTypeLabel), 'fi'))
-        FILTER(LANGMATCHES(LANG(?broaderAreaLabel), 'fi'))
-      }
-      `,
-  },
-  'warsa_municipalities': {
-    'title': 'Finnish WW2 municipalities',
-    'shortTitle': 'FWM',
-    'timePeriod': '1939-1944',
-    'lang': '',
-    'endpoint': 'http://ldf.fi/warsa/sparql',
-    // 'suggestionQuery': `
-    //   PREFIX text: <http://jena.apache.org/text#>
-    //   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    //   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    //   PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-    //   PREFIX gs: <http://www.opengis.net/ont/geosparql#>
-    //   SELECT DISTINCT ?label (COUNT(?s) AS ?count)
-    //   WHERE {
-    //     GRAPH <http://ldf.fi/warsa/places/municipalities> {
-    //       (?s ?score) text:query (skos:prefLabel '<QUERYTERM>*') .
-    //     }
-    //     ?s skos:prefLabel ?lbl .
-    //     BIND(STR(?lbl) AS ?label)
-    //   }
-    //   GROUP BY ?label
-    //   ORDER BY DESC(MAX(?score)) ?label
-    //   `,
-    'simpleSuggestionQuery': `
-      PREFIX text: <http://jena.apache.org/text#>
-      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-      PREFIX gs: <http://www.opengis.net/ont/geosparql#>
-      SELECT DISTINCT ?label
-      WHERE {
-        GRAPH <http://ldf.fi/warsa/places/municipalities> {
-          ?s text:query (skos:prefLabel '<QUERYTERM>*' 50) .
-        }
-        ?s skos:prefLabel ?lbl .
-        FILTER(STRSTARTS(LCASE(?lbl), '<QUERYTERM>'))
-        BIND(STR(?lbl) AS ?label)
-      }
-      `,
-    'resultQuery': `
-      PREFIX text: <http://jena.apache.org/text#>
-      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-      PREFIX gs: <http://www.opengis.net/ont/geosparql#>
-      PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-      SELECT ?s ?label ?typeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
-      WHERE {
-        {
-          SELECT DISTINCT ?s {
-            GRAPH <http://ldf.fi/warsa/places/municipalities> {
-              ?s text:query (skos:prefLabel '<QUERYTERM>') .
-            }
-          }
-        }
-        ?s skos:prefLabel ?label .
-        ?s a/skos:prefLabel ?typeLabel .
-        ?s gs:sfWithin/skos:prefLabel ?broaderAreaLabel .
-        BIND("FWM" AS ?source)
-        BIND("red" AS ?markerColor)
-        OPTIONAL {
-          ?s wgs84:lat ?lat .
-          ?s wgs84:long ?long .
-        }
-        FILTER(LCASE(STR(?label))='<QUERYTERM>')
-        FILTER(LANGMATCHES(LANG(?label), 'fi'))
-        FILTER(LANGMATCHES(LANG(?typeLabel), 'fi'))
         FILTER(LANGMATCHES(LANG(?broaderAreaLabel), 'fi'))
       }
       `,
@@ -163,6 +92,7 @@ module.exports = {
         `,
     'resultQuery': `
       PREFIX text: <http://jena.apache.org/text#>
+      PREFIX spatial: <http://jena.apache.org/spatial#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -172,7 +102,7 @@ module.exports = {
       PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
       SELECT ?s ?prefLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
-        ?s text:query (skos:prefLabel '<QUERYTERM>' 100000) .
+        <QUERY>
         ?s sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?prefLabel) .
         ?s a ?type .
         ?type sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderTypeLabel) .
@@ -267,6 +197,7 @@ module.exports = {
       `,
     'resultQuery': `
       PREFIX text: <http://jena.apache.org/text#>
+      PREFIX spatial: <http://jena.apache.org/spatial#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
@@ -276,7 +207,7 @@ module.exports = {
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
       SELECT ?s ?prefLabel ?typeLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector ?collectionYear ?markerColor
       WHERE {
-        ?s text:query (skos:prefLabel '<QUERYTERM>' 100000) .
+        <QUERY>
         ?s skos:prefLabel ?prefLabel .
         ?s na-schema:municipality ?broaderAreaLabel .
         BIND("NA" AS ?source)

@@ -45,7 +45,6 @@ app.get('/search', (req, res) => {
   let longMin = 0;
   let latMax = 0;
   let longMax = 0;
-
   if (has(req.query, 'q')) {
     queryTerm = req.query.q;
   }
@@ -55,7 +54,6 @@ app.get('/search', (req, res) => {
     latMax = req.query.latMax;
     longMax = req.query.longMax;
   }
-
   return sparqlSearchEngine.getFederatedResults(queryTerm, latMin, longMin, latMax, longMax, queryDatasets).then((data) => {
     // console.log(data);
     res.json(data);

@@ -33,10 +33,10 @@ const map = (state = INITIAL_STATE, action) => {
     case UPDATE_MAP_BOUNDS:
       return {
         ...state,
-        latMin: action.latMin,
-        longMin: action.longMin,
-        latMax: action.latMax,
-        longMax: action.longMax,
+        latMin: action.bounds.latMin,
+        longMin: action.bounds.longMin,
+        latMax: action.bounds.latMax,
+        longMax: action.bounds.longMax,
       };
     case BOUNCE_MARKER:
       return {

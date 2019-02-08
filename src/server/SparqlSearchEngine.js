@@ -28,9 +28,16 @@ class SparqlSearchEngine {
       .then((results) => results.map(res => (res.label.value)));
   }
 
-  getResults(queryTerm, datasetId) {
+  getResults(queryTerm, latMin, longMin, latMax, longMax, datasetId) {
     const { endpoint, resultQuery } = datasetConfig[datasetId];
-    const query = resultQuery.replace(/<QUERYTERM>/g, queryTerm.toLowerCase());
+    let query = '';
+    //console.log(latMin)
+    if (queryTerm !== '') {
+      query = resultQuery.replace('<QUERY>', `?s text:query (skos:prefLabel '${queryTerm.toLowerCase()}' 100000) .`);
+    } else if (latMin != 0) {
+      query = resultQuery.replace('<QUERY>', `?s spatial:withinBox (${latMin} ${longMin} ${latMax} ${longMax}) .`);
+    }
+    //console.log(query)
     const sparqlApi = new SparqlApi({ endpoint });
     return this.doSearch(query, sparqlApi, mapResults);
   }
@@ -42,7 +49,7 @@ class SparqlSearchEngine {
 
   getFederatedResults(queryTerm, latMin, longMin, latMax, longMax, datasets) {
     return Promise.all(datasets.map((datasetId) =>
-      this.getResults(queryTerm, datasetId))).then(mergeResults);
+      this.getResults(queryTerm, latMin, longMin, latMax, longMax, datasetId))).then(mergeResults);
   }
 
 }

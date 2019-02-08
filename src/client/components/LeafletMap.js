@@ -177,7 +177,12 @@ class LeafletMap extends React.Component {
     const longMin = bounds._southWest.lng;
     const latMax = bounds._northEast.lat;
     const longMax = bounds._northEast.lng;
-    return latMin, longMin, latMax, longMax;
+    return {
+      latMin: latMin,
+      longMin: longMin,
+      latMax: latMax,
+      longMax: longMax
+    };
   }
 
   componentDidUpdate({ results, mapMode, geoJSONKey, bouncingMarkerKey, openPopupMarkerKey }) {
