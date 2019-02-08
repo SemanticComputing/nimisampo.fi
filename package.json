@@ -59,6 +59,7 @@
     "@material-ui/icons": "^3.0.2",
     "@material-ui/lab": "^3.0.0-alpha.28",
     "Leaflet.Control.Opacity": "git+https://github.com/SemanticComputing/Leaflet.Control.Opacity.git",
+    "leaflet.zoominfo": "git+https://github.com/SemanticComputing/Leaflet.zoominfo.git",
     "autosuggest-highlight": "^3.1.1",
     "babel-preset-stage-2": "^6.24.1",
     "bootstrap": "^4.1.3",

@@ -4,15 +4,22 @@ import { withStyles } from '@material-ui/core/styles';
 //import CircularProgress from '@material-ui/core/CircularProgress';
 import { has } from 'lodash';
 import L from 'leaflet';
+
 import 'leaflet-fullscreen/dist/fullscreen.png';
 import 'leaflet-fullscreen/dist/leaflet.fullscreen.css';
 import 'leaflet-fullscreen/dist/Leaflet.fullscreen.min.js';
+
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster/dist/leaflet.markercluster.js';
+
 import 'Leaflet.Control.Opacity/dist/L.Control.Opacity.css';
 import 'Leaflet.Control.Opacity/dist/L.Control.Opacity.js';
+
 import 'leaflet.smooth_marker_bouncing/leaflet.smoothmarkerbouncing.js';
+
+import 'leaflet.zoominfo/dist/L.Control.Zoominfo.js';
+import 'leaflet.zoominfo/dist/L.Control.Zoominfo.css';
 
 import markerShadowIcon from '../img/markers/marker-shadow.png';
 import markerIconViolet from '../img/markers/marker-icon-violet.png';
@@ -127,6 +134,8 @@ class LeafletMap extends React.Component {
     this.leafletMap = L.map(this.props.mapElementId, {
       center: [65.184809, 27.314050],
       zoom: 4,
+      zoomControl: false,
+      zoominfoControl: true,
       layers: [
         OSMBaseLayer,
         this.resultMarkerLayer,
