@@ -81,14 +81,16 @@ let FacetBar = props => {
           <SearchField
             search={props.search}
             fetchResults={props.fetchResults}
-            updateQuery={props.updateQuery}
             clearResults={props.clearResults}
+            updateQuery={props.updateQuery}
             datasets={props.search.datasets}
             strings={strings}
           />
           <LeafletMapDialog
             map={props.map}
             fetchResults={props.fetchResults}
+            clearResults={props.clearResults}
+            updateQuery={props.updateQuery}
             updateMapBounds={props.updateMapBounds}
             getGeoJSON={props.getGeoJSON}
             strings={strings}
