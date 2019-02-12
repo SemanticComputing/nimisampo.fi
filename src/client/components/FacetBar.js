@@ -86,7 +86,7 @@ let FacetBar = props => {
             datasets={props.search.datasets}
             strings={strings}
           />
-          <LeafletMapDialog
+          {/*<LeafletMapDialog
             map={props.map}
             fetchResults={props.fetchResults}
             clearResults={props.clearResults}
@@ -94,7 +94,7 @@ let FacetBar = props => {
             updateMapBounds={props.updateMapBounds}
             getGeoJSON={props.getGeoJSON}
             strings={strings}
-          />
+          /> */}
           <div className={classes.resultTextContainer}>
             <Typography variant="h6">{hasResults ? `${props.search.results.length} ${strings.results}` : ''}</Typography>
           </div>
