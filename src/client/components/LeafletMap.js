@@ -26,6 +26,7 @@ import markerIconViolet from '../img/markers/marker-icon-violet.png';
 import markerIconYellow from '../img/markers/marker-icon-yellow.png';
 import markerIconGrey from '../img/markers/marker-icon-grey.png';
 import markerIconBlue from '../img/markers/marker-icon-blue.png';
+import markerIconOrange from '../img/markers/marker-icon-orange.png';
 
 const styles = () => ({
   spinner: {
@@ -297,6 +298,9 @@ class LeafletMap extends React.Component {
         break;
       case 'blue':
         markerIcon = markerIconBlue;
+        break;
+      case 'orange':
+        markerIcon = markerIconOrange;
         break;
     }
     const icon = new ColorIcon({iconUrl: markerIcon });

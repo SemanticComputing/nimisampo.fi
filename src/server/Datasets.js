@@ -145,7 +145,7 @@ module.exports = {
       '}' +
       'LIMIT+20',
     'resultQuery':
-      'SELECT+?s+(COALESCE(?labelEn,?labelGVP)+AS+?prefLabel)+?typeLabel+?broaderAreaLabel+?source+?lat+?long+?markerColor' +
+      'SELECT+?s+(COALESCE(?labelEn,?labelGVP)+AS+?prefLabel)+?typeLabel+?broaderAreaLabel+?source+?lat+?long+?markerColor+' +
       'WHERE+{' +
       '?s+luc:term+"<QUERYTERM>";+' +
       'skos:inScheme+tgn:;+' +
