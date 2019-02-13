@@ -145,12 +145,12 @@ module.exports = {
       '}' +
       'LIMIT+20',
     'resultQuery':
-      'SELECT+?s+(COALESCE(?labelEn,?labelGVP)+AS+?prefLabel)+?typeLabel+?broaderAreaLabel+?source+?lat+?long+?markerColor' +
+      'SELECT+?s+(COALESCE(?labelEn,?labelGVP)+AS+?prefLabel)+?broaderTypeLabel+?broaderAreaLabel+?source+?lat+?long+?markerColor+' +
       'WHERE+{' +
       '?s+luc:term+"<QUERYTERM>";+' +
       'skos:inScheme+tgn:;+' +
-      'gvp:placeTypePreferred+[gvp:prefLabelGVP+[xl:literalForm+?typeLabel;dct:language+gvp_lang:en]];+' +
-      'gvp:parentStringAbbrev+?broaderAreaLabel+.+' +
+      'gvp:placeTypePreferred+[gvp:prefLabelGVP+[xl:literalForm+?broaderTypeLabel;dct:language+gvp_lang:en]];+' +
+      'gvp:broaderPreferred/xl:prefLabel/xl:literalForm+?broaderAreaLabel+.+' +
       'OPTIONAL+{?s+xl:prefLabel+[xl:literalForm+?labelEn;+dct:language+gvp_lang:en]}+' +
       'OPTIONAL{?s+gvp:prefLabelGVP+[xl:literalForm?labelGVP]}+' +
       'OPTIONAL{?s+foaf:focus+?place+.+?place+wgs:lat+?lat;+wgs:long+?long}+' +
