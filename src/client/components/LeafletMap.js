@@ -72,7 +72,7 @@ class LeafletMap extends React.Component {
     this.props.getGeoJSON(Object.keys(kotusLayers));
 
     // Base layers
-    const OSMBaseLayer = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    const OSMBaseLayer = L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
     });
 
