@@ -13,7 +13,7 @@ import {
 
 const apiUrl = (process.env.NODE_ENV === 'development')
   ? 'http://localhost:3001/'
-  : `http://${location.hostname}/`;
+  : `${location.protocol}//${location.hostname}/`;
 
 const pickSelectedDatasets = (datasets) => {
   let selected = [];
