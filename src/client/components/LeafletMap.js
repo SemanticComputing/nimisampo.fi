@@ -104,11 +104,11 @@ class LeafletMap extends React.Component {
     //   attribution: 'National Land Survey of Finland'
     // });
 
-    const karelianMaps = L.tileLayer('http://ldf.fi/corsproxy/mapwarper.onki.fi/mosaics/tile/4/{z}/{x}/{y}.png', {
+    const karelianMaps = L.tileLayer('https://ldf.fi/corsproxy/mapwarper.onki.fi/mosaics/tile/4/{z}/{x}/{y}.png', {
       attribution: 'SeCo'
     });
 
-    const senateAtlas = L.tileLayer('http://ldf.fi/corsproxy/mapwarper.onki.fi/mosaics/tile/5/{z}/{x}/{y}.png', {
+    const senateAtlas = L.tileLayer('https://ldf.fi/corsproxy/mapwarper.onki.fi/mosaics/tile/5/{z}/{x}/{y}.png', {
       attribution: 'SeCo'
     });
 
