@@ -5,7 +5,7 @@ import HierarchicalFacet from './HierarchicalFacet';
 import Paper from '@material-ui/core/Paper';
 import FacetHeader from './FacetHeader';
 import SearchField from './SearchField';
-import LeafletMapDialog from './LeafletMapDialog';
+// import LeafletMapDialog from './LeafletMapDialog';
 import Typography from '@material-ui/core/Typography';
 import DatasetSelector from '../components/DatasetSelector';
 
@@ -55,7 +55,14 @@ const styles = theme => ({
 let FacetBar = props => {
 
   const { classes, strings } = props;
-  const hasResults = props.search.results.length > 0 ? true : false;
+  const { results } = props.search;
+  const hasResults = results !== null;
+  const resultCount = hasResults ? results.length : '';
+  let resultString = '';
+  if (hasResults) {
+    resultString = resultCount == 1 ? strings.result : strings.results;
+  }
+  const showFacets = hasResults && resultCount > 5;
 
   return (
     <div className={classes.root}>
@@ -96,13 +103,13 @@ let FacetBar = props => {
             strings={strings}
           /> */}
           <div className={classes.resultTextContainer}>
-            <Typography variant="h6">{hasResults ? `${props.search.results.length} ${strings.results}` : ''}</Typography>
+            <Typography variant="h6">{resultCount} {resultString}</Typography>
           </div>
         </div>
       </Paper>
 
 
-      { hasResults &&
+      { showFacets &&
         <React.Fragment>
           <Paper className={classes.facetContainer}>
             <FacetHeader

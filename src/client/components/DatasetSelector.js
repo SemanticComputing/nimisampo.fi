@@ -17,8 +17,14 @@ const styles = theme => ({
   formControl: {
     width: '100%'
   },
-  formControlLabel: {
-    width: '100%'
+  formControlLabelRoot: {
+    width: '100%',
+    [theme.breakpoints.down('md')]: {
+      marginBottom: theme.spacing.unit * 2
+    },
+  },
+  formControlLabelLabel: {
+    width: '100%',
   },
   checkboxLabel: {
     width: '100%',
@@ -29,9 +35,9 @@ const styles = theme => ({
   link: {
     display: 'flex',
     textDecoration: 'none',
-    alignItems: 'center'
+    alignItems: 'center',
+    color: theme.palette.primary.main,
   },
-
 });
 
 class DatasetSelector extends React.Component {
@@ -66,8 +72,8 @@ class DatasetSelector extends React.Component {
             {Object.keys(this.props.search.datasets).map(id => (
               <FormControlLabel
                 classes={{
-                  root: classes.formControlLabel,
-                  label: classes.formControlLabel
+                  root: classes.formControlLabelRoot,
+                  label: classes.formControlLabelLabel
                 }}
                 key={id}
                 control={

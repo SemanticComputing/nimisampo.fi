@@ -58,7 +58,7 @@ export const INITIAL_STATE = {
   suggestions: [],
   suggestionsQuery: '',
   fetchingSuggestions: false,
-  results: [],
+  results: null,
   //results: sampleResults,
   latestFilter: '',
   latestFilterValues: [],
@@ -89,7 +89,7 @@ const search = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         suggestions: [],
-        results: [],
+        results: null,
         datasets: {
           ...state.datasets,
           [action.dataset]: {
@@ -119,7 +119,7 @@ const search = (state = INITIAL_STATE, action) => {
     case CLEAR_RESULTS:
       return {
         ...state,
-        results: [],
+        results: null,
         resultsQuery: '',
         fetchingResults: false
       };
