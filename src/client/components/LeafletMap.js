@@ -21,6 +21,8 @@ import 'leaflet.smooth_marker_bouncing/leaflet.smoothmarkerbouncing.js';
 import 'leaflet.zoominfo/dist/L.Control.Zoominfo.js';
 import 'leaflet.zoominfo/dist/L.Control.Zoominfo.css';
 
+import 'leaflet-providers/leaflet-providers.js';
+
 import markerShadowIcon from '../img/markers/marker-shadow.png';
 import markerIconViolet from '../img/markers/marker-icon-violet.png';
 import markerIconYellow from '../img/markers/marker-icon-yellow.png';
@@ -72,10 +74,16 @@ class LeafletMap extends React.Component {
     //   kotus:rajat-sms-alueet    murrealueet
     this.props.getGeoJSON(Object.keys(kotusLayers));
 
+
     // Base layers
-    const OSMBaseLayer = L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    const HEREBaseLayer = L.tileLayer.provider('HERE.terrainDay', {
+      app_id: 'u154Xl41bH0mmtWCJocX',
+      app_code: 'zKilnb73ZG4ohe-U-T3KZw'
     });
+
+    // const OSMBaseLayer = L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+    //   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    // });
 
     const topographicalMapNLS = L.tileLayer(this.createNLSUrl('maastokartta'), {
       attribution: 'National Land Survey of Finland'
@@ -134,11 +142,12 @@ class LeafletMap extends React.Component {
     // create map
     this.leafletMap = L.map(this.props.mapElementId, {
       center: [65.184809, 27.314050],
-      zoom: 4,
+      zoom: 5,
       zoomControl: false,
       zoominfoControl: true,
       layers: [
-        OSMBaseLayer,
+        //OSMBaseLayer,
+        HEREBaseLayer,
         this.resultMarkerLayer,
       ],
       fullscreenControl: true,
@@ -146,7 +155,8 @@ class LeafletMap extends React.Component {
 
     // layer controls
     const baseMaps = {
-      'OpenStreetMap': OSMBaseLayer,
+      'HERE Maps': HEREBaseLayer,
+      //'OpenStreetMap': OSMBaseLayer,
       'Topographical map (National Land Survey of Finland)': topographicalMapNLS,
       'Background map (National Land Survey of Finland)': backgroundMapNLS,
     };
