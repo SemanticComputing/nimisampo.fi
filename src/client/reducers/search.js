@@ -60,7 +60,10 @@ export const INITIAL_STATE = {
   fetchingSuggestions: false,
   results: null,
   //results: sampleResults,
-  latestFilter: '',
+  latestFilter: {
+    id: '',
+    adding: null
+  },
   latestFilterValues: [],
   resultsFilter: {
     prefLabel: new Set(),
@@ -146,14 +149,17 @@ const search = (state = INITIAL_STATE, action) => {
 
 const updateResultsFilter = (state, action) => {
   const { property, value, latestValues } = action.filterObj;
+  let adding = false;
   //console.log(property)
   //console.log(value)
   let nSet = state.resultsFilter[property];
   //console.log(nSet)
   if (nSet.has(value)) {
     nSet.delete(value);
+    adding = false;
   } else {
     nSet.add(value);
+    adding = true;
   }
   const newFilter = {
     ...state.resultsFilter,
@@ -162,7 +168,10 @@ const updateResultsFilter = (state, action) => {
   return {
     ...state,
     resultsFilter: newFilter,
-    latestFilter: property,
+    latestFilter: {
+      id: property,
+      adding: adding
+    },
     latestFilterValues: latestValues
   };
 };

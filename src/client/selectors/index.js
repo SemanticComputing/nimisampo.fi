@@ -29,23 +29,26 @@ export const filterResults = createSelector(
 
     results = orderBy(results, sortBy, sortDirection);
 
-    // Calculate result values, first handle the filter that was updated
+    // Calculate result values
+    // If a filter was added, first handle that filter
     let visibleValues = {};
+    let skipProperty = '';
     for (const property in resultsFilter) {
       visibleValues[property] = {};
     }
-    if (latestFilter !== '') {
+    if (latestFilter.id !== '' && latestFilter.adding) {
+      skipProperty = latestFilter.id;
       latestFilterValues = latestFilterValues.map(value => ({
         ...value,
-        selected: resultsFilter[latestFilter].has(value.id)
+        selected: resultsFilter[latestFilter.id].has(value.id)
       }));
-      visibleValues[latestFilter] = latestFilterValues;
+      visibleValues[latestFilter.id] = latestFilterValues;
     }
 
     // Then handle all the remainder filters
     for (const result of results) {
       for (const property in resultsFilter) {
-        if (property !== latestFilter && has(result, property)) {
+        if (property !== skipProperty && has(result, property)) {
           if (!has(visibleValues[property], result[property])) {
             visibleValues[property][result[property]] = {
               id: result[property],
