@@ -68,6 +68,7 @@
     "leaflet": "^1.4.0",
     "leaflet-fullscreen": "^1.0.2",
     "leaflet-providers": "^1.5.0",
+    "leaflet.gridlayer.googlemutant": "^0.8.0",
     "leaflet.markercluster": "^1.4.1",
     "leaflet.smooth_marker_bouncing": "^1.2.0",
     "leaflet.zoominfo": "git+https://github.com/SemanticComputing/Leaflet.zoominfo.git",
