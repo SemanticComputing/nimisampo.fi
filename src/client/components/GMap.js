@@ -1,8 +1,8 @@
 import React from 'react';
-import { withScriptjs, withGoogleMap, GoogleMap } from 'react-google-maps';
+import { /*withScriptjs,*/ withGoogleMap, GoogleMap } from 'react-google-maps';
 import HeatmapLayer from 'react-google-maps/lib/components/visualization/HeatmapLayer';
 
-let GMap = withScriptjs(withGoogleMap((props) =>
+let GMap = withGoogleMap((props) =>
   <GoogleMap
     defaultZoom={4}
     defaultCenter={{ lat: 65.184809, lng: 27.31405 }}
@@ -16,6 +16,6 @@ let GMap = withScriptjs(withGoogleMap((props) =>
       },[])
     } />
   </GoogleMap>
-));
+);
 
 export default GMap;
