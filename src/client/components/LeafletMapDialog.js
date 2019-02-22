@@ -46,7 +46,7 @@ class LeafletMapDialog extends React.Component {
   };
 
   handleSearchByArea = () => {
-    if (this.props.map.zoomLevel > 9) {
+    if (this.props.map.zoomLevel > 10) {
       this.props.clearResults();
       this.props.fetchResults('spatial');
       this.setState({ open: false });

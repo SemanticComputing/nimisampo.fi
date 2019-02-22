@@ -60,7 +60,7 @@ export const INITIAL_STATE = {
       result: 'hakutulos',
       searchPlaceNames: 'Hae paikannimellä',
       searchByArea: 'Hae kaikki paikat alueelta',
-      searchByAreaTitle: 'Siirrä karttanäkymä haluamallesi alueelle ja aseta zoomaustasoksi vähintään 11',
+      searchByAreaTitle: 'Siirrä karttanäkymä tutkittavalle alueelle, aseta zoomaustasoksi vähintään 11 ja käytä alareunan hakupainiketta.',
       name: 'Nimi',
       type: 'Paikanlaji',
       area: 'Alue',
