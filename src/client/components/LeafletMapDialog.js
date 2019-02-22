@@ -79,7 +79,7 @@ class LeafletMapDialog extends React.Component {
           onClose={this.handleClose}
           aria-labelledby="dialog-title"
         >
-          <DialogTitle id="dialog-title">{strings.searchByArea}</DialogTitle>
+          <DialogTitle id="dialog-title">{strings.searchByAreaTitle}</DialogTitle>
           <LeafletMap
             mapMode="noCluster"
             strings={strings}
@@ -91,8 +91,11 @@ class LeafletMapDialog extends React.Component {
             updateMapBounds={this.props.updateMapBounds}
           />
           <DialogActions>
+            <Button onClick={this.handleClose} variant="contained" color="primary" autoFocus>
+              Peruuta
+            </Button>
             <Button onClick={this.handleSearchByArea} variant="contained" color="primary" autoFocus>
-              Rajaa
+              Hae
             </Button>
           </DialogActions>
         </Dialog>
