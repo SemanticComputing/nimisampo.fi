@@ -68,6 +68,7 @@ const styles = theme => ({
   },
   facetBarContainer: {
     height: '100%',
+    minWidth: 320,
     overflow: 'auto',
     paddingTop: '0px !important',
     paddingBottom: '0px !important'
@@ -123,7 +124,7 @@ let MapApp = (props) => {
           path="/app"
           render={routeProps =>
             <Grid container spacing={8} className={classes.mainContainer}>
-              <Grid item sm={12} md={3} className={classes.facetBarContainer}>
+              <Grid item sm={4} md={3} className={classes.facetBarContainer}>
                 <FacetBar
                   search={search}
                   resultValues={resultValues}
@@ -139,7 +140,7 @@ let MapApp = (props) => {
                   updateMapBounds={props.updateMapBounds}
                 />
               </Grid>
-              <Grid item sm={12} md={9} className={classes.resultsContainer}>
+              <Grid item sm={8} md={9} className={classes.resultsContainer}>
                 {props.results.length == 0 && !props.search.fetchingResults &&
                   <Paper className={classes.frontContainerPaper}>
                     <Front strings={strings} />
