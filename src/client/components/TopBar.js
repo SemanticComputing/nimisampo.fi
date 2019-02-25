@@ -9,10 +9,11 @@ import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Link } from 'react-router-dom';
 import Menu from '@material-ui/core/Menu';
+import FeedbackDialog from './FeedbackDialog';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+// import MoreIcon from '@material-ui/icons/MoreVert';
 import namesampoLogoEn from '../img/logos/namesampo.png';
 import namesampoLogoFi from '../img/logos/nimisampo-logo.png';
 
@@ -54,6 +55,8 @@ const styles = theme => ({
     color: 'white !important',
   },
 });
+
+const iframeWebropol = '<iframe frameborder="0" width="100%" height="100%" src="https://link.webropolsurveys.com/S/3BA01B62823131EF"></iframe>';
 
 class TopBar extends React.Component {
 
@@ -155,6 +158,10 @@ class TopBar extends React.Component {
               >
                 <Button className={classes.appBarButton}>Tietoja</Button>
               </a>
+              <FeedbackDialog
+                strings={this.props.strings}
+                iframe={iframeWebropol}
+              />
               {/* <Button className={classes.appBarButton}>Ohje</Button> */}
             </div>
             { /* <div className={classes.sectionMobile}>
