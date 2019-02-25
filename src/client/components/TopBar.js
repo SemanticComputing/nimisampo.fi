@@ -56,7 +56,7 @@ const styles = theme => ({
   },
 });
 
-const iframeWebropol = '<iframe frameborder="0" width="100%" height="100%" src="https://link.webropolsurveys.com/S/3BA01B62823131EF"></iframe>';
+
 
 class TopBar extends React.Component {
 
@@ -158,10 +158,7 @@ class TopBar extends React.Component {
               >
                 <Button className={classes.appBarButton}>Tietoja</Button>
               </a>
-              <FeedbackDialog
-                strings={this.props.strings}
-                iframe={iframeWebropol}
-              />
+              <FeedbackDialog strings={this.props.strings} />
               {/* <Button className={classes.appBarButton}>Ohje</Button> */}
             </div>
             { /* <div className={classes.sectionMobile}>

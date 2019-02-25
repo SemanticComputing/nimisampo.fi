@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = () => ({
   dialogContainer: {
@@ -24,24 +25,34 @@ const styles = () => ({
     color: 'white !important',
   },
   iframe: {
-    height: 'calc(100% - 3px)',
-    //height: '100%',
-    width: '100%',
-    backgroundColor: '#fff',
-    overFlowY: 'auto'
-  }
+    // height: 'calc(100% - 3px)',
+    // //height: '100%',
+    // width: '100%',
+    // backgroundColor: '#fff',
+    // overFlowY: 'auto'
+  },
+  spinner: {
+    height: 40,
+    width: 40,
+    position: 'absolute',
+    left: '50%',
+    top: '50%',
+    transform: 'translate(-50%,-50%)',
+    zIndex: 500
+  },
 });
 
-class LeafletMapDialog extends React.Component {
+class FeedbackDialog extends React.Component {
   state = {
     open: false,
-    zoomMessage: ''
+    zoomMessage: '',
+    loading: true
   };
 
-  iframe = () => {
-    return {
-      __html: this.props.iframe
-    };
+  hideSpinner = () => {
+    this.setState({
+      loading: false
+    });
   };
 
   handleClickOpen = () => {
@@ -75,9 +86,17 @@ class LeafletMapDialog extends React.Component {
           aria-labelledby="dialog-title"
         >
           <DialogContent className={classes.dialogContent} >
-            <div
-              className={classes.iframe}
-              dangerouslySetInnerHTML={ this.iframe() }
+            {this.state.loading ? (
+              <div className={classes.spinner}>
+                <CircularProgress thickness={5} />
+              </div>
+            ) : null }
+            <iframe
+              frameBorder="0"
+              width="100%"
+              height="100%"
+              src="https://link.webropolsurveys.com/S/3BA01B62823131EF"
+              onLoad={this.hideSpinner}
             />
           </DialogContent>
         </Dialog>
@@ -86,10 +105,9 @@ class LeafletMapDialog extends React.Component {
   }
 }
 
-LeafletMapDialog.propTypes = {
+FeedbackDialog.propTypes = {
   classes: PropTypes.object.isRequired,
   strings: PropTypes.object.isRequired,
-  iframe: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(LeafletMapDialog);
+export default withStyles(styles)(FeedbackDialog);
