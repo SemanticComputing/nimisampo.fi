@@ -90,6 +90,20 @@ let FacetBar = props => {
             datasets={props.search.datasets}
             strings={strings}
           />
+          {/*<LeafletMapDialog
+            map={props.map}
+            fetchResults={props.fetchResults}
+            clearResults={props.clearResults}
+            updateQuery={props.updateQuery}
+            updateMapBounds={props.updateMapBounds}
+            getGeoJSON={props.getGeoJSON}
+            strings={strings}
+         /> */}
+        </div>
+      </Paper>
+
+      <Paper className={classes.facetContainer}>
+        <div className={classes.facetSearchFieldContainer}>
           <LeafletMapDialog
             map={props.map}
             fetchResults={props.fetchResults}
@@ -98,16 +112,22 @@ let FacetBar = props => {
             updateMapBounds={props.updateMapBounds}
             getGeoJSON={props.getGeoJSON}
             strings={strings}
+            fetching={props.search.spatialResultsFetching}
           />
-          <div className={classes.resultTextContainer}>
-            <Typography variant="h6">{resultCount} {resultString}</Typography>
-          </div>
         </div>
       </Paper>
 
 
       { showFacets &&
         <React.Fragment>
+          <Paper className={classes.facetContainer}>
+            <div className={classes.facetSearchFieldContainer}>
+              <div className={classes.resultTextContainer}>
+                <Typography variant="h6">{resultCount} {resultString}{/*{strings.filterResults}*/}</Typography>
+              </div>
+            </div>
+          </Paper>
+
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label={strings.name}

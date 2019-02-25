@@ -30,17 +30,15 @@ class SearchField extends React.Component {
 
   handleOnKeyDown = (event) => {
     if (event.key === 'Enter' && this.hasDatasets() && this.hasValidQuery()) {
-      this.props.updateQuery(this.state.value);
       this.props.clearResults();
-      this.props.fetchResults('text');
+      this.props.fetchResults('text', this.state.value);
     }
   };
 
   handleClick = () => {
     if (this.hasDatasets() && this.hasValidQuery()) {
-      this.props.updateQuery(this.state.value);
       this.props.clearResults();
-      this.props.fetchResults('text');
+      this.props.fetchResults('text', this.state.value);
     }
   };
 
@@ -62,7 +60,7 @@ class SearchField extends React.Component {
     const { classes, strings } = this.props;
 
     let searchButton = null;
-    if (this.props.search.fetchingSuggestions || this.props.search.fetchingResults) {
+    if (this.props.search.textResultsFetching) {
       searchButton = (
         <IconButton
           aria-label="Search places"

@@ -1,10 +1,10 @@
 import {
   UPDATE_QUERY,
   TOGGLE_DATASET,
-  FETCH_SUGGESTIONS,
+  //FETCH_SUGGESTIONS,
   FETCH_RESULTS,
-  UPDATE_SUGGESTIONS,
-  CLEAR_SUGGESTIONS,
+  //UPDATE_SUGGESTIONS,
+  //CLEAR_SUGGESTIONS,
   UPDATE_RESULTS,
   CLEAR_RESULTS,
   UPDATE_RESULTS_FILTER,
@@ -55,8 +55,8 @@ export const INITIAL_STATE = {
     //   'selected': false
     // },
   },
-  suggestions: [],
-  suggestionsQuery: '',
+  // suggestions: [],
+  // suggestionsQuery: '',
   fetchingSuggestions: false,
   results: null,
   //results: sampleResults,
@@ -80,8 +80,8 @@ export const INITIAL_STATE = {
   sortDirection: 'asc',
   groupBy: 'broaderTypeLabel',
   groupByLabel: 'Paikanlaji',
-  resultsQuery: '',
-  fetchingResults: false,
+  textResultsFetching: false,
+  spatialResultsFetching: false,
 };
 
 const search = (state = INITIAL_STATE, action) => {
@@ -101,37 +101,25 @@ const search = (state = INITIAL_STATE, action) => {
           }
         }
       };
-    case FETCH_SUGGESTIONS:
-      return { ...state, fetchingSuggestions: true };
+    // case FETCH_SUGGESTIONS:
+    //   return { ...state, fetchingSuggestions: true };
     case FETCH_RESULTS:
-      return { ...state, fetchingResults: true };
-    case CLEAR_SUGGESTIONS:
       return {
         ...state,
-        suggestions: [],
-        suggestionsQuery: '',
-        fetchingSuggestions: false
-      };
-    case UPDATE_SUGGESTIONS:
-      return {
-        ...state,
-        suggestions: action.suggestions,
-        suggestionsQuery: state.query,
-        fetchingSuggestions: false
+        [`${action.jenaIndex}ResultsFetching`]: true
       };
     case CLEAR_RESULTS:
       return {
         ...state,
         results: null,
-        resultsQuery: '',
-        fetchingResults: false
+        fetchingResults: false,
+        query: ''
       };
     case UPDATE_RESULTS:
       return {
         ...state,
         results: action.results,
-        resultsQuery: state.query,
-        fetchingResults: false
+        [`${action.jenaIndex}ResultsFetching`]: false
       };
     case UPDATE_RESULTS_FILTER:
       return updateResultsFilter(state, action);

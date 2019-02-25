@@ -74,14 +74,14 @@ export const clearSuggestions = () => ({
   type: CLEAR_SUGGESTIONS,
 });
 
-export const fetchResults = jenaIndex => ({
+export const fetchResults = (jenaIndex, query) => ({
   type: FETCH_RESULTS,
-  jenaIndex
+  jenaIndex, query
 });
 
-export const updateResults = ({ results }) => ({
+export const updateResults = ({ results, jenaIndex }) => ({
   type: UPDATE_RESULTS,
-  results
+  results, jenaIndex
 });
 
 export const clearResults = () => ({

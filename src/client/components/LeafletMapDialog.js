@@ -9,6 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import LeafletMap from './LeafletMap';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   dialogContainer: {
@@ -66,7 +67,10 @@ class LeafletMapDialog extends React.Component {
           onClick={this.handleClickOpen}
         >
           {strings.searchByArea}
-          <CropFreeIcon className={classes.rightIcon} />
+          {this.props.fetching ?
+            <CircularProgress className={classes.rightIcon} color='inherit' size={24} /> 
+            : <CropFreeIcon className={classes.rightIcon} />
+          }
         </Button>
 
         <Dialog
@@ -112,7 +116,8 @@ LeafletMapDialog.propTypes = {
   updateMapBounds: PropTypes.func.isRequired,
   fetchResults: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
-  updateQuery: PropTypes.func.isRequired
+  updateQuery: PropTypes.func.isRequired,
+  fetching: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(LeafletMapDialog);
