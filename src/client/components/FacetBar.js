@@ -111,6 +111,7 @@ let FacetBar = props => {
             updateQuery={props.updateQuery}
             updateMapBounds={props.updateMapBounds}
             getGeoJSON={props.getGeoJSON}
+            showError={props.showError}
             strings={strings}
             fetching={props.search.spatialResultsFetching}
           />
@@ -234,7 +235,8 @@ FacetBar.propTypes = {
   language: PropTypes.string.isRequired,
   map: PropTypes.object.isRequired,
   getGeoJSON: PropTypes.func.isRequired,
-  updateMapBounds: PropTypes.func.isRequired
+  updateMapBounds: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(FacetBar);

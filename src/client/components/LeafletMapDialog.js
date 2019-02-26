@@ -51,6 +51,11 @@ class LeafletMapDialog extends React.Component {
       this.props.clearResults();
       this.props.fetchResults('spatial');
       this.setState({ open: false });
+    } else {
+      this.props.showError({
+        title: '',
+        text: this.props.strings.wrongZoomLevel
+      });
     }
   }
 
@@ -68,7 +73,7 @@ class LeafletMapDialog extends React.Component {
         >
           {strings.searchByArea}
           {this.props.fetching ?
-            <CircularProgress className={classes.rightIcon} color='inherit' size={24} /> 
+            <CircularProgress className={classes.rightIcon} color='inherit' size={24} />
             : <CropFreeIcon className={classes.rightIcon} />
           }
         </Button>
@@ -117,6 +122,7 @@ LeafletMapDialog.propTypes = {
   fetchResults: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
   updateQuery: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired,
   fetching: PropTypes.bool.isRequired
 };
 

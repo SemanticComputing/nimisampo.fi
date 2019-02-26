@@ -13,6 +13,7 @@ import Footer from '../components/Footer';
 import FacetBar from '../components/FacetBar';
 import Places from '../components/Places';
 import Front from '../components/Front';
+import Message from '../components/Message';
 import bgImage from '../img/bg2.jpg';
 
 import {
@@ -34,7 +35,8 @@ import {
   bounceMarker,
   openMarkerPopup,
   removeTempMarker,
-  updateMapBounds
+  updateMapBounds,
+  showError,
 } from '../actions';
 
 const styles = theme => ({
@@ -103,13 +105,13 @@ const styles = theme => ({
 });
 
 let MapApp = (props) => {
-  const { classes, search, results, resultValues } = props;
-  //error,
+  const { classes, search, results, resultValues, error } = props;
   const strings = props.options.strings[props.options.language];
 
   return (
     <div className={classes.root}>
       <div className={classes.appFrame}>
+        <Message error={error} />
         <TopBar
           results={results}
           clearResults={props.clearResults}
@@ -138,6 +140,7 @@ let MapApp = (props) => {
                   map={props.map}
                   getGeoJSON={props.getGeoJSON}
                   updateMapBounds={props.updateMapBounds}
+                  showError={props.showError}
                 />
               </Grid>
               <Grid item sm={8} md={9} className={classes.resultsContainer}>
@@ -189,6 +192,7 @@ const mapStateToProps = (state) => {
     browser: state.browser,
     search: state.search,
     map: state.map,
+    error: state.error,
     results: results,
     resultValues: resultValues,
   };
@@ -209,7 +213,8 @@ const mapDispatchToProps = ({
   bounceMarker,
   openMarkerPopup,
   removeTempMarker,
-  updateMapBounds
+  updateMapBounds,
+  showError
 });
 
 MapApp.propTypes = {
@@ -221,6 +226,7 @@ MapApp.propTypes = {
   options: PropTypes.object.isRequired,
   search: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
+  error: PropTypes.object.isRequired,
   results: PropTypes.array,
   resultValues: PropTypes.object,
 
@@ -238,7 +244,8 @@ MapApp.propTypes = {
   updateResultFormat: PropTypes.func.isRequired,
   updateMapMode: PropTypes.func.isRequired,
   updateResultsFilter: PropTypes.func.isRequired,
-  updateMapBounds: PropTypes.func.isRequired
+  updateMapBounds: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired
 };
 
 export default compose(

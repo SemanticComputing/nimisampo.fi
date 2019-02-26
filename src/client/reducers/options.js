@@ -39,6 +39,7 @@ export const INITIAL_STATE = {
       resultsAsCSV: 'results as csv table',
       search: 'Search...',
       tooManyResults: 'Over 5000 results, please use clustered map or heatmap.',
+      wrongZoomLevel: 'The map zoom level has to at least 11',
       feedback: 'Feedback'
     },
     fi: {
@@ -80,6 +81,7 @@ export const INITIAL_STATE = {
       resultsAsCSV: 'lataa hakutulokset csv-taulukkona',
       search: 'Hae...',
       tooManyResults: 'Hakutuloksia on yli 5000, jolloin täytyy käyttää joko klusteroitua karttaa tai lämpökartta.',
+      wrongZoomLevel: 'Hakutuloksien suuren määrän johdosta kartan zoomaustason täytyy olla vähintään 11',
       feedback: 'Palaute'
     }
   }
