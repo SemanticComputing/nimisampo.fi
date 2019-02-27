@@ -118,17 +118,18 @@ let FacetBar = props => {
         </div>
       </Paper>
 
-
+      { hasResults &&
+        <Paper className={classes.facetContainer}>
+          <div className={classes.facetSearchFieldContainer}>
+            <div className={classes.resultTextContainer}>
+              <Typography variant="h6">{resultCount} {resultString}{/*{strings.filterResults}*/}</Typography>
+            </div>
+          </div>
+        </Paper>
+      }
+  
       { showFacets &&
         <React.Fragment>
-          <Paper className={classes.facetContainer}>
-            <div className={classes.facetSearchFieldContainer}>
-              <div className={classes.resultTextContainer}>
-                <Typography variant="h6">{resultCount} {resultString}{/*{strings.filterResults}*/}</Typography>
-              </div>
-            </div>
-          </Paper>
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label={strings.name}

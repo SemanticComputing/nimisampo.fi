@@ -20,6 +20,14 @@ class SearchField extends React.Component {
     value: '',
   };
 
+  componentDidUpdate = prevProps => {
+    if (prevProps.search.query != this.props.search.query) {
+      this.setState({
+        value: this.props.search.query
+      });
+    }
+  }
+
   handleChange = (event) => {
     this.setState({ value: event.target.value });
   };
@@ -31,6 +39,7 @@ class SearchField extends React.Component {
   handleOnKeyDown = (event) => {
     if (event.key === 'Enter' && this.hasDatasets() && this.hasValidQuery()) {
       this.props.clearResults();
+      this.props.updateQuery(this.state.value);
       this.props.fetchResults('text', this.state.value);
     }
   };
@@ -38,6 +47,7 @@ class SearchField extends React.Component {
   handleClick = () => {
     if (this.hasDatasets() && this.hasValidQuery()) {
       this.props.clearResults();
+      this.props.updateQuery(this.state.value);
       this.props.fetchResults('text', this.state.value);
     }
   };
@@ -58,7 +68,6 @@ class SearchField extends React.Component {
 
   render() {
     const { classes, strings } = this.props;
-
     let searchButton = null;
     if (this.props.search.textResultsFetching) {
       searchButton = (
