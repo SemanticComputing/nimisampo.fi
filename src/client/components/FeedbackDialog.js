@@ -14,8 +14,9 @@ const styles = () => ({
   dialogPaper: {
     height: '100%',
     width: '100%',
+    minWidth: 600,
     maxWidth: 750,
-    maxHeight: 651,
+    maxHeight: 700,
     padding: '0px !important'
   },
   dialogContent: {
@@ -24,12 +25,19 @@ const styles = () => ({
   appBarButton: {
     color: 'white !important',
   },
+  // https://benmarshall.me/responsive-iframes/
+  iframeContainer: {
+    overflow: 'hidden',
+    paddingTop: '93%',   // aspect ratio: 700 / 750
+    position: 'relative'
+  },
   iframe: {
-    // height: 'calc(100% - 3px)',
-    // //height: '100%',
-    // width: '100%',
-    // backgroundColor: '#fff',
-    // overFlowY: 'auto'
+    border: 0,
+    height: '100%',
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: '100%',
   },
   spinner: {
     height: 40,
@@ -40,6 +48,7 @@ const styles = () => ({
     transform: 'translate(-50%,-50%)',
     zIndex: 500
   },
+
 });
 
 class FeedbackDialog extends React.Component {
@@ -91,13 +100,14 @@ class FeedbackDialog extends React.Component {
                 <CircularProgress thickness={5} />
               </div>
             ) : null }
-            <iframe
-              frameBorder="0"
-              width="100%"
-              height="100%"
-              src="https://link.webropolsurveys.com/S/3BA01B62823131EF"
-              onLoad={this.hideSpinner}
-            />
+            <div className={classes.iframeContainer}>
+              <iframe
+                className={classes.iframe}
+                src="https://link.webropolsurveys.com/S/3BA01B62823131EF"
+                onLoad={this.hideSpinner}
+              />
+            </div>
+
           </DialogContent>
         </Dialog>
       </div>
