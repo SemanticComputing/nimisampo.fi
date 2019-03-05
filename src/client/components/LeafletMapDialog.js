@@ -9,6 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import LeafletMap from './LeafletMap';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   dialogContainer: {
@@ -46,10 +47,15 @@ class LeafletMapDialog extends React.Component {
   };
 
   handleSearchByArea = () => {
-    if (this.props.map.zoomLevel > 9) {
+    if (this.props.map.zoomLevel > 10) {
       this.props.clearResults();
       this.props.fetchResults('spatial');
       this.setState({ open: false });
+    } else {
+      this.props.showError({
+        title: '',
+        text: this.props.strings.wrongZoomLevel
+      });
     }
   }
 
@@ -66,7 +72,10 @@ class LeafletMapDialog extends React.Component {
           onClick={this.handleClickOpen}
         >
           {strings.searchByArea}
-          <CropFreeIcon className={classes.rightIcon} />
+          {this.props.fetching ?
+            <CircularProgress className={classes.rightIcon} color='inherit' size={24} />
+            : <CropFreeIcon className={classes.rightIcon} />
+          }
         </Button>
 
         <Dialog
@@ -79,7 +88,7 @@ class LeafletMapDialog extends React.Component {
           onClose={this.handleClose}
           aria-labelledby="dialog-title"
         >
-          <DialogTitle id="dialog-title">{strings.searchByArea}</DialogTitle>
+          <DialogTitle id="dialog-title">{strings.searchByAreaTitle}</DialogTitle>
           <LeafletMap
             mapMode="noCluster"
             strings={strings}
@@ -91,8 +100,11 @@ class LeafletMapDialog extends React.Component {
             updateMapBounds={this.props.updateMapBounds}
           />
           <DialogActions>
+            <Button onClick={this.handleClose} variant="contained" color="primary" autoFocus>
+              Peruuta
+            </Button>
             <Button onClick={this.handleSearchByArea} variant="contained" color="primary" autoFocus>
-              Rajaa
+              Hae
             </Button>
           </DialogActions>
         </Dialog>
@@ -109,7 +121,9 @@ LeafletMapDialog.propTypes = {
   updateMapBounds: PropTypes.func.isRequired,
   fetchResults: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
-  updateQuery: PropTypes.func.isRequired
+  updateQuery: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired,
+  fetching: PropTypes.bool.isRequired
 };
 
 export default withStyles(styles)(LeafletMapDialog);

@@ -20,6 +20,7 @@ export const INITIAL_STATE = {
       selectDataSources: 'Select data sources',
       results: 'results',
       result: 'result',
+      filterResults: ', narrow results by:',
       searchPlaceNames: 'Search place names',
       searchByArea: 'Search by area',
       name: 'Name',
@@ -38,6 +39,8 @@ export const INITIAL_STATE = {
       resultsAsCSV: 'results as csv table',
       search: 'Search...',
       tooManyResults: 'Over 5000 results, please use clustered map or heatmap.',
+      wrongZoomLevel: 'The map zoom level has to at least 11',
+      feedback: 'Feedback'
     },
     fi: {
       nameSampo: 'Nimisampo: nimistöntutkijan työpöytä',
@@ -58,8 +61,10 @@ export const INITIAL_STATE = {
       selectDataSources: 'Valitse lähdeaineistot',
       results: 'hakutulosta',
       result: 'hakutulos',
+      filterResults: ', suodata:',
       searchPlaceNames: 'Hae paikannimellä',
-      searchByArea: 'Rajaa alue kartalta',
+      searchByArea: 'Hae kaikki paikannimet alueelta',
+      searchByAreaTitle: 'Siirrä karttanäkymä tutkittavalle alueelle, aseta zoomaustasoksi vähintään 11 ja käytä alareunan hakupainiketta.',
       name: 'Nimi',
       type: 'Paikanlaji',
       area: 'Alue',
@@ -75,7 +80,9 @@ export const INITIAL_STATE = {
       source: 'Lähde',
       resultsAsCSV: 'lataa hakutulokset csv-taulukkona',
       search: 'Hae...',
-      tooManyResults: 'Hakutuloksia on yli 5000, jolloin täytyy käyttää joko klusteroitua karttaa tai lämpökartta.'
+      tooManyResults: 'Hakutuloksia on yli 5000, jolloin täytyy käyttää joko klusteroitua karttaa tai lämpökartta.',
+      wrongZoomLevel: 'Hakutuloksien suuren määrän johdosta kartan zoomaustason täytyy olla vähintään 11',
+      feedback: 'Palaute'
     }
   }
 };

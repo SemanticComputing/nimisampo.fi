@@ -1,17 +1,12 @@
 import {
   UPDATE_QUERY,
   TOGGLE_DATASET,
-  FETCH_SUGGESTIONS,
   FETCH_RESULTS,
-  UPDATE_SUGGESTIONS,
-  CLEAR_SUGGESTIONS,
   UPDATE_RESULTS,
   CLEAR_RESULTS,
   UPDATE_RESULTS_FILTER,
   SORT_RESULTS
 } from '../actions';
-
-// import sampleResults from './sampleResults';
 
 export const INITIAL_STATE = {
   query: '',
@@ -48,18 +43,8 @@ export const INITIAL_STATE = {
       link: 'http://www.getty.edu/research/tools/vocabularies/tgn/about.html',
       selected: false
     },
-    // 'warsa_municipalities': {
-    //   'title': 'Finnish WW2 municipalities',
-    //   'shortTitle': 'FWM',
-    //   'timePeriod': '1939-1944',
-    //   'selected': false
-    // },
   },
-  suggestions: [],
-  suggestionsQuery: '',
-  fetchingSuggestions: false,
   results: null,
-  //results: sampleResults,
   latestFilter: {
     id: '',
     adding: null
@@ -80,8 +65,8 @@ export const INITIAL_STATE = {
   sortDirection: 'asc',
   groupBy: 'broaderTypeLabel',
   groupByLabel: 'Paikanlaji',
-  resultsQuery: '',
-  fetchingResults: false,
+  textResultsFetching: false,
+  spatialResultsFetching: false,
 };
 
 const search = (state = INITIAL_STATE, action) => {
@@ -101,42 +86,38 @@ const search = (state = INITIAL_STATE, action) => {
           }
         }
       };
-    case FETCH_SUGGESTIONS:
-      return { ...state, fetchingSuggestions: true };
     case FETCH_RESULTS:
-      return { ...state, fetchingResults: true };
-    case CLEAR_SUGGESTIONS:
       return {
         ...state,
-        suggestions: [],
-        suggestionsQuery: '',
-        fetchingSuggestions: false
-      };
-    case UPDATE_SUGGESTIONS:
-      return {
-        ...state,
-        suggestions: action.suggestions,
-        suggestionsQuery: state.query,
-        fetchingSuggestions: false
+        [`${action.jenaIndex}ResultsFetching`]: true
       };
     case CLEAR_RESULTS:
       return {
         ...state,
         results: null,
-        resultsQuery: '',
-        fetchingResults: false
+        fetchingResults: false,
+        query: '',
+        resultsFilter: {
+          prefLabel: new Set(),
+          modifier: new Set(),
+          basicElement: new Set(),
+          typeLabel: new Set(),
+          broaderTypeLabel: new Set(),
+          broaderAreaLabel: new Set(),
+          collector: new Set(),
+          collectionYear: new Set(),
+          source: new Set(),
+        },
       };
     case UPDATE_RESULTS:
       return {
         ...state,
         results: action.results,
-        resultsQuery: state.query,
-        fetchingResults: false
+        [`${action.jenaIndex}ResultsFetching`]: false
       };
     case UPDATE_RESULTS_FILTER:
       return updateResultsFilter(state, action);
     case SORT_RESULTS:
-      //console.log(action)
       return {
         ...state,
         sortBy: action.options.sortBy,
@@ -150,10 +131,7 @@ const search = (state = INITIAL_STATE, action) => {
 const updateResultsFilter = (state, action) => {
   const { property, value, latestValues } = action.filterObj;
   let adding = false;
-  //console.log(property)
-  //console.log(value)
   let nSet = state.resultsFilter[property];
-  //console.log(nSet)
   if (nSet.has(value)) {
     nSet.delete(value);
     adding = false;
@@ -175,12 +153,5 @@ const updateResultsFilter = (state, action) => {
     latestFilterValues: latestValues
   };
 };
-
-// const updateObject = (oldObject, newValues) => {
-//   // Encapsulate the idea of passing a new object as the first parameter
-//   // to Object.assign to ensure we correctly copy data instead of mutating
-//   //console.log(Object.assign({}, oldObject, newValues));
-//   return Object.assign({}, oldObject, newValues);
-// };
 
 export default search;

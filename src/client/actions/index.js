@@ -22,6 +22,7 @@ export const GET_GEOJSON = 'GET_GEOJSON';
 export const UPDATE_GEOJSON = 'UPDATE_GEOJSON';
 export const GET_GEOJSON_FAILED = 'GET_GEOJSON_FAILED';
 export const UPDATE_MAP_BOUNDS = 'UPDATE_MAP_BOUNDS';
+export const SHOW_ERROR = 'SHOW_ERROR';
 
 export const updateQuery = query => ({
   type: UPDATE_QUERY,
@@ -74,14 +75,14 @@ export const clearSuggestions = () => ({
   type: CLEAR_SUGGESTIONS,
 });
 
-export const fetchResults = jenaIndex => ({
+export const fetchResults = (jenaIndex, query) => ({
   type: FETCH_RESULTS,
-  jenaIndex
+  jenaIndex, query
 });
 
-export const updateResults = ({ results }) => ({
+export const updateResults = ({ results, jenaIndex }) => ({
   type: UPDATE_RESULTS,
-  results
+  results, jenaIndex
 });
 
 export const clearResults = () => ({
@@ -135,4 +136,9 @@ export const getGeoJSONFailed = error => ({
 export const updateMapBounds = bounds => ({
   type: UPDATE_MAP_BOUNDS,
   bounds
+});
+
+export const showError = error => ({
+  type: SHOW_ERROR,
+  error
 });

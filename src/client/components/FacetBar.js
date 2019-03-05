@@ -5,11 +5,9 @@ import HierarchicalFacet from './HierarchicalFacet';
 import Paper from '@material-ui/core/Paper';
 import FacetHeader from './FacetHeader';
 import SearchField from './SearchField';
-// import LeafletMapDialog from './LeafletMapDialog';
+import LeafletMapDialog from './LeafletMapDialog';
 import Typography from '@material-ui/core/Typography';
 import DatasetSelector from '../components/DatasetSelector';
-
-
 
 const styles = theme => ({
   root: {
@@ -53,7 +51,6 @@ const styles = theme => ({
 });
 
 let FacetBar = props => {
-
   const { classes, strings } = props;
   const { results } = props.search;
   const hasResults = results !== null;
@@ -63,11 +60,8 @@ let FacetBar = props => {
     resultString = resultCount == 1 ? strings.result : strings.results;
   }
   const showFacets = hasResults && resultCount > 5;
-
   return (
     <div className={classes.root}>
-
-
       <Paper className={classes.facetContainer}>
         <FacetHeader
           label={strings.selectDataSources}
@@ -82,7 +76,6 @@ let FacetBar = props => {
           />
         </div>
       </Paper>
-
       <Paper className={classes.facetContainer}>
         <div className={classes.facetSearchFieldContainer}>
           <SearchField
@@ -101,14 +94,33 @@ let FacetBar = props => {
             updateMapBounds={props.updateMapBounds}
             getGeoJSON={props.getGeoJSON}
             strings={strings}
-          /> */}
-          <div className={classes.resultTextContainer}>
-            <Typography variant="h6">{resultCount} {resultString}</Typography>
-          </div>
+         /> */}
         </div>
       </Paper>
-
-
+      <Paper className={classes.facetContainer}>
+        <div className={classes.facetSearchFieldContainer}>
+          <LeafletMapDialog
+            map={props.map}
+            fetchResults={props.fetchResults}
+            clearResults={props.clearResults}
+            updateQuery={props.updateQuery}
+            updateMapBounds={props.updateMapBounds}
+            getGeoJSON={props.getGeoJSON}
+            showError={props.showError}
+            strings={strings}
+            fetching={props.search.spatialResultsFetching}
+          />
+        </div>
+      </Paper>
+      { hasResults &&
+        <Paper className={classes.facetContainer}>
+          <div className={classes.facetSearchFieldContainer}>
+            <div className={classes.resultTextContainer}>
+              <Typography variant="h6">{resultCount} {resultString}{/*{strings.filterResults}*/}</Typography>
+            </div>
+          </div>
+        </Paper>
+      }
       { showFacets &&
         <React.Fragment>
           <Paper className={classes.facetContainer}>
@@ -142,7 +154,6 @@ let FacetBar = props => {
               />
             </div>
           </Paper>
-
           <Paper className={classes.facetContainerLast}>
             <FacetHeader
               label={strings.area}
@@ -158,40 +169,31 @@ let FacetBar = props => {
               />
             </div>
           </Paper>
-
-
-
-
           { /*
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Type (NA)'
               hierarchical={true}
             />
           </Paper>
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Area'
               hierarchical={true}
             />
           </Paper>
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Year'
               hierarchical={true}
             />
           </Paper>
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Modifier'
               hierarchical={true}
             />
           </Paper>
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Base'
@@ -217,7 +219,8 @@ FacetBar.propTypes = {
   language: PropTypes.string.isRequired,
   map: PropTypes.object.isRequired,
   getGeoJSON: PropTypes.func.isRequired,
-  updateMapBounds: PropTypes.func.isRequired
+  updateMapBounds: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(FacetBar);

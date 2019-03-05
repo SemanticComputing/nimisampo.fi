@@ -1,35 +1,26 @@
 import {
-  FETCH_SUGGESTIONS_FAILED,
-  CLEAR_ERROR,
-  FETCH_SUGGESTIONS,
+  SHOW_ERROR,
 } from '../actions';
 
 export const INITIAL_STATE = {
-  hasError: false,
+  id: 0,
   message: {},
 };
 
-const search = (state = INITIAL_STATE, action) => {
+const error = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case FETCH_SUGGESTIONS_FAILED:
+    case SHOW_ERROR:
       return {
         ...state,
-        hasError: true,
+        id: state.id + 1,
         message: {
-          text: action.error.xhr.statusText,
-          title: 'Error',
-        },
-      };
-    case FETCH_SUGGESTIONS:
-    case CLEAR_ERROR:
-      return {
-        ...state,
-        hasError: false,
-        message: {},
+          text: action.error.text,
+          title: action.error.title
+        }
       };
     default:
       return state;
   }
 };
 
-export default search;
+export default error;

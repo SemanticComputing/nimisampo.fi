@@ -38,7 +38,7 @@ render(
         <App />
       </Router>
       <ReduxToastr
-        timeOut={4000}
+        timeOut={5000}
         newestOnTop={false}
         preventDuplicates
         position="top-center"
