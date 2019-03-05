@@ -60,11 +60,8 @@ let FacetBar = props => {
     resultString = resultCount == 1 ? strings.result : strings.results;
   }
   const showFacets = hasResults && resultCount > 5;
-
   return (
     <div className={classes.root}>
-
-
       <Paper className={classes.facetContainer}>
         <FacetHeader
           label={strings.selectDataSources}
@@ -79,7 +76,6 @@ let FacetBar = props => {
           />
         </div>
       </Paper>
-
       <Paper className={classes.facetContainer}>
         <div className={classes.facetSearchFieldContainer}>
           <SearchField
@@ -101,7 +97,6 @@ let FacetBar = props => {
          /> */}
         </div>
       </Paper>
-
       <Paper className={classes.facetContainer}>
         <div className={classes.facetSearchFieldContainer}>
           <LeafletMapDialog
@@ -117,7 +112,6 @@ let FacetBar = props => {
           />
         </div>
       </Paper>
-
       { hasResults &&
         <Paper className={classes.facetContainer}>
           <div className={classes.facetSearchFieldContainer}>
@@ -127,7 +121,6 @@ let FacetBar = props => {
           </div>
         </Paper>
       }
-  
       { showFacets &&
         <React.Fragment>
           <Paper className={classes.facetContainer}>
@@ -161,7 +154,6 @@ let FacetBar = props => {
               />
             </div>
           </Paper>
-
           <Paper className={classes.facetContainerLast}>
             <FacetHeader
               label={strings.area}
@@ -177,40 +169,31 @@ let FacetBar = props => {
               />
             </div>
           </Paper>
-
-
-
-
           { /*
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Type (NA)'
               hierarchical={true}
             />
           </Paper>
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Area'
               hierarchical={true}
             />
           </Paper>
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Year'
               hierarchical={true}
             />
           </Paper>
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Modifier'
               hierarchical={true}
             />
           </Paper>
-
           <Paper className={classes.facetContainer}>
             <FacetHeader
               label='Base'

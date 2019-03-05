@@ -32,19 +32,14 @@ const styles = () => ({
   },
 });
 
-
-
 class TopBar extends React.Component {
-
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
   };
 
   render() {
-
     const { classes } = this.props;
-
     return (
       <div className={classes.root}>
         <AppBar position="absolute">
