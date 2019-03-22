@@ -52,7 +52,7 @@ export const INITIAL_STATE = {
       venäläisiä Senaatin kartastoja eli Venäjän armeijan 1800–1900-luvulla
       laatimia Etelä-Suomen karttoja.`,
       nameSampoDesc2: `Aloita haku valitsemalla vasemmalta lähdeaineisto ja
-      syöttämällä paikannimi.`,
+      syöttämällä paikannimi. Vaihtoehtoisesti voit hakea kaikki paikannimet kartalta rajatulta alueelta.`,
       nameSampoDesc3: `Paikannimien haussa voi käyttää jokerimerkkiä (*), esimerkiksi
       haulla "orava*" löytyvät kaikki orava-alkuiset ja haulla "*haara" kaikki
       haara-loppuiset nimet.`,
