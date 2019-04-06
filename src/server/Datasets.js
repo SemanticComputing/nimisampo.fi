@@ -212,7 +212,7 @@ module.exports = {
       WHERE {
         <QUERY>
         ?s skos:prefLabel ?prefLabel .
-        ?s na-schema:municipality ?broaderAreaLabel .
+        ?s na-schema:parish ?broaderAreaLabel .
         BIND("NA" AS ?source)
         BIND("violet" AS ?markerColor)
         BIND("-" AS ?missingValue)
@@ -234,7 +234,7 @@ module.exports = {
              na-schema:place_name_basic_element ?basicElement .
         }
         OPTIONAL { ?s na-schema:collector ?collector }
-        OPTIONAL { ?s na-schema:collection_year ?collectionYear }
+        OPTIONAL { ?s na-schema:stamp_date ?collectionYear }
         #FILTER(LANGMATCHES(LANG(?label), 'fi'))
         #FILTER(LANGMATCHES(LANG(?typeLabel), 'fi'))
         #FILTER(LANGMATCHES(LANG(?broaderAreaLabel), 'fi'))
