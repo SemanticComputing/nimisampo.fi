@@ -10,7 +10,6 @@
     "server": "nodemon src/server/index.js --exec babel-node",
     "build-client": "webpack --progress --config webpack.client.prod.js",
     "build-server": "babel src/server --out-dir ./dist/server",
-    "serve": "NODE_ENV=production node dist/server/index.js",
     "test": "jest --watch"
   },
   "jest": {
