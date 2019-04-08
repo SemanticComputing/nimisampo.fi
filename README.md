@@ -11,6 +11,7 @@ test branch visible at http://test.nimisampo.fi/
 ## Requirements
 
 Node.js https://nodejs.org/en/ (tested with 10.15.3 LTS)
+
 Nodemon https://nodemon.io/
 
 ## Local development
