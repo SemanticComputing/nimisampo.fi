@@ -106,6 +106,7 @@ class VirtualizedTable extends React.PureComponent {
     const labelRenderer = ({cellData, rowData}) => {
       if (cellData == null) return '';
       const label = <a target='_blank' rel='noopener noreferrer' href={rowData.s}>{cellData}</a>;
+
       let  marker = '';
       if (typeof rowData.lat !== 'undefined' || typeof rowData.long !== 'undefined') {
 
@@ -125,6 +126,15 @@ class VirtualizedTable extends React.PureComponent {
       return (
         <div key={rowData.s}>
           {label}{marker}
+        </div>
+      );
+    };
+
+    const sourceRenderer = ({cellData, rowData}) => {
+      if (cellData == null) return '';
+      return (
+        <div key={rowData.s}>
+          <a target='_blank' rel='noopener noreferrer' href={rowData.namesArchiveLink}>{cellData}</a>
         </div>
       );
     };
@@ -225,6 +235,7 @@ class VirtualizedTable extends React.PureComponent {
                     cellDataGetter={({rowData}) => rowData.source}
                     dataKey="source"
                     headerRenderer={headerRenderer}
+                    cellRenderer={sourceRenderer}
                     width={columnWidth}
                   />
                 </Table>
