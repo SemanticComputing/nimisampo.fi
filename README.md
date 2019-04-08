@@ -10,14 +10,16 @@ test branch visible at http://test.nimisampo.fi/
 
 ## Requirements
 
-Node.js 8.x: https://nodejs.org/en/download/releases/
+Node.js https://nodejs.org/en/ (tested with 10.15.3 LTS)
+Nodemon https://nodemon.io/
 
 ## Local development
 
-```
-npm install
-npm run dev
-```
+Install the dependencies defined in package.json:
+`npm install`
+
+Run client and server concurrently:
+`npm run dev`
 
 ## Deploy with Docker
 
