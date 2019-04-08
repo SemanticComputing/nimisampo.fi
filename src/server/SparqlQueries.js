@@ -133,31 +133,52 @@ module.exports = {
     'shortTitle': 'TGN',
     'timePeriod': '',
     'endpoint': 'http://vocab.getty.edu/sparql.json',
-    'simpleSuggestionQuery':
-      'SELECT+DISTINCT+?label+' +
-      'WHERE+{' +
-      '?s+a+skos:Concept;+' +
-      'luc:term+"<QUERYTERM>*";+' +
-      'skos:inScheme+tgn:;' +
-      'gvp:prefLabelGVP/xl:literalForm+?lbl+.' +
-      '+BIND(STR(?lbl)+AS+?label)' +
-      'FILTER+(STRSTARTS(LCASE(?lbl),+"<QUERYTERM>"))' +
-      '}' +
-      'LIMIT+20',
-    'resultQuery':
-      'SELECT+?s+(COALESCE(?labelEn,?labelGVP)+AS+?prefLabel)+?broaderTypeLabel+?broaderAreaLabel+?source+?lat+?long+?markerColor+' +
-      'WHERE+{' +
-      '?s+luc:term+"<QUERYTERM>";+' +
-      'skos:inScheme+tgn:;+' +
-      'gvp:placeTypePreferred+[gvp:prefLabelGVP+[xl:literalForm+?broaderTypeLabel;dct:language+gvp_lang:en]];+' +
-      'gvp:broaderPreferred/xl:prefLabel/xl:literalForm+?broaderAreaLabel+.+' +
-      'OPTIONAL+{?s+xl:prefLabel+[xl:literalForm+?labelEn;+dct:language+gvp_lang:en]}+' +
-      'OPTIONAL{?s+gvp:prefLabelGVP+[xl:literalForm?labelGVP]}+' +
-      'OPTIONAL{?s+foaf:focus+?place+.+?place+wgs:lat+?lat;+wgs:long+?long}+' +
-      'FILTER+EXISTS+{?s+xl:prefLabel/gvp:term+?term+.+FILTER+(LCASE(STR(?term))="<QUERYTERM>")}' +
-      'BIND("TGN"+AS+?source)+' +
-      'BIND("orange"+AS+?markerColor)+' +
-      '}',
+    //'simpleSuggestionQuery':
+    //  'SELECT+DISTINCT+?label+' +
+    //  'WHERE+{' +
+    //  '?s+a+skos:Concept;+' +
+    //  'luc:term+"<QUERYTERM>*";+' +
+    //  'skos:inScheme+tgn:;' +
+    //  'gvp:prefLabelGVP/xl:literalForm+?lbl+.' +
+    //  '+BIND(STR(?lbl)+AS+?label)' +
+    //  'FILTER+(STRSTARTS(LCASE(?lbl),+"<QUERYTERM>"))' +
+    //  '}' +
+    //  'LIMIT+20',
+    'resultQuery': `
+      SELECT ?s (COALESCE(?labelEn,?labelGVP) AS ?prefLabel) ?broaderTypeLabel
+        ?broaderAreaLabel ?source ?lat ?long ?markerColor
+      WHERE {
+          ?s luc:term "<QUERYTERM>" ;
+          skos:inScheme tgn: ;
+          gvp:placeTypePreferred [
+            gvp:prefLabelGVP [
+              xl:literalForm ?broaderTypeLabel;
+              dct:language gvp_lang:en
+            ]
+          ];
+          gvp:broaderPreferred/xl:prefLabel/xl:literalForm ?broaderAreaLabel .
+        OPTIONAL {
+          ?s xl:prefLabel [
+            xl:literalForm ?labelEn ;
+            dct:language gvp_lang:en
+          ]
+        }
+        OPTIONAL {
+          ?s gvp:prefLabelGVP [xl:literalForm ?labelGVP]
+        }
+        OPTIONAL {
+          ?s foaf:focus ?place .
+          ?place wgs:lat ?lat ;
+                 wgs:long ?long .
+        }
+        FILTER EXISTS {
+          ?s xl:prefLabel/gvp:term+?term .
+          FILTER (LCASE(STR(?term))="<QUERYTERM>")
+        }
+        BIND("TGN" AS ?source)
+        BIND("orange" AS ?markerColor)
+      }
+      `,
   },
   'kotus': {
     'title': 'Institute for the Languages of Finland (Kotus) Digital Names archive',
@@ -237,9 +258,6 @@ module.exports = {
         }
         OPTIONAL { ?s na-schema:collector ?collector }
         OPTIONAL { ?s na-schema:stamp_date ?collectionYear }
-        #FILTER(LANGMATCHES(LANG(?label), 'fi'))
-        #FILTER(LANGMATCHES(LANG(?typeLabel), 'fi'))
-        #FILTER(LANGMATCHES(LANG(?broaderAreaLabel), 'fi'))
       }
     `,
   },

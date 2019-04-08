@@ -1,13 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import request from 'superagent';
 import path from 'path';
 import { has, castArray} from 'lodash';
-import sparqlSearchEngine from './SparqlSearchEngine';
+import { getFederatedResults, getWFSLayers } from './Search';
 const DEFAULT_PORT = 3001;
 const app = express();
-//const isDevelopment  = app.get('env') !== 'production';
-
 app.set('port', process.env.PORT || DEFAULT_PORT);
 app.use(bodyParser.json());
 
@@ -18,25 +15,11 @@ app.use(function(req, res, next) {
   next();
 });
 
-// React app, static files
-app.use(express.static(__dirname + './../public/'));
+// The root directory from which to serve static assets (React app)
+const publicPath = path.join(__dirname, './../public/');
+app.use(express.static(publicPath));
 
-app.get('/suggest', (req, res) => {
-  const queryDatasets = castArray(req.query.dataset);
-  const queryTerm = req.query.q;
-  // console.log(queryDatasets);
-
-  return sparqlSearchEngine.getFederatedSuggestions(queryTerm, queryDatasets).then((data) => {
-    // console.log(data);
-    res.json(data);
-  })
-    .catch((err) => {
-      console.log(err);
-      return res.sendStatus(500);
-    });
-});
-
-app.get('/search', (req, res) => {
+app.get('/search', async (req, res, next) => {
   // https://softwareengineering.stackexchange.com/questions/233164/how-do-searches-fit-into-a-restful-interface
   // example request: http://localhost:3000/search?dataset=warsa_karelian_places&dataset=pnr&q=viip
   const queryDatasets = castArray(req.query.dataset);
@@ -54,27 +37,38 @@ app.get('/search', (req, res) => {
     latMax = req.query.latMax;
     longMax = req.query.longMax;
   }
-  return sparqlSearchEngine.getFederatedResults(queryTerm, latMin, longMin, latMax, longMax, queryDatasets).then((data) => {
-    // console.log(data);
+  try {
+    const data = await getFederatedResults(queryTerm, latMin, longMin, latMax, longMax, queryDatasets);
     res.json(data);
-  })
-    .catch((err) => {
-      console.log(err);
-      return res.sendStatus(500);
-    });
+  } catch(error) {
+    next(error);
+  }
 });
 
-app.get('/wfs', (req, res) => {
-
-  return getWFSLayers(req.query.layerID).then((data) => {
-    //console.log(data);
-    res.json(data);
-  })
-    .catch((err) => {
-      console.log(err);
-      return res.sendStatus(500);
-    });
+app.get('/wfs', async (req, res, next) => {
+  try {
+    const data = await getWFSLayers(req.query.layerID);
+    return res.json(data);
+  } catch (error) {
+    next(error);
+  }
 });
+
+// app.get('/suggest', (req, res) => {
+//   const queryDatasets = castArray(req.query.dataset);
+//   const queryTerm = req.query.q;
+//   // console.log(queryDatasets);
+//
+//   return sparqlSearchEngine.getFederatedSuggestions(queryTerm, queryDatasets).then((data) => {
+//     // console.log(data);
+//     res.json(data);
+//   })
+//     .catch((err) => {
+//       console.log(err);
+//       return res.sendStatus(500);
+//     });
+// });
+
 
 /*  Routes are matched to a url in order of their definition
     Redirect all the the rest for react-router to handle */
@@ -82,23 +76,9 @@ app.get('*', function(request, response) {
   response.sendFile(path.resolve(__dirname, './../public/', 'index.html'));
 });
 
-const getWFSLayers = (layerIDs) => {
-  return Promise.all(layerIDs.map((layerID) => getWFSLayer(layerID)));
-};
-
-const getWFSLayer = (layerID) => {
-  return new Promise((resolve, reject) => {
-    // https://avaa.tdata.fi/web/kotus/rajapinta
-    const url = 'http://avaa.tdata.fi/geoserver/kotus/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=' + layerID + '&srsName=EPSG:4326&outputformat=json';
-    request
-      .get(url)
-      .then(function(data) {
-        return resolve({ layerID: layerID, geoJSON: data.body });
-      })
-      .catch(function(err) {
-        return reject(err.message, err.response);
-      });
-  });
-};
-
-app.listen(app.get('port'), () => console.log('NameSampo backend listening on port ' + app.get('port')));
+app.listen(app.get('port'), () =>
+  console.log(`
+  Express server listening on port ${app.get('port')}
+  Static files (e.g. the React app) will be served from ${publicPath}
+  `)
+);
