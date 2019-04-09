@@ -8,7 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 //import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import CropFreeIcon from '@material-ui/icons/CropFree';
-import LeafletMap from './LeafletMap';
+import LeafletMap from '../facet_results/LeafletMap';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({

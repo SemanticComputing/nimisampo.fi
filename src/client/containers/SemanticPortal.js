@@ -8,12 +8,12 @@ import compose from 'recompose/compose';
 import { Route, Redirect } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import TopBar from '../components/TopBar';
-import Footer from '../components/Footer';
-import FacetBar from '../components/FacetBar';
-import Places from '../components/Places';
-import Front from '../components/Front';
-import Message from '../components/Message';
+import TopBar from '../components/main_layout/TopBar';
+import Main from '../components/main_layout/Main';
+import Footer from '../components/main_layout/Footer';
+import FacetBar from '../components/facet_bar/FacetBar';
+import Places from '../components/perspectives/Places';
+import Message from '../components/main_layout/Message';
 import bgImage from '../img/bg2.jpg';
 
 import {
@@ -104,7 +104,7 @@ const styles = theme => ({
   }
 });
 
-let MapApp = (props) => {
+let SemanticPortal = props => {
   const { classes, search, results, resultValues, error } = props;
   const strings = props.options.strings[props.options.language];
 
@@ -146,7 +146,7 @@ let MapApp = (props) => {
               <Grid item sm={8} md={9} className={classes.resultsContainer}>
                 {props.results.length == 0 && !props.search.fetchingResults &&
                   <Paper className={classes.frontContainerPaper}>
-                    <Front strings={strings} />
+                    <Main strings={strings} />
                   </Paper>
                 }
                 {props.results.length > 0 &&
@@ -185,7 +185,7 @@ let MapApp = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { results, resultValues } = filterResults(state.search);
   return {
     options: state.options,
@@ -217,7 +217,7 @@ const mapDispatchToProps = ({
   showError
 });
 
-MapApp.propTypes = {
+SemanticPortal.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
   //error: PropTypes.object.isRequired,
@@ -256,4 +256,4 @@ export default compose(
   ),
   withWidth(),
   withStyles(styles, {withTheme: true}),
-)(MapApp);
+)(SemanticPortal);

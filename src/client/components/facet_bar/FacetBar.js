@@ -7,7 +7,7 @@ import FacetHeader from './FacetHeader';
 import SearchField from './SearchField';
 import LeafletMapDialog from './LeafletMapDialog';
 import Typography from '@material-ui/core/Typography';
-import DatasetSelector from '../components/DatasetSelector';
+import DatasetSelector from './DatasetSelector';
 
 const styles = theme => ({
   root: {
