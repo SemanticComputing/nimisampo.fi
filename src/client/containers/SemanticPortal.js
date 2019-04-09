@@ -113,7 +113,6 @@ let SemanticPortal = props => {
       <div className={classes.appFrame}>
         <Message error={error} />
         <TopBar
-          results={results}
           clearResults={props.clearResults}
           strings={strings}
           language={props.options.language}
