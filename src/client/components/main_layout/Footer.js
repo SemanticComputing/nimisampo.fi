@@ -2,11 +2,11 @@ import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import aaltoLogo from '../img/logos/aalto-logo-white-no-background-small.png';
-import uhLogo from '../img/logos/university-of-helsinki-logo-white-no-background-small.png';
-import heldigLogo from '../img/logos/heldig-logo-small.png';
-import kotusLogo from '../img/logos/kotus-logo-white-no-backgrounds-small.png';
-import secoLogo from '../img/logos/seco-logo-white-no-background-small.png';
+import aaltoLogo from '../../img/logos/aalto-logo-white-no-background-small.png';
+import uhLogo from '../../img/logos/university-of-helsinki-logo-white-no-background-small.png';
+import heldigLogo from '../../img/logos/heldig-logo-small.png';
+import kotusLogo from '../../img/logos/kotus-logo-white-no-backgrounds-small.png';
+import secoLogo from '../../img/logos/seco-logo-white-no-background-small.png';
 
 const aaltoLogoHeight = 37;
 const uhLogoHeight = 44;
