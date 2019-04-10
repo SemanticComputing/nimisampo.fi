@@ -47,7 +47,6 @@ export const INITIAL_STATE = {
   results: null,
   latestFilter: {
     id: '',
-    adding: null
   },
   latestFilterValues: [],
   resultsFilter: {
@@ -130,14 +129,11 @@ const search = (state = INITIAL_STATE, action) => {
 
 const updateResultsFilter = (state, action) => {
   const { property, value, latestValues } = action.filterObj;
-  let adding = false;
   let nSet = state.resultsFilter[property];
   if (nSet.has(value)) {
     nSet.delete(value);
-    adding = false;
   } else {
     nSet.add(value);
-    adding = true;
   }
   const newFilter = {
     ...state.resultsFilter,
@@ -148,7 +144,6 @@ const updateResultsFilter = (state, action) => {
     resultsFilter: newFilter,
     latestFilter: {
       id: property,
-      adding: adding
     },
     latestFilterValues: latestValues
   };

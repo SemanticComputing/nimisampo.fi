@@ -36,7 +36,7 @@ export const filterResults = createSelector(
     for (const property in resultsFilter) {
       visibleValues[property] = {};
     }
-    if (latestFilter.id !== '' && latestFilter.adding) {
+    if (latestFilter.id !== '') {
       skipProperty = latestFilter.id;
       latestFilterValues = latestFilterValues.map(value => ({
         ...value,
