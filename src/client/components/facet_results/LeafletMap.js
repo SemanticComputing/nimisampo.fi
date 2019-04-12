@@ -347,7 +347,7 @@ class LeafletMap extends React.Component {
       <h3>{prefLabel}</h3>
       <p>${strings.type}: {typeLabel}</p>
       <p>${strings.area}: {broaderAreaLabel}</p>
-      <p>${strings.source}: <a target='_blank' rel='noopener noreferrer' href={s}>{source}</a></p>
+      <p>${strings.source}: <a target='_blank' rel='noopener noreferrer' href={id}>{source}</a></p>
       `;
     return L.Util.template(popUpTemplate, result);
   }
