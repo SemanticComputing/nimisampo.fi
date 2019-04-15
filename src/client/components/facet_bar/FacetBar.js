@@ -133,7 +133,7 @@ let FacetBar = props => {
                 data={Object.values(props.resultValues.prefLabel)}
                 property='prefLabel'
                 searchField={true}
-                updateFilter={props.updateResultsFilter}
+                updateFacet={props.updateFacet}
                 strings={strings}
               />
             </div>
@@ -149,7 +149,7 @@ let FacetBar = props => {
                 data={Object.values(props.resultValues.broaderTypeLabel)}
                 property='broaderTypeLabel'
                 searchField={true}
-                updateFilter={props.updateResultsFilter}
+                updateFacet={props.updateFacet}
                 strings={strings}
               />
             </div>
@@ -164,7 +164,7 @@ let FacetBar = props => {
                 data={Object.values(props.resultValues.broaderAreaLabel)}
                 property='broaderAreaLabel'
                 searchField={true}
-                updateFilter={props.updateResultsFilter}
+                updateFacet={props.updateFacet}
                 strings={strings}
               />
             </div>
@@ -211,7 +211,7 @@ FacetBar.propTypes = {
   search: PropTypes.object.isRequired,
   resultValues: PropTypes.object.isRequired,
   fetchResults: PropTypes.func.isRequired,
-  updateResultsFilter: PropTypes.func.isRequired,
+  updateFacet: PropTypes.func.isRequired,
   toggleDataset: PropTypes.func.isRequired,
   updateQuery: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
