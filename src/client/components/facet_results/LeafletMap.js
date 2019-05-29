@@ -343,11 +343,17 @@ class LeafletMap extends React.Component {
 
   createPopUpContent(result) {
     const { strings } = this.props;
+    let accuracy = '';
+    if (has(result, 'positioningAccuracy')) {
+      accuracy = `<p>${strings.accuracy}: {positioningAccuracy}</p>`;
+    }
+    let sourceLink = result.source == 'NA' ? 'namesArchiveLink' : 'id';
     const popUpTemplate = `
       <h3>{prefLabel}</h3>
       <p>${strings.type}: {typeLabel}</p>
       <p>${strings.area}: {broaderAreaLabel}</p>
-      <p>${strings.source}: <a target='_blank' rel='noopener noreferrer' href={id}>{source}</a></p>
+      ${accuracy}
+      <p>${strings.source}: <a target='_blank' rel='noopener noreferrer' href={${sourceLink}}>{source}</a></p>
       `;
     return L.Util.template(popUpTemplate, result);
   }
