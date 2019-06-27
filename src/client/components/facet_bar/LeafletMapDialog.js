@@ -101,10 +101,10 @@ class LeafletMapDialog extends React.Component {
           />
           <DialogActions>
             <Button onClick={this.handleClose} variant="contained" color="primary" autoFocus>
-	      {strings.searchByAreaCancel}
+              {strings.searchByAreaCancel}
             </Button>
             <Button onClick={this.handleSearchByArea} variant="contained" color="primary" autoFocus>
-	      {strings.searchByAreaSearch}
+              {strings.searchByAreaSearch}
             </Button>
           </DialogActions>
         </Dialog>
