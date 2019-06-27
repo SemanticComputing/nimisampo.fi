@@ -56,6 +56,7 @@ export const INITIAL_STATE = {
       nameSampoDesc3: `Paikannimien haussa voi käyttää jokerimerkkiä (*), esimerkiksi
       haulla "orava*" löytyvät kaikki orava-alkuiset ja haulla "*haara" kaikki
       haara-loppuiset nimet.`,
+      nameSampoAbout: 'Tietoja',
       nameSampoDesc4: `Hakutermejä voi myös yhdistellä käyttämällä "or"-sanaa, esimerkiksi
       "ukko* or ukon*" löytää kaikki ukko- tai ukon-alkuiset nimet.`,
       selectDataSources: 'Valitse lähdeaineistot',
@@ -65,6 +66,8 @@ export const INITIAL_STATE = {
       searchPlaceNames: 'Hae paikannimellä',
       searchByArea: 'Hae kaikki paikannimet alueelta',
       searchByAreaTitle: 'Siirrä karttanäkymä tutkittavalle alueelle, aseta zoomaustasoksi vähintään 11 ja käytä alareunan hakupainiketta.',
+      searchByAreaCancel: 'Peruuta',
+      searchByAreaSearch: 'Hae',
       name: 'Nimi',
       type: 'Paikanlaji',
       area: 'Alue',
