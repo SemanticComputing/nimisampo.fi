@@ -60,7 +60,7 @@ class TopBar extends React.Component {
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                <Button className={classes.appBarButton}>Tietoja</Button>
+                <Button className={classes.appBarButton}>{this.props.strings.nameSampoAbout}</Button>
               </a>
               <FeedbackDialog strings={this.props.strings} />
               {/* <Button className={classes.appBarButton}>Ohje</Button> */}
