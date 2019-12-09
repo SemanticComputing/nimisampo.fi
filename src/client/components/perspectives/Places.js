@@ -27,7 +27,7 @@ let Places = props => {
             resultValues={props.resultValues}
             search={props.search}
             sortResults={props.sortResults}
-            updateResultsFilter={props.updateResultsFilter}
+            updateFacet={props.updateFacet}
             bounceMarker={props.bounceMarker}
             openMarkerPopup={props.openMarkerPopup}
             removeTempMarker={props.removeTempMarker}
@@ -132,7 +132,7 @@ Places.propTypes = {
   removeTempMarker: PropTypes.func.isRequired,
   updateResultFormat: PropTypes.func.isRequired,
   updateMapMode: PropTypes.func.isRequired,
-  updateResultsFilter: PropTypes.func.isRequired,
+  updateFacet: PropTypes.func.isRequired,
   routeProps: PropTypes.object.isRequired,
   strings: PropTypes.object.isRequired
 };

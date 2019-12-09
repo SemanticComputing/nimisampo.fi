@@ -30,7 +30,7 @@ import {
   getGeoJSON,
   updateResultFormat,
   updateMapMode,
-  updateResultsFilter,
+  updateFacet,
   sortResults,
   bounceMarker,
   openMarkerPopup,
@@ -130,7 +130,7 @@ let SemanticPortal = props => {
                   search={search}
                   resultValues={resultValues}
                   fetchResults={props.fetchResults}
-                  updateResultsFilter={props.updateResultsFilter}
+                  updateFacet={props.updateFacet}
                   updateQuery={props.updateQuery}
                   clearResults={props.clearResults}
                   toggleDataset={props.toggleDataset}
@@ -157,7 +157,7 @@ let SemanticPortal = props => {
                     map={props.map}
                     options={props.options}
                     sortResults={props.sortResults}
-                    updateResultsFilter={props.updateResultsFilter}
+                    updateFacet={props.updateFacet}
                     updateQuery={props.updateQuery}
                     fetchResults={props.fetchResults}
                     clearResults={props.clearResults}
@@ -208,7 +208,7 @@ const mapDispatchToProps = ({
   getGeoJSON,
   updateResultFormat,
   updateMapMode,
-  updateResultsFilter,
+  updateFacet,
   bounceMarker,
   openMarkerPopup,
   removeTempMarker,
@@ -242,7 +242,7 @@ SemanticPortal.propTypes = {
   removeTempMarker: PropTypes.func.isRequired,
   updateResultFormat: PropTypes.func.isRequired,
   updateMapMode: PropTypes.func.isRequired,
-  updateResultsFilter: PropTypes.func.isRequired,
+  updateFacet: PropTypes.func.isRequired,
   updateMapBounds: PropTypes.func.isRequired,
   showError: PropTypes.func.isRequired
 };

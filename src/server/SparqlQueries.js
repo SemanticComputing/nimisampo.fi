@@ -230,7 +230,9 @@ module.exports = {
       PREFIX hipla-schema: <http://ldf.fi/schema/hipla/>
       PREFIX na-schema: <http://ldf.fi/schema/kotus-names-archive/>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-      SELECT ?id ?prefLabel ?namesArchiveLink ?typeLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector ?collectionYear ?markerColor
+      SELECT ?id ?prefLabel ?namesArchiveLink ?typeLabel ?broaderTypeLabel
+      ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector
+      ?collectionYear ?markerColor ?positioningAccuracy
       WHERE {
         <QUERY>
         ?id skos:prefLabel ?prefLabel .
@@ -252,6 +254,7 @@ module.exports = {
           ?id wgs84:lat ?lat .
           ?id wgs84:long ?long .
         }
+        OPTIONAL { ?id na-schema:positioning_accuracy ?positioningAccuracy }
         OPTIONAL {
           ?id na-schema:place_name_modifier ?modifier ;
              na-schema:place_name_basic_element ?basicElement .
