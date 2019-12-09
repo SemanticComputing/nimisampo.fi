@@ -27,12 +27,12 @@ import 'leaflet.zoominfo/dist/L.Control.Zoominfo.css';
 
 import 'leaflet.gridlayer.googlemutant/Leaflet.GoogleMutant.js';
 
-import markerShadowIcon from '../img/markers/marker-shadow.png';
-import markerIconViolet from '../img/markers/marker-icon-violet.png';
-import markerIconYellow from '../img/markers/marker-icon-yellow.png';
-import markerIconGrey from '../img/markers/marker-icon-grey.png';
-import markerIconBlue from '../img/markers/marker-icon-blue.png';
-import markerIconOrange from '../img/markers/marker-icon-orange.png';
+import markerShadowIcon from '../../img/markers/marker-shadow.png';
+import markerIconViolet from '../../img/markers/marker-icon-violet.png';
+import markerIconYellow from '../../img/markers/marker-icon-yellow.png';
+import markerIconGrey from '../../img/markers/marker-icon-grey.png';
+import markerIconBlue from '../../img/markers/marker-icon-blue.png';
+import markerIconOrange from '../../img/markers/marker-icon-orange.png';
 
 const styles = () => ({
   spinner: {
@@ -343,11 +343,17 @@ class LeafletMap extends React.Component {
 
   createPopUpContent(result) {
     const { strings } = this.props;
+    let accuracy = '';
+    if (has(result, 'positioningAccuracy')) {
+      accuracy = `<p>${strings.accuracy}: {positioningAccuracy}</p>`;
+    }
+    let sourceLink = result.source == 'NA' ? 'namesArchiveLink' : 'id';
     const popUpTemplate = `
       <h3>{prefLabel}</h3>
       <p>${strings.type}: {typeLabel}</p>
       <p>${strings.area}: {broaderAreaLabel}</p>
-      <p>${strings.source}: <a target='_blank' rel='noopener noreferrer' href={s}>{source}</a></p>
+      ${accuracy}
+      <p>${strings.source}: <a target='_blank' rel='noopener noreferrer' href={${sourceLink}}>{source}</a></p>
       `;
     return L.Util.template(popUpTemplate, result);
   }

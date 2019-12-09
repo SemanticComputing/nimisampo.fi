@@ -2,19 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Immutable from 'immutable';
 import { Route, Redirect } from 'react-router-dom';
-import ViewTabs from './ViewTabs';
-import LeafletMap from './LeafletMap';
-import GMap from '../components/GMap';
-import VirtualizedTable from './VirtualizedTable';
-import Pie from './Pie.js';
-import CSVButton from './CSVButton';
-import ResultInfo from './ResultInfo';
+import PerspectiveTabs from '../main_layout/PerspectiveTabs';
+import LeafletMap from '../facet_results/LeafletMap';
+import GMap from '../facet_results/GMap';
+import VirtualizedTable from '../facet_results/VirtualizedTable';
+import Pie from '../facet_results/Pie.js';
+import CSVButton from '../facet_results/CSVButton';
+import ResultInfo from '../facet_results/ResultInfo';
 
 let Places = props => {
   //console.log(props.results)
   return (
     <React.Fragment>
-      <ViewTabs routeProps={props.routeProps} strings={props.strings} />
+      <PerspectiveTabs routeProps={props.routeProps} strings={props.strings} />
       <Route
         exact path='/app'
         render={() => <Redirect to='/app/table' />}
@@ -27,7 +27,7 @@ let Places = props => {
             resultValues={props.resultValues}
             search={props.search}
             sortResults={props.sortResults}
-            updateResultsFilter={props.updateResultsFilter}
+            updateFacet={props.updateFacet}
             bounceMarker={props.bounceMarker}
             openMarkerPopup={props.openMarkerPopup}
             removeTempMarker={props.removeTempMarker}
@@ -132,7 +132,7 @@ Places.propTypes = {
   removeTempMarker: PropTypes.func.isRequired,
   updateResultFormat: PropTypes.func.isRequired,
   updateMapMode: PropTypes.func.isRequired,
-  updateResultsFilter: PropTypes.func.isRequired,
+  updateFacet: PropTypes.func.isRequired,
   routeProps: PropTypes.object.isRequired,
   strings: PropTypes.object.isRequired
 };

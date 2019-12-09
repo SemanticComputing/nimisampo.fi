@@ -10,16 +10,16 @@ module.exports = {
     //   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     //   PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
     //   PREFIX gs: <http://www.opengis.net/ont/geosparql#>
-    //   SELECT DISTINCT ?label (COUNT(?s) AS ?count)
+    //   SELECT DISTINCT ?label (COUNT(?id) AS ?count)
     //   WHERE {
     //     GRAPH <http://ldf.fi/warsa/places/karelian_places> {
-    //       (?s ?score) text:query (skos:prefLabel '<QUERYTERM>*') .
+    //       (?id ?idcore) text:query (skos:prefLabel '<QUERYTERM>*') .
     //     }
-    //     ?s skos:prefLabel ?lbl .
+    //     ?id skos:prefLabel ?lbl .
     //     BIND(STR(?lbl) AS ?label)
     //   }
     //   GROUP BY ?label
-    //   ORDER BY DESC(MAX(?score)) ?label
+    //   ORDER BY DESC(MAX(?idcore)) ?label
     //   LIMIT 50
     //   `,
     'simpleSuggestionQuery': `
@@ -31,9 +31,9 @@ module.exports = {
         SELECT DISTINCT ?label
         WHERE {
           GRAPH <http://ldf.fi/warsa/places/karelian_places> {
-            ?s text:query (skos:prefLabel '<QUERYTERM>*' 50) .
+            ?id text:query (skos:prefLabel '<QUERYTERM>*' 50) .
           }
-          ?s skos:prefLabel ?lbl .
+          ?id skos:prefLabel ?lbl .
           FILTER(STRSTARTS(LCASE(?lbl), '<QUERYTERM>'))
           BIND(STR(?lbl) AS ?label)
         }
@@ -46,23 +46,23 @@ module.exports = {
       PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
       PREFIX gs: <http://www.opengis.net/ont/geosparql#>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-      SELECT ?s ?prefLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
+      SELECT ?id ?prefLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
         {
-          SELECT DISTINCT ?s {
+          SELECT DISTINCT ?id {
             GRAPH <http://ldf.fi/warsa/places/karelian_places> {
               <QUERY>
             }
           }
         }
-        ?s skos:prefLabel ?prefLabel .
-        ?s a/skos:prefLabel ?broaderTypeLabel .
-        ?s gs:sfWithin/skos:prefLabel ?broaderAreaLabel .
+        ?id skos:prefLabel ?prefLabel .
+        ?id a/skos:prefLabel ?broaderTypeLabel .
+        ?id gs:sfWithin/skos:prefLabel ?broaderAreaLabel .
         BIND("KK" AS ?source)
         BIND("blue" AS ?markerColor)
         OPTIONAL {
-          ?s wgs84:lat ?lat .
-          ?s wgs84:long ?long .
+          ?id wgs84:lat ?lat .
+          ?id wgs84:long ?long .
         }
         #FILTER(LCASE(STR(?prefLabel))='<QUERYTERM>')
         FILTER(LANGMATCHES(LANG(?prefLabel), 'fi'))
@@ -85,8 +85,8 @@ module.exports = {
       PREFIX sf: <http://ldf.fi/functions#>
       SELECT DISTINCT ?label
       WHERE {
-        ?s text:query (skos:prefLabel '<QUERYTERM>*' 50) .
-        ?s sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?lbl) .
+        ?id text:query (skos:prefLabel '<QUERYTERM>*' 50) .
+        ?id sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?lbl) .
         FILTER(STRSTARTS(LCASE(?lbl), '<QUERYTERM>'))
         BIND(STR(?lbl) AS ?label)
       }
@@ -101,16 +101,16 @@ module.exports = {
       PREFIX sf: <http://ldf.fi/functions#>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
       PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
-      SELECT ?s ?prefLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
+      SELECT ?id ?prefLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
         <QUERY>
-        ?s sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?prefLabel) .
-        ?s a ?type .
+        ?id sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?prefLabel) .
+        ?id a ?type .
         ?type sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderTypeLabel) .
-        ?s wgs84:lat ?lat .
-        ?s wgs84:long ?long .
+        ?id wgs84:lat ?lat .
+        ?id wgs84:long ?long .
         OPTIONAL {
-          ?s crm:P89_falls_within ?municipality .
+          ?id crm:P89_falls_within ?municipality .
           ?municipality a ?munType .
           ?municipality sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderAreaLabel_) .
           FILTER (?munType != <http://ldf.fi/pnr-schema#SubRegion>)
@@ -136,7 +136,7 @@ module.exports = {
     //'simpleSuggestionQuery':
     //  'SELECT+DISTINCT+?label+' +
     //  'WHERE+{' +
-    //  '?s+a+skos:Concept;+' +
+    //  '?id+a+skos:Concept;+' +
     //  'luc:term+"<QUERYTERM>*";+' +
     //  'skos:inScheme+tgn:;' +
     //  'gvp:prefLabelGVP/xl:literalForm+?lbl+.' +
@@ -145,10 +145,10 @@ module.exports = {
     //  '}' +
     //  'LIMIT+20',
     'resultQuery': `
-      SELECT ?s (COALESCE(?labelEn,?labelGVP) AS ?prefLabel) ?broaderTypeLabel
+      SELECT ?id (COALESCE(?labelEn,?labelGVP) AS ?prefLabel) ?broaderTypeLabel
         ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
-          ?s luc:term "<QUERYTERM>" ;
+          ?id luc:term "<QUERYTERM>" ;
           skos:inScheme tgn: ;
           gvp:placeTypePreferred [
             gvp:prefLabelGVP [
@@ -158,21 +158,21 @@ module.exports = {
           ];
           gvp:broaderPreferred/xl:prefLabel/xl:literalForm ?broaderAreaLabel .
         OPTIONAL {
-          ?s xl:prefLabel [
+          ?id xl:prefLabel [
             xl:literalForm ?labelEn ;
             dct:language gvp_lang:en
           ]
         }
         OPTIONAL {
-          ?s gvp:prefLabelGVP [xl:literalForm ?labelGVP]
+          ?id gvp:prefLabelGVP [xl:literalForm ?labelGVP]
         }
         OPTIONAL {
-          ?s foaf:focus ?place .
+          ?id foaf:focus ?place .
           ?place wgs:lat ?lat ;
                  wgs:long ?long .
         }
         FILTER EXISTS {
-          ?s xl:prefLabel/gvp:term+?term .
+          ?id xl:prefLabel/gvp:term+?term .
           FILTER (LCASE(STR(?term))="<QUERYTERM>")
         }
         BIND("TGN" AS ?source)
@@ -193,14 +193,14 @@ module.exports = {
     //   PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
     //   PREFIX gs: <http://www.opengis.net/ont/geosparql#>
     //   PREFIX hipla: <http://ldf.fi/schema/hipla/>
-    //   SELECT DISTINCT ?label (COUNT(?s) AS ?count)
+    //   SELECT DISTINCT ?label (COUNT(?id) AS ?count)
     //   WHERE {
-    //     (?s ?score) text:query (skos:prefLabel '<QUERYTERM>*') .
-    //     ?s hipla:type [] .
-    //     ?s skos:prefLabel ?lbl .
+    //     (?id ?idcore) text:query (skos:prefLabel '<QUERYTERM>*') .
+    //     ?id hipla:type [] .
+    //     ?id skos:prefLabel ?lbl .
     //     BIND(STR(?lbl) AS ?label)
     //   }
-    //   ORDER BY DESC(MAX(?score)) ?label
+    //   ORDER BY DESC(MAX(?idcore)) ?label
     //   LIMIT 20
     //   `,
     'simpleSuggestionQuery': `
@@ -212,9 +212,9 @@ module.exports = {
       PREFIX hipla: <http://ldf.fi/schema/hipla/>
       SELECT DISTINCT ?label
       WHERE {
-        ?s text:query (skos:prefLabel '<QUERYTERM>*' 50) .
-        ?s hipla:type [] .
-        ?s skos:prefLabel ?lbl .
+        ?id text:query (skos:prefLabel '<QUERYTERM>*' 50) .
+        ?id hipla:type [] .
+        ?id skos:prefLabel ?lbl .
         FILTER(STRSTARTS(LCASE(?lbl), '<QUERYTERM>'))
         BIND(STR(?lbl) AS ?label)
       }
@@ -230,17 +230,19 @@ module.exports = {
       PREFIX hipla-schema: <http://ldf.fi/schema/hipla/>
       PREFIX na-schema: <http://ldf.fi/schema/kotus-names-archive/>
       PREFIX wgs84: <http://www.w3.org/2003/01/geo/wgs84_pos#>
-      SELECT ?s ?prefLabel ?namesArchiveLink ?typeLabel ?broaderTypeLabel ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector ?collectionYear ?markerColor
+      SELECT ?id ?prefLabel ?namesArchiveLink ?typeLabel ?broaderTypeLabel
+      ?broaderAreaLabel ?source ?lat ?long ?modifier ?basicElement ?collector
+      ?collectionYear ?markerColor ?positioningAccuracy
       WHERE {
         <QUERY>
-        ?s skos:prefLabel ?prefLabel .
-        ?s na-schema:parish ?broaderAreaLabel .
-        ?s owl:sameAs ?namesArchiveLink .
+        ?id skos:prefLabel ?prefLabel .
+        ?id na-schema:parish ?broaderAreaLabel .
+        ?id owl:sameAs ?namesArchiveLink .
         BIND("NA" AS ?source)
         BIND("violet" AS ?markerColor)
         BIND("-" AS ?missingValue)
         OPTIONAL {
-          ?s a ?type .
+          ?id a ?type .
           OPTIONAL {
             ?type skos:prefLabel ?typeLabel_ .
             ?type rdfs:subClassOf/skos:prefLabel ?broaderTypeLabel_ .
@@ -249,15 +251,16 @@ module.exports = {
         BIND(COALESCE(?typeLabel_, ?missingValue) as ?typeLabel)
         BIND(COALESCE(?broaderTypeLabel_, ?missingValue) as ?broaderTypeLabel)
         OPTIONAL {
-          ?s wgs84:lat ?lat .
-          ?s wgs84:long ?long .
+          ?id wgs84:lat ?lat .
+          ?id wgs84:long ?long .
         }
+        OPTIONAL { ?id na-schema:positioning_accuracy ?positioningAccuracy }
         OPTIONAL {
-          ?s na-schema:place_name_modifier ?modifier ;
+          ?id na-schema:place_name_modifier ?modifier ;
              na-schema:place_name_basic_element ?basicElement .
         }
-        OPTIONAL { ?s na-schema:collector ?collector }
-        OPTIONAL { ?s na-schema:stamp_date ?collectionYear }
+        OPTIONAL { ?id na-schema:collector ?collector }
+        OPTIONAL { ?id na-schema:stamp_date ?collectionYear }
       }
     `,
   },

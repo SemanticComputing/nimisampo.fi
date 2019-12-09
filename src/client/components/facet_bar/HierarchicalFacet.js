@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
-//import 'react-sortable-tree/style.css'; // This only needs to be imported once in your app
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -71,16 +70,11 @@ class HierarchicalFacet extends Component {
   }
 
   componentDidUpdate = prevProps => {
-    //console.log(this.props.data)
     if (prevProps.data != this.props.data) {
       this.setState({
         treeData: this.props.data
       });
     }
-    // if (this.props.updatedFacet !== '' && this.props.updatedFacet !== this.props.property && prevProps.facetFilters != this.props.facetFilters) {
-    //   // console.log(`fetching new values for ${this.props.property}`)
-    //   this.props.fetchFacet(this.props.property, this.props.sortBy, this.props.sortDirection);
-    // }
   }
 
   handleCheckboxChange = treeObj => event => {
@@ -96,8 +90,8 @@ class HierarchicalFacet extends Component {
 
     this.setState({ treeData: newTreeData });
     //console.log(treeObj)
-    this.props.updateFilter({
-      property: this.props.property,
+    this.props.updateFacet({
+      facetId: this.props.property,
       value: treeObj.node.prefLabel,
       latestValues: this.props.data
     });
@@ -108,17 +102,13 @@ class HierarchicalFacet extends Component {
   }
 
   generateLabel = node => {
-    //let source = node.source == null ? '' : `(source: ${node.source.substring(node.source.lastIndexOf('/') + 1)}`;
-    //console.log(node)
     let label = '';
     if (this.props.property === 'broaderTypeLabel') {
       label = node.prefLabel.toLowerCase();
     } else {
       label = node.prefLabel;
     }
-    //let count = node.totalInstanceCount == null || node.totalInstanceCount == 0 ? node.instanceCount : node.totalInstanceCount;
     return `${label} (${node.instanceCount})`;
-
   }
 
   generateLabelClass = (classes, node) => {
@@ -140,8 +130,6 @@ class HierarchicalFacet extends Component {
   render() {
     const { classes } = this.props;
     const { searchString, searchFocusIndex, searchFoundCount } = this.state;
-    //console.log(this.state.treeData)
-    // console.log(this.props.data.length)
 
     // Case insensitive search of `node.title`
     const customSearchMethod = ({ node, searchQuery }) =>
@@ -163,8 +151,6 @@ class HierarchicalFacet extends Component {
             ? (searchFocusIndex + 1) % searchFoundCount
             : 0,
       });
-
-      //{/* disabled={this.props.data.length < 2 ? true : false} */}
 
     return (
       <React.Fragment>
@@ -210,20 +196,9 @@ class HierarchicalFacet extends Component {
                 onChange={treeData => this.setState({ treeData })}
                 canDrag={false}
                 rowHeight={30}
-                // Custom comparison for matching during search.
-                // This is optional, and defaults to a case sensitive search of
-                // the title and subtitle values.
-                // see `defaultSearchMethod` in https://github.com/frontend-collective/react-sortable-tree/blob/master/src/utils/default-handlers.js
                 searchMethod={customSearchMethod}
                 searchQuery={searchString}
-                // When matches are found, this property lets you highlight a specific
-                // match and scroll to it. This is optional.
                 searchFocusOffset={searchFocusIndex}
-                // This callback returns the matches from the search,
-                // including their `node`s, `treeIndex`es, and `path`s
-                // Here I just use it to note how many matches were found.
-                // This is optional, but without it, the only thing searches
-                // do natively is outline the matching nodes.
                 searchFinishCallback={matches =>
                   this.setState({
                     searchFoundCount: matches.length,
@@ -271,7 +246,7 @@ HierarchicalFacet.propTypes = {
   fetchFacet: PropTypes.func,
   fetchingFacet: PropTypes.bool,
   facetFilters: PropTypes.object,
-  updateFilter: PropTypes.func,
+  updateFacet: PropTypes.func,
   updatedFacet: PropTypes.string,
   searchField: PropTypes.bool.isRequired,
   strings: PropTypes.object.isRequired

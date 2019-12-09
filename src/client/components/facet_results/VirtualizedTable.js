@@ -105,7 +105,7 @@ class VirtualizedTable extends React.PureComponent {
 
     const labelRenderer = ({cellData, rowData}) => {
       if (cellData == null) return '';
-      const label = <a target='_blank' rel='noopener noreferrer' href={rowData.s}>{cellData}</a>;
+      const label = <a target='_blank' rel='noopener noreferrer' href={rowData.id}>{cellData}</a>;
 
       let  marker = '';
       if (typeof rowData.lat !== 'undefined' || typeof rowData.long !== 'undefined') {
@@ -124,7 +124,7 @@ class VirtualizedTable extends React.PureComponent {
         );
       }
       return (
-        <div key={rowData.s}>
+        <div key={rowData.id}>
           {label}{marker}
         </div>
       );

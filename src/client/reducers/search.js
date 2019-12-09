@@ -4,7 +4,7 @@ import {
   FETCH_RESULTS,
   UPDATE_RESULTS,
   CLEAR_RESULTS,
-  UPDATE_RESULTS_FILTER,
+  UPDATE_FACET,
   SORT_RESULTS
 } from '../actions';
 
@@ -46,11 +46,10 @@ export const INITIAL_STATE = {
   },
   results: null,
   latestFilter: {
-    id: '',
-    adding: null
+    facetId: '',
   },
   latestFilterValues: [],
-  resultsFilter: {
+  facets: {
     prefLabel: new Set(),
     modifier: new Set(),
     basicElement: new Set(),
@@ -115,8 +114,8 @@ const search = (state = INITIAL_STATE, action) => {
         results: action.results,
         [`${action.jenaIndex}ResultsFetching`]: false
       };
-    case UPDATE_RESULTS_FILTER:
-      return updateResultsFilter(state, action);
+    case UPDATE_FACET:
+      return updateFacet(state, action);
     case SORT_RESULTS:
       return {
         ...state,
@@ -128,27 +127,23 @@ const search = (state = INITIAL_STATE, action) => {
   }
 };
 
-const updateResultsFilter = (state, action) => {
-  const { property, value, latestValues } = action.filterObj;
-  let adding = false;
-  let nSet = state.resultsFilter[property];
+const updateFacet = (state, action) => {
+  const { facetId, value, latestValues } = action;
+  let nSet = state.facets[facetId];
   if (nSet.has(value)) {
     nSet.delete(value);
-    adding = false;
   } else {
     nSet.add(value);
-    adding = true;
   }
   const newFilter = {
     ...state.resultsFilter,
-    [property]: nSet
+    [ facetId ]: nSet
   };
   return {
     ...state,
     resultsFilter: newFilter,
     latestFilter: {
-      id: property,
-      adding: adding
+      facetId: facetId,
     },
     latestFilterValues: latestValues
   };
