@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
-import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer';
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import purple from '@material-ui/core/colors/purple';
-import Input from '@material-ui/core/Input';
-import IconButton from '@material-ui/core/IconButton';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
-import Typography from '@material-ui/core/Typography';
-
-// https://frontend-collective.github.io/react-sortable-tree/storybook/?selectedKind=Basics&selectedStory=Search&full=0&addons=0&stories=1&panelRight=0
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import intl from 'react-intl-universal'
+import { withStyles } from '@material-ui/core/styles'
+import { has } from 'lodash'
+import SortableTree, { changeNodeAtPath } from 'react-sortable-tree'
+import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer'
+import Checkbox from '@material-ui/core/Checkbox'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import purple from '@material-ui/core/colors/purple'
+import Input from '@material-ui/core/Input'
+import IconButton from '@material-ui/core/IconButton'
+import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore'
+import Typography from '@material-ui/core/Typography'
 
 const styles = () => ({
   facetSearchContainer: {
@@ -26,10 +26,11 @@ const styles = () => ({
     padding: 10
   },
   treeContainer: {
-    height: '100%'
+    flex: 1
   },
   treeContainerWithSearchField: {
-    height: 'calc(100% - 40px)'
+    width: '100%',
+    flex: 1
   },
   spinnerContainer: {
     display: 'flex',
@@ -41,7 +42,10 @@ const styles = () => ({
   checkbox: {
     padding: 0,
     marginLeft: 6,
-    marginRight: 4,
+    marginRight: 4
+  },
+  searchMatch: {
+    boxShadow: '0 2px 0 #673ab7'
   },
   label: {
     // no styling
@@ -54,131 +58,265 @@ const styles = () => ({
   },
   bibaleLabel: {
     color: '#F57F17'
+  },
+  facetLink: {
+    textDecoration: 'inherit'
   }
 
-});
+})
 
+/*
+This component is based on the React Sortable Tree example at:
+https://frontend-collective.github.io/react-sortable-tree/storybook/?selectedKind=Basics&selectedStory=Search&full=0&addons=0&stories=1&panelRight=0
+*/
 class HierarchicalFacet extends Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
-      treeData: this.props.data,
+      treeData: [],
       searchString: '',
       searchFocusIndex: 0,
       searchFoundCount: null,
-    };
+      matches: []
+    }
+  }
+
+  componentDidMount = () => {
+    // console.log(`${this.props.facetID} mounted`);
+    if (this.props.facet.filterType === 'uriFilter') {
+      this.props.fetchFacet({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID
+      })
+    }
   }
 
   componentDidUpdate = prevProps => {
-    if (prevProps.data != this.props.data) {
+    if (prevProps.facetUpdateID !== this.props.facetUpdateID) {
+      // update component state if the user modified this facet
+      if (this.props.updatedFacet === this.props.facetID) {
+        if (has(this.props.updatedFilter, 'path')) {
+          const treeObj = this.props.updatedFilter
+          const newTreeData = changeNodeAtPath({
+            treeData: this.state.treeData,
+            getNodeKey: ({ treeIndex }) => treeIndex,
+            path: treeObj.path,
+            newNode: () => {
+              const oldNode = treeObj.node
+              if (has(oldNode, 'children')) {
+                return {
+                  ...oldNode,
+                  selected: treeObj.added ? 'true' : 'false',
+                  children: this.recursiveSelect(oldNode.children, treeObj.added)
+                }
+              } else {
+                return {
+                  ...oldNode,
+                  selected: treeObj.added ? 'true' : 'false'
+                }
+              }
+            }
+          })
+          this.setState({ treeData: newTreeData })
+        }
+      } else { // else fetch new values, because some other facet was updated
+        // console.log(`fetching new values for ${this.props.facetID}`)
+        this.props.fetchFacet({
+          facetClass: this.props.facetClass,
+          facetID: this.props.facetID
+        })
+      }
+    }
+
+    // fetch new values if the user changes the filter type or sort order
+    if (prevProps.facet.filterType !== this.props.facet.filterType &&
+      this.props.facet.filterType === 'uriFilter') {
+      this.props.fetchFacet({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID
+      })
+    }
+    if (prevProps.facet.sortBy !== this.props.facet.sortBy) {
+      this.props.fetchFacet({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID
+      })
+    }
+
+    // when values have been fetched, update component's state
+    if (prevProps.facet.values !== this.props.facet.values) {
       this.setState({
-        treeData: this.props.data
-      });
+        treeData: this.props.facet.values
+      })
     }
   }
 
-  handleCheckboxChange = treeObj => event => {
-    const newTreeData = changeNodeAtPath({
-      treeData: this.state.treeData,
-      getNodeKey: ({ treeIndex }) =>  treeIndex,
-      path: treeObj.path,
-      newNode: {
-        ...treeObj.node,
-        selected: event.target.checked
-      },
-    });
+  recursiveSelect = (nodes, selected) => {
+    nodes.forEach(node => {
+      // if a child has been previously selected, remove it
+      if (has(this.props.facet.uriFilter, node.id)) {
+        this.props.updateFacetOption({
+          facetClass: this.props.facetClass,
+          facetID: this.props.facetID,
+          option: this.props.facet.filterType,
+          value: { node }
+        })
+      }
+      node.selected = selected ? 'true' : 'false'
+      node.disabled = selected ? 'true' : 'false'
+      if (has(node, 'children')) {
+        this.recursiveSelect(node.children, selected)
+      }
+    })
+    return nodes
+  };
 
-    this.setState({ treeData: newTreeData });
-    //console.log(treeObj)
-    this.props.updateFacet({
-      facetId: this.props.property,
-      value: treeObj.node.prefLabel,
-      latestValues: this.props.data
-    });
+  handleCheckboxChange = treeObj => () => {
+    this.props.updateFacetOption({
+      facetClass: this.props.facetClass,
+      facetID: this.props.facetID,
+      option: this.props.facet.filterType,
+      value: treeObj
+    })
   };
 
   handleSearchFieldOnChange = event => {
-    this.setState({ searchString: event.target.value });
+    this.setState({ searchString: event.target.value })
   }
+
+  generateNodeProps = treeObj => {
+    const { uriFilter } = this.props.facet
+    const { node } = treeObj
+    const selectedCount = uriFilter == null ? 0 : Object.keys(this.props.facet.uriFilter).length
+    const isSelected = node.selected === 'true'
+    return {
+      title: (
+        <FormControlLabel
+          control={
+            <Checkbox
+              className={this.props.classes.checkbox}
+              checked={isSelected}
+              disabled={
+                /* non-hierarchical facet:
+                prevent selecting values with 0 hits (which may appear based on earlier selections): */
+                (this.props.facet.type !== 'hierarchical' &&
+                node.instanceCount === 0 &&
+                node.selected === 'false') ||
+                // prevent selecting unknown value:
+                node.id === 'http://ldf.fi/MISSING_VALUE' ||
+                // prevent selecting when another facet is still updating:
+                this.props.someFacetIsFetching ||
+                // prevent selecting all facet values:
+                (selectedCount >= this.props.facet.distinctValueCount - 1 && !isSelected) ||
+                // prevent selecting when parent has been selected
+                node.disabled === 'true'
+              }
+              onChange={this.handleCheckboxChange(treeObj)}
+              value={treeObj.node.id}
+              color='primary'
+            />
+          }
+          label={this.generateLabel(treeObj.node)}
+          classes={{
+            label: this.generateLabelClass(this.props.classes, treeObj.node)
+          }}
+        />
+      )
+    }
+  };
 
   generateLabel = node => {
-    let label = '';
-    if (this.props.property === 'broaderTypeLabel') {
-      label = node.prefLabel.toLowerCase();
-    } else {
-      label = node.prefLabel;
+    const count = node.totalInstanceCount == null || node.totalInstanceCount === 0 ? node.instanceCount : node.totalInstanceCount
+    let isSearchMatch = false
+    if (this.state.matches.length > 0) {
+      // console.log(this.state.matches)
+      isSearchMatch = this.state.matches.some(match => match.node.id === node.id)
     }
-    return `${label} (${node.instanceCount})`;
+
+    return (
+      <>
+        <Typography className={isSearchMatch ? this.props.classes.searchMatch : ''} variant='body2'>
+          {node.prefLabel}
+          <span> [{count}]</span>
+        </Typography>
+      </>
+    )
   }
 
-  generateLabelClass = (classes, node) => {
-    let labelClass = classes.label;
-    if (this.props.property === 'author' || this.props.property === 'productionPlace' || this.props.property === 'source') {
-      if (node.source === 'http://ldf.fi/mmm/schema/SDBM' || node.id === 'http://ldf.fi/mmm/schema/SDBM') {
-        labelClass = classes.sdbmLabel;
-      }
-      if (node.source === 'http://ldf.fi/mmm/schema/Bodley' || node.id === 'http://ldf.fi/mmm/schema/Bodley') {
-        labelClass = classes.bodleyLabel;
-      }
-      if (node.source === 'http://ldf.fi/mmm/schema/Bibale' || node.id === 'http://ldf.fi/mmm/schema/Bibale') {
-        labelClass = classes.bibaleLabel;
-      }
-    }
-    return labelClass;
+  generateLabelClass = classes => {
+    const labelClass = classes.label
+    // if (this.props.facetID === 'author' || this.props.facetID === 'source') {
+    //   if (node.source === 'http://ldf.fi/mmm/schema/SDBM' || node.id === 'http://ldf.fi/mmm/schema/SDBM') {
+    //     labelClass = classes.sdbmLabel;
+    //   }
+    //   if (node.source === 'http://ldf.fi/mmm/schema/Bodley' || node.id === 'http://ldf.fi/mmm/schema/Bodley') {
+    //     labelClass = classes.bodleyLabel;
+    //   }
+    //   if (node.source === 'http://ldf.fi/mmm/schema/Bibale' || node.id === 'http://ldf.fi/mmm/schema/Bibale') {
+    //     labelClass = classes.bibaleLabel;
+    //   }
+    // }
+    return labelClass
   }
 
-  render() {
-    const { classes } = this.props;
-    const { searchString, searchFocusIndex, searchFoundCount } = this.state;
+  render () {
+    const { searchString, searchFocusIndex, searchFoundCount } = this.state
+    const { classes, facet, facetClass, facetID } = this.props
+    const { isFetching, searchField } = facet
+    // if (this.props.facetID == 'owner') {
+    //   console.log(this.state.treeData)
+    // }
 
     // Case insensitive search of `node.title`
-    const customSearchMethod = ({ node, searchQuery }) =>
-      searchQuery.length > 2  &&
-      node.prefLabel.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
+    const customSearchMethod = ({ node, searchQuery }) => {
+      const prefLabel = Array.isArray(node.prefLabel) ? node.prefLabel[0] : node.prefLabel
+      return searchQuery.length > 2 &&
+      prefLabel.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1
+    }
 
     const selectPrevMatch = () =>
       this.setState({
         searchFocusIndex:
           searchFocusIndex !== null
             ? (searchFoundCount + searchFocusIndex - 1) % searchFoundCount
-            : searchFoundCount - 1,
-      });
+            : searchFoundCount - 1
+      })
 
     const selectNextMatch = () =>
       this.setState({
         searchFocusIndex:
           searchFocusIndex !== null
             ? (searchFocusIndex + 1) % searchFoundCount
-            : 0,
-      });
+            : 0
+      })
 
     return (
-      <React.Fragment>
-        {this.props.fetchingFacet ?
+      <>
+        {isFetching ? (
           <div className={classes.spinnerContainer}>
             <CircularProgress style={{ color: purple[500] }} thickness={5} />
           </div>
-          :
-          <React.Fragment>
-            {this.props.searchField &&
+        ) : (
+          <>
+            {searchField && facet.filterType !== 'spatialFilter' &&
               <div className={classes.facetSearchContainer}>
                 <Input
-                  placeholder={this.props.strings.search}
+                  placeholder='Search...'
                   onChange={this.handleSearchFieldOnChange}
-                >
-                </Input>
+                  value={this.state.searchString}
+                />
                 {searchFoundCount > 0 &&
-                  <React.Fragment>
+                  <>
                     <IconButton
                       className={classes.facetSearchIconButton}
-                      aria-label="Previous"
+                      aria-label='Previous'
                       onClick={selectPrevMatch}
                     >
                       <NavigateBeforeIcon />
                     </IconButton>
                     <IconButton
                       className={classes.facetSearchIconButton}
-                      aria-label="Next"
+                      aria-label='Next'
                       onClick={selectNextMatch}
                     >
                       <NavigateNextIcon />
@@ -186,70 +324,59 @@ class HierarchicalFacet extends Component {
                     <Typography>
                       {searchFoundCount > 0 ? searchFocusIndex + 1 : 0} / {searchFoundCount || 0}
                     </Typography>
-                  </React.Fragment>
-                }
-              </div>
-            }
-            <div className={this.props.searchField ? classes.treeContainerWithSearchField : classes.treeContainer }>
-              <SortableTree
-                treeData={this.state.treeData}
-                onChange={treeData => this.setState({ treeData })}
-                canDrag={false}
-                rowHeight={30}
-                searchMethod={customSearchMethod}
-                searchQuery={searchString}
-                searchFocusOffset={searchFocusIndex}
-                searchFinishCallback={matches =>
-                  this.setState({
-                    searchFoundCount: matches.length,
-                    searchFocusIndex:
-                        matches.length > 0 ? searchFocusIndex % matches.length : 0,
-                  })
-                }
-                onlyExpandSearchedNodes={true}
-                theme={FileExplorerTheme}
-                generateNodeProps={n => ({
-                  title: (
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          className={classes.checkbox}
-                          checked={n.node.selected}
-
-                          onChange={this.handleCheckboxChange(n)}
-                          value={n.node.prefLabel}
-                          color="primary"
-                        />
-                      }
-                      label={this.generateLabel(n.node)}
-                      classes={{
-                        label: this.generateLabelClass(classes, n.node)
-                      }}
-                    />
-                  ),
-                })}
-              />
-            </div>
-          </React.Fragment>
-        }
-      </React.Fragment>
-    );
+                  </>}
+              </div>}
+            {facet.filterType !== 'spatialFilter' &&
+              <div className={searchField ? classes.treeContainerWithSearchField : classes.treeContainer}>
+                <SortableTree
+                  treeData={this.state.treeData}
+                  onChange={treeData => this.setState({ treeData })}
+                  canDrag={false}
+                  rowHeight={30}
+                  searchMethod={customSearchMethod}
+                  searchQuery={searchString}
+                  searchFocusOffset={searchFocusIndex}
+                  searchFinishCallback={matches => {
+                    this.setState({
+                      searchFoundCount: matches.length,
+                      searchFocusIndex:
+                          matches.length > 0 ? searchFocusIndex % matches.length : 0,
+                      matches
+                    })
+                  }}
+                  onlyExpandSearchedNodes
+                  theme={FileExplorerTheme}
+                  generateNodeProps={this.generateNodeProps}
+                />
+              </div>}
+            {facet.filterType === 'spatialFilter' &&
+              <div className={classes.spinnerContainer}>
+                <Typography>
+                  Draw a bounding box on the map to filter by {intl.get(`perspectives.${facetClass}.properties.${facetID}.label`)}.
+                </Typography>
+              </div>}
+          </>
+        )}
+      </>
+    )
   }
 }
 
 HierarchicalFacet.propTypes = {
   classes: PropTypes.object.isRequired,
-  property: PropTypes.string,
-  data: PropTypes.array.isRequired,
-  sortBy: PropTypes.string,
-  sortDirection: PropTypes.string,
+  facetID: PropTypes.string.isRequired,
+  facet: PropTypes.object.isRequired,
+  facetClass: PropTypes.string,
+  resultClass: PropTypes.string,
   fetchFacet: PropTypes.func,
-  fetchingFacet: PropTypes.bool,
-  facetFilters: PropTypes.object,
-  updateFacet: PropTypes.func,
-  updatedFacet: PropTypes.string,
-  searchField: PropTypes.bool.isRequired,
-  strings: PropTypes.object.isRequired
-};
+  someFacetIsFetching: PropTypes.bool.isRequired,
+  updateFacetOption: PropTypes.func,
+  facetUpdateID: PropTypes.number,
+  updatedFilter: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string,
+    PropTypes.array]),
+  updatedFacet: PropTypes.string
+}
 
-export default withStyles(styles)(HierarchicalFacet);
+export default withStyles(styles)(HierarchicalFacet)

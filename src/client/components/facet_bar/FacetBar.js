@@ -1,226 +1,283 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import HierarchicalFacet from './HierarchicalFacet';
-import Paper from '@material-ui/core/Paper';
-import FacetHeader from './FacetHeader';
-import SearchField from './SearchField';
-import LeafletMapDialog from './LeafletMapDialog';
-import Typography from '@material-ui/core/Typography';
-import DatasetSelector from './DatasetSelector';
+import React from 'react'
+import PropTypes from 'prop-types'
+import intl from 'react-intl-universal'
+import { withStyles } from '@material-ui/core/styles'
+import HierarchicalFacet from './HierarchicalFacet'
+import TextFacet from './TextFacet'
+import SliderFacet from './SliderFacet'
+import RangeFacet from './RangeFacet'
+import DateFacet from './DateFacet'
+import Paper from '@material-ui/core/Paper'
+import FacetHeader from './FacetHeader'
+import FacetInfo from './FacetInfo'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import clsx from 'clsx'
 
 const styles = theme => ({
   root: {
     width: '100%',
     height: '100%'
   },
-  headingContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
+  facetInfoContainer: {
+    padding: theme.spacing(1),
     borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    borderBottomRightRadius: 0
   },
-  facetContainer: {
-    marginBottom: theme.spacing.unit,
+  expansionPanelSummaryRoot: {
+    paddingLeft: theme.spacing(1),
+    cursor: 'default !important'
   },
-  facetContainerLast: {
-    marginBottom: 4,
+  expansionPanelSummaryContent: {
+    margin: 0
   },
-  facetSearchFieldContainer: {
-    // height: 345,
-    padding: theme.spacing.unit,
+  expansionPanelDetails: {
+    paddingTop: 0,
+    paddingLeft: theme.spacing(1),
+    flexDirection: 'column'
   },
-  facetValuesContainerTen: {
-    height: 300,
-    padding: theme.spacing.unit,
+  two: {
+    height: 60
   },
-  facetValuesContainerThree: {
-    height: 108,
-    padding: theme.spacing.unit,
+  three: {
+    height: 108
   },
-  facetHeaderButtons: {
-    marginLeft: 'auto'
+  four: {
+    height: 135
   },
-  resultTextContainer: {
-    marginTop: theme.spacing.unit,
-    paddingLeft: theme.spacing.unit,
-    height: 32
+  five: {
+    height: 150
+  },
+  six: {
+    height: 180
+  },
+  ten: {
+    height: 357
+  }
+})
+
+class FacetBar extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      activeFacets: this.props.defaultActiveFacets
+    }
   }
 
-});
-
-let FacetBar = props => {
-  const { classes, strings } = props;
-  const { results } = props.search;
-  const hasResults = results !== null;
-  const resultCount = hasResults ? results.length : '';
-  let resultString = '';
-  if (hasResults) {
-    resultString = resultCount == 1 ? strings.result : strings.results;
+  handleExpandButtonOnClick = facetID => () => {
+    const activeFacets = this.state.activeFacets
+    if (activeFacets.has(facetID)) {
+      activeFacets.delete(facetID)
+    } else {
+      activeFacets.add(facetID)
+    }
+    this.setState({ activeFacets })
   }
-  const showFacets = hasResults && resultCount > 5;
-  return (
-    <div className={classes.root}>
-      <Paper className={classes.facetContainer}>
-        <FacetHeader
-          label={strings.selectDataSources}
-          hierarchical={true}
-        />
-        <div className={classes.facetSearchFieldContainer}>
-          <DatasetSelector
-            search={props.search}
-            toggleDataset={props.toggleDataset}
-            strings={strings}
-            language={props.language}
+
+  renderFacet = (facetID, someFacetIsFetching) => {
+    const { classes, facetClass } = this.props
+    const { facetUpdateID, updatedFacet, updatedFilter, facets } = this.props.facetData
+    const label = intl.get(`perspectives.${facetClass}.properties.${facetID}.label`)
+    const description = intl.get(`perspectives.${facetClass}.properties.${facetID}.description`)
+    const facet = facets[facetID]
+    const facetConstrainSelf = this.props.facetDataConstrainSelf !== null
+      ? this.props.facetDataConstrainSelf.facets[facetID]
+      : null
+    let facetComponent = null
+    const isActive = this.state.activeFacets.has(facetID)
+    switch (facet.filterType) {
+      case 'uriFilter':
+      case 'spatialFilter':
+        facetComponent = (
+          <HierarchicalFacet
+            facetID={facetID}
+            facet={facet}
+            facetClass={this.props.facetClass}
+            resultClass={this.props.resultClass}
+            facetUpdateID={facetUpdateID}
+            updatedFacet={updatedFacet}
+            updatedFilter={updatedFilter}
+            fetchFacet={this.props.fetchFacet}
+            someFacetIsFetching={someFacetIsFetching}
+            updateFacetOption={this.props.updateFacetOption}
           />
-        </div>
-      </Paper>
-      <Paper className={classes.facetContainer}>
-        <div className={classes.facetSearchFieldContainer}>
-          <SearchField
-            search={props.search}
-            fetchResults={props.fetchResults}
-            clearResults={props.clearResults}
-            updateQuery={props.updateQuery}
-            datasets={props.search.datasets}
-            strings={strings}
+        )
+        break
+      case 'textFilter':
+        facetComponent = (
+          <TextFacet
+            facetID={facetID}
+            facet={facet}
+            facetClass={this.props.facetClass}
+            resultClass={this.props.resultClass}
+            facetUpdateID={facetUpdateID}
+            fetchFacet={this.props.fetchFacet}
+            someFacetIsFetching={someFacetIsFetching}
+            updateFacetOption={this.props.updateFacetOption}
           />
-          {/*<LeafletMapDialog
-            map={props.map}
-            fetchResults={props.fetchResults}
-            clearResults={props.clearResults}
-            updateQuery={props.updateQuery}
-            updateMapBounds={props.updateMapBounds}
-            getGeoJSON={props.getGeoJSON}
-            strings={strings}
-         /> */}
-        </div>
-      </Paper>
-      <Paper className={classes.facetContainer}>
-        <div className={classes.facetSearchFieldContainer}>
-          <LeafletMapDialog
-            map={props.map}
-            fetchResults={props.fetchResults}
-            clearResults={props.clearResults}
-            updateQuery={props.updateQuery}
-            updateMapBounds={props.updateMapBounds}
-            getGeoJSON={props.getGeoJSON}
-            showError={props.showError}
-            strings={strings}
-            fetching={props.search.spatialResultsFetching}
+        )
+        break
+      case 'timespanFilter':
+        facetComponent = (
+          <SliderFacet
+            facetID={facetID}
+            facet={facet}
+            facetClass={this.props.facetClass}
+            resultClass={this.props.resultClass}
+            facetUpdateID={facetUpdateID}
+            fetchFacet={this.props.fetchFacet}
+            someFacetIsFetching={someFacetIsFetching}
+            updateFacetOption={this.props.updateFacetOption}
+            dataType='ISOString'
           />
-        </div>
-      </Paper>
-      { hasResults &&
-        <Paper className={classes.facetContainer}>
-          <div className={classes.facetSearchFieldContainer}>
-            <div className={classes.resultTextContainer}>
-              <Typography variant="h6">{resultCount} {resultString}{/*{strings.filterResults}*/}</Typography>
-            </div>
-          </div>
+        )
+        break
+      case 'dateFilter':
+        facetComponent = (
+          <DateFacet
+            facetID={facetID}
+            facet={facet}
+            facetClass={this.props.facetClass}
+            resultClass={this.props.resultClass}
+            facetUpdateID={facetUpdateID}
+            fetchFacet={this.props.fetchFacet}
+            someFacetIsFetching={someFacetIsFetching}
+            updateFacetOption={this.props.updateFacetOption}
+          />
+        )
+        break
+      case 'integerFilter':
+        facetComponent = (
+          <SliderFacet
+            facetID={facetID}
+            facet={facet}
+            facetClass={this.props.facetClass}
+            resultClass={this.props.resultClass}
+            facetUpdateID={facetUpdateID}
+            fetchFacet={this.props.fetchFacet}
+            someFacetIsFetching={someFacetIsFetching}
+            updateFacetOption={this.props.updateFacetOption}
+            dataType='integer'
+          />
+        )
+        break
+      case 'integerFilterRange':
+        facetComponent = (
+          <RangeFacet
+            facetID={facetID}
+            facet={facet}
+            facetClass={this.props.facetClass}
+            resultClass={this.props.resultClass}
+            facetUpdateID={facetUpdateID}
+            fetchFacet={this.props.fetchFacet}
+            someFacetIsFetching={someFacetIsFetching}
+            updateFacetOption={this.props.updateFacetOption}
+            dataType='integer'
+          />
+        )
+        break
+      default:
+        facetComponent = (
+          <HierarchicalFacet
+            facetID={facetID}
+            facet={facet}
+            facetClass={this.props.facetClass}
+            resultClass={this.props.resultClass}
+            facetUpdateID={facetUpdateID}
+            updatedFacet={updatedFacet}
+            updatedFilter={updatedFilter}
+            fetchFacet={this.props.fetchFacet}
+            updateFacetOption={this.props.updateFacetOption}
+          />
+        )
+        break
+    }
+
+    return (
+      <ExpansionPanel
+        key={facetID}
+        expanded={isActive}
+      >
+        <ExpansionPanelSummary
+          classes={{
+            root: classes.expansionPanelSummaryRoot,
+            content: classes.expansionPanelSummaryContent
+          }}
+          expandIcon={<ExpandMoreIcon />}
+          IconButtonProps={{ onClick: this.handleExpandButtonOnClick(facetID) }}
+          aria-controls='panel1a-content'
+          id='panel1a-header'
+        >
+          <FacetHeader
+            facetID={facetID}
+            facetLabel={label}
+            facet={facet}
+            facetConstrainSelf={facetConstrainSelf}
+            isActive={isActive}
+            facetClass={this.props.facetClass}
+            resultClass={this.props.resultClass}
+            fetchFacet={this.props.fetchFacet}
+            fetchFacetConstrainSelf={this.props.fetchFacetConstrainSelf}
+            updateFacetOption={this.props.updateFacetOption}
+            facetDescription={description}
+          />
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails
+          className={clsx(classes[facet.containerClass], classes.expansionPanelDetails)}
+        >
+          {isActive && facetComponent}
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+    )
+  }
+
+  render () {
+    const { classes, facetClass, resultClass, resultCount } = this.props
+    const { facets } = this.props.facetData
+    let someFacetIsFetching = false
+    Object.values(facets).forEach(facet => {
+      if (facet.isFetching) {
+        someFacetIsFetching = true
+      }
+    })
+
+    return (
+      <div className={classes.root}>
+        <Paper className={classes.facetInfoContainer}>
+          <FacetInfo
+            facetUpdateID={this.props.facetData.facetUpdateID}
+            facetData={this.props.facetData}
+            facetClass={facetClass}
+            resultClass={resultClass}
+            resultCount={resultCount}
+            fetchingResultCount={this.props.fetchingResultCount}
+            updateFacetOption={this.props.updateFacetOption}
+            fetchResultCount={this.props.fetchResultCount}
+            someFacetIsFetching={someFacetIsFetching}
+            fetchFacet={this.props.fetchFacet}
+          />
         </Paper>
-      }
-      { showFacets &&
-        <React.Fragment>
-          <Paper className={classes.facetContainer}>
-            <FacetHeader
-              label={strings.name}
-              hierarchical={true}
-            />
-            <div className={classes.facetValuesContainerTen}>
-              <HierarchicalFacet
-                data={Object.values(props.resultValues.prefLabel)}
-                property='prefLabel'
-                searchField={true}
-                updateFacet={props.updateFacet}
-                strings={strings}
-              />
-            </div>
-          </Paper>
-
-          <Paper className={classes.facetContainer}>
-            <FacetHeader
-              label={strings.type}
-              hierarchical={true}
-            />
-            <div className={classes.facetValuesContainerTen}>
-              <HierarchicalFacet
-                data={Object.values(props.resultValues.broaderTypeLabel)}
-                property='broaderTypeLabel'
-                searchField={true}
-                updateFacet={props.updateFacet}
-                strings={strings}
-              />
-            </div>
-          </Paper>
-          <Paper className={classes.facetContainerLast}>
-            <FacetHeader
-              label={strings.area}
-              hierarchical={true}
-            />
-            <div className={classes.facetValuesContainerTen}>
-              <HierarchicalFacet
-                data={Object.values(props.resultValues.broaderAreaLabel)}
-                property='broaderAreaLabel'
-                searchField={true}
-                updateFacet={props.updateFacet}
-                strings={strings}
-              />
-            </div>
-          </Paper>
-          { /*
-          <Paper className={classes.facetContainer}>
-            <FacetHeader
-              label='Type (NA)'
-              hierarchical={true}
-            />
-          </Paper>
-          <Paper className={classes.facetContainer}>
-            <FacetHeader
-              label='Area'
-              hierarchical={true}
-            />
-          </Paper>
-          <Paper className={classes.facetContainer}>
-            <FacetHeader
-              label='Year'
-              hierarchical={true}
-            />
-          </Paper>
-          <Paper className={classes.facetContainer}>
-            <FacetHeader
-              label='Modifier'
-              hierarchical={true}
-            />
-          </Paper>
-          <Paper className={classes.facetContainer}>
-            <FacetHeader
-              label='Base'
-              hierarchical={true}
-            />
-          </Paper> */}
-        </React.Fragment>
-      }
-    </div>
-  );
-};
+        {Object.keys(facets).map(facetID => this.renderFacet(facetID, someFacetIsFetching))}
+      </div>
+    )
+  }
+}
 
 FacetBar.propTypes = {
   classes: PropTypes.object.isRequired,
-  search: PropTypes.object.isRequired,
-  resultValues: PropTypes.object.isRequired,
-  fetchResults: PropTypes.func.isRequired,
-  updateFacet: PropTypes.func.isRequired,
-  toggleDataset: PropTypes.func.isRequired,
-  updateQuery: PropTypes.func.isRequired,
-  clearResults: PropTypes.func.isRequired,
-  strings: PropTypes.object.isRequired,
-  language: PropTypes.string.isRequired,
-  map: PropTypes.object.isRequired,
-  getGeoJSON: PropTypes.func.isRequired,
-  updateMapBounds: PropTypes.func.isRequired,
-  showError: PropTypes.func.isRequired
-};
+  facetData: PropTypes.object.isRequired,
+  facetDataConstrainSelf: PropTypes.object,
+  facetClass: PropTypes.string.isRequired,
+  resultClass: PropTypes.string.isRequired,
+  resultCount: PropTypes.number.isRequired,
+  fetchingResultCount: PropTypes.bool.isRequired,
+  fetchFacet: PropTypes.func.isRequired,
+  fetchFacetConstrainSelf: PropTypes.func.isRequired,
+  fetchResultCount: PropTypes.func.isRequired,
+  updateFacetOption: PropTypes.func.isRequired,
+  defaultActiveFacets: PropTypes.instanceOf(Set).isRequired
+}
 
-export default withStyles(styles)(FacetBar);
+export default withStyles(styles)(FacetBar)

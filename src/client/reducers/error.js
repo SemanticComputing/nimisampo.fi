@@ -1,26 +1,34 @@
 import {
   SHOW_ERROR,
-} from '../actions';
+  FETCH_RESULTS_FAILED,
+  FETCH_PAGINATED_RESULTS_FAILED,
+  FETCH_FACET_FAILED,
+  FETCH_BY_URI_FAILED
+} from '../actions'
 
 export const INITIAL_STATE = {
   id: 0,
-  message: {},
-};
+  message: {}
+}
 
 const error = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case SHOW_ERROR:
+    case FETCH_RESULTS_FAILED:
+    case FETCH_PAGINATED_RESULTS_FAILED:
+    case FETCH_BY_URI_FAILED:
+    case FETCH_FACET_FAILED:
       return {
         ...state,
         id: state.id + 1,
         message: {
-          text: action.error.text,
-          title: action.error.title
+          text: action.message.text,
+          title: action.message.title
         }
-      };
+      }
     default:
-      return state;
+      return state
   }
-};
+}
 
-export default error;
+export default error

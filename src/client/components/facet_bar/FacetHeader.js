@@ -1,14 +1,15 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-//import MoreVertIcon from '@material-ui/icons/MoreVert';
-import SortByAlphaIcon from '@material-ui/icons/SortByAlpha';
-//import { /*PieChart,*/ ExpandLess, /*ExpandMore*/ }  from '@material-ui/icons';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
+import Typography from '@material-ui/core/Typography'
+import InfoIcon from '@material-ui/icons/InfoOutlined'
+import history from '../../History'
+import ChartDialog from './ChartDialog'
 
 const styles = theme => ({
   root: {
@@ -18,126 +19,197 @@ const styles = theme => ({
   headingContainer: {
     display: 'flex',
     alignItems: 'center',
-    paddingLeft: theme.spacing.unit,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    height: 48
-  },
-  facetContainer: {
-    marginBottom: theme.spacing.unit,
-  },
-  facetContainerLast: {
-    marginBottom: 2,
+    // justifyContent: 'space-between',
+    width: '100%'
   },
   facetValuesContainerTen: {
     height: 345,
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1)
   },
   facetValuesContainerThree: {
     height: 108,
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1)
   },
   facetHeaderButtons: {
     marginLeft: 'auto'
   }
-});
+})
 
 class FacetHeader extends React.Component {
   state = {
-    anchorEl: null,
+    anchorEl: null
   };
 
-  handleSortByClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleMenuButtonClick = event => {
+    this.setState({ anchorEl: event.currentTarget })
   };
 
-  handleMenuItemClick = (sortBy, isSelected) => () =>  {
-    this.setState({ anchorEl: null });
-    let sortDirection = '';
-    if (isSelected) {
-      sortDirection = this.props.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      if (sortBy === 'prefLabel') {
-        sortDirection = 'asc';
-      } else if (sortBy === 'instanceCount') {
-        sortDirection = 'desc';
-      }
+  handleSortOnClick = buttonID => () => {
+    this.setState({ anchorEl: null })
+    if (buttonID === 'prefLabel' && this.props.facet.sortBy === 'instanceCount') {
+      this.props.updateFacetOption({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID,
+        option: 'sortBy',
+        value: 'prefLabel'
+      })
     }
-    this.props.fetchFacet(this.props.property, sortBy, sortDirection);
+    if (buttonID === 'instanceCount' && this.props.facet.sortBy === 'prefLabel') {
+      this.props.updateFacetOption({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID,
+        option: 'sortDirection',
+        value: 'desc'
+      })
+      this.props.updateFacetOption({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID,
+        option: 'sortBy',
+        value: 'instanceCount'
+      })
+    }
   };
 
-  handleMenuClose = () => {
-    this.setState({ anchorEl: null });
+  handleFilterTypeOnClick = buttonID => () => {
+    // console.log(event.target)
+    this.setState({ anchorEl: null })
+
+    if (buttonID === 'uriFilter' && this.props.facet.filterType === 'spatialFilter') {
+      this.props.updateFacetOption({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID,
+        option: 'spatialFilter',
+        value: null
+      })
+      this.props.updateFacetOption({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID,
+        option: 'filterType',
+        value: 'uriFilter'
+      })
+    }
+    if (buttonID === 'spatialFilter' && this.props.facet.filterType === 'uriFilter') {
+      this.props.updateFacetOption({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID,
+        option: 'filterType',
+        value: 'spatialFilter'
+      })
+      history.push({ pathname: `/${this.props.resultClass}/faceted-search/${this.props.facet.spatialFilterTab}` })
+    }
   }
 
-  render() {
-    const { classes } = this.props;
-    const { anchorEl } = this.state;
-    const open = Boolean(anchorEl);
-    const options = [
-      {
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null })
+  }
+
+  renderFacetMenu = () => {
+    const { anchorEl } = this.state
+    const { sortButton, spatialFilterButton, sortBy, filterType, chartButton = false } = this.props.facet
+    const open = Boolean(anchorEl)
+    const menuButtons = []
+    if (sortButton) {
+      menuButtons.push({
         id: 'prefLabel',
         menuItemText: 'Sort alphabetically',
-        selected: this.props.sortBy === 'prefLabel' ? true : false,
-        sortDirection: this.props.sortDirection,
-      },
-      {
+        selected: sortBy === 'prefLabel',
+        onClickHandler: this.handleSortOnClick
+      })
+      menuButtons.push({
         id: 'instanceCount',
-        menuItemText: 'Sort by manuscript count',
-        selected: this.props.sortBy === 'instanceCount' ? true : false,
-        sortDirection: this.props.sortDirection,
-      },
-    ];
+        menuItemText: `Sort by number of ${this.props.resultClass}`,
+        selected: sortBy === 'instanceCount',
+        onClickHandler: this.handleSortOnClick
+      })
+    }
+    if (spatialFilterButton) {
+      menuButtons.push({
+        id: 'uriFilter',
+        menuItemText: 'Filter by name',
+        selected: filterType === 'uriFilter',
+        onClickHandler: this.handleFilterTypeOnClick
+      })
+      menuButtons.push({
+        id: 'spatialFilter',
+        menuItemText: 'Filter by bounding box',
+        selected: filterType === 'spatialFilter',
+        onClickHandler: this.handleFilterTypeOnClick
+      })
+    }
+    return (
+      <>
+        {chartButton &&
+          <ChartDialog
+            data={this.props.facetConstrainSelf.values}
+            fetching={this.props.facetConstrainSelf.isFetching}
+            facetID={this.props.facetID}
+            facetClass={this.props.facetClass}
+            fetchFacetConstrainSelf={this.props.fetchFacetConstrainSelf}
+          />}
+        <Tooltip disableFocusListener title='Filter options'>
+          <IconButton
+            aria-label='Filter options'
+            aria-owns={open ? 'facet-option-menu' : undefined}
+            aria-haspopup='true'
+            onClick={this.handleMenuButtonClick}
+          >
+            <MoreVertIcon />
+          </IconButton>
+        </Tooltip>
+        <Menu
+          id='facet-option-menu'
+          anchorEl={anchorEl}
+          open={open}
+          onClose={this.handleMenuClose}
+        >
+          {menuButtons.map(button => (
+            <MenuItem key={button.id} selected={button.selected} onClick={button.onClickHandler(button.id)}>
+              {button.menuItemText}
+            </MenuItem>
+          ))}
+        </Menu>
+      </>
+    )
+  }
+
+  render () {
+    const { classes, isActive, facetDescription, facetLabel } = this.props
+    const { sortButton, spatialFilterButton, chartButton } = this.props.facet
+    const showButtons = isActive && (sortButton || spatialFilterButton || chartButton)
 
     return (
-      <Paper className={classes.headingContainer}>
-        <Typography variant="h6">{this.props.label} {this.props.distinctValueCount > 0 ? `(${this.props.distinctValueCount})` : ''}</Typography>
-        <div className={classes.facetHeaderButtons}>
-          {/*<IconButton disabled aria-label="Statistics">
-            <PieChart />
-          </IconButton> */}
-          {!this.props.hierarchical &&
-            <React.Fragment>
-              <IconButton
-                aria-label="More"
-                aria-owns={open ? 'facet-menu' : undefined}
-                aria-haspopup="true"
-                onClick={this.handleSortByClick}
-              >
-                <SortByAlphaIcon />
-              </IconButton>
-              <Menu
-                id="facet-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={this.handleMenuClose}
-              >
-                {options.map(option => (
-                  <MenuItem key={option.id} selected={option.selected} onClick={this.handleMenuItemClick(option.id, option.selected)}>
-                    {option.menuItemText}
-                  </MenuItem>
-                ))}
-              </Menu>
-            </React.Fragment>
-          }
-          {/*<IconButton disabled aria-label="Expand">
-            <ExpandLess />
-          </IconButton>*/}
-        </div>
-      </Paper>
-    );
+      <div className={classes.headingContainer}>
+        <Typography variant='body1'>{facetLabel} </Typography>
+        <Tooltip
+          title={facetDescription}
+          enterDelay={300}
+        >
+          <IconButton>
+            <InfoIcon />
+          </IconButton>
+        </Tooltip>
+        {showButtons &&
+          <div className={classes.facetHeaderButtons}>
+            {this.renderFacetMenu()}
+          </div>}
+      </div>
+    )
   }
 }
 
 FacetHeader.propTypes = {
   classes: PropTypes.object.isRequired,
-  label: PropTypes.string,
-  property: PropTypes.string,
-  hierarchical: PropTypes.bool,
-  distinctValueCount: PropTypes.number,
-  sortBy: PropTypes.string,
-  sortDirection: PropTypes.string,
-  fetchFacet: PropTypes.func
-};
+  facetID: PropTypes.string,
+  facetLabel: PropTypes.string.isRequired,
+  facet: PropTypes.object,
+  facetConstrainSelf: PropTypes.object,
+  isActive: PropTypes.bool.isRequired,
+  facetClass: PropTypes.string,
+  resultClass: PropTypes.string,
+  fetchFacet: PropTypes.func,
+  fetchFacetConstrainSelf: PropTypes.func,
+  updateFacetOption: PropTypes.func,
+  facetDescription: PropTypes.string.isRequired
+}
 
-export default withStyles(styles)(FacetHeader);
+export default withStyles(styles)(FacetHeader)
