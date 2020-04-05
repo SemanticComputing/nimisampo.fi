@@ -1,17 +1,17 @@
-import React from 'react';
-import Immutable from 'immutable';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react'
+import Immutable from 'immutable'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
 // import ResultFilterDialogSingle from './ResultFilterDialogSingle';
-import IconButton from '@material-ui/core/IconButton';
-import PlaceIcon from '@material-ui/icons/Place';
-import { has } from 'lodash';
+import IconButton from '@material-ui/core/IconButton'
+import PlaceIcon from '@material-ui/icons/Place'
+import { has } from 'lodash'
 import {
   AutoSizer,
   Column,
   Table,
   SortIndicator
-} from 'react-virtualized';
+} from 'react-virtualized'
 
 // https://github.com/bvaughn/react-virtualized/issues/650
 // https://github.com/bvaughn/react-virtualized/blob/master/docs/usingAutoSizer.md
@@ -21,27 +21,27 @@ const styles = () => ({
     display: 'flex',
     height: 'calc(100% - 74px)',
     width: 'calc(100% - 1px)',
-    flexGrow: 1,
+    flexGrow: 1
   },
   resultsInfo: {
     flexGrow: 0
-  },
-});
+  }
+})
 
 const tableStyles = {
   tableRoot: {
-    fontFamily: 'Roboto',
+    fontFamily: 'Roboto'
   },
   headerRow: {
     textTransform: 'none',
     borderBottom: '1px solid rgba(224, 224, 224, 1)'
   },
   evenRow: {
-    borderBottom: '1px solid rgba(224, 224, 224, 1)',
-    //backgroundColor: '#fafafa'
+    borderBottom: '1px solid rgba(224, 224, 224, 1)'
+    // backgroundColor: '#fafafa'
   },
   oddRow: {
-    borderBottom: '1px solid rgba(224, 224, 224, 1)',
+    borderBottom: '1px solid rgba(224, 224, 224, 1)'
   },
   noRows: {
     position: 'absolute',
@@ -53,91 +53,90 @@ const tableStyles = {
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '1em',
-    color: '#bdbdbd',
+    color: '#bdbdbd'
   }
-};
+}
 
-const columnWidth = 115;
+const columnWidth = 115
 
 const calculateRowStyle = ({ index }) => {
   if (index < 0) {
-    return tableStyles.headerRow;
+    return tableStyles.headerRow
   } else {
-    return index % 2 === 0 ? tableStyles.evenRow : tableStyles.oddRow;
+    return index % 2 === 0 ? tableStyles.evenRow : tableStyles.oddRow
   }
-};
+}
 
 class VirtualizedTable extends React.PureComponent {
-
-  constructor(props) {
-    super(props);
-    this._noRowsRenderer = this._noRowsRenderer.bind(this);
-    this._sort = this._sort.bind(this);
+  constructor (props) {
+    super(props)
+    this._noRowsRenderer = this._noRowsRenderer.bind(this)
+    this._sort = this._sort.bind(this)
   }
 
-  render() {
-    const { classes, list, strings } = this.props;
-    const rowGetter = ({index}) => this._getDatum(list, index);
+  render () {
+    const { classes, list, strings } = this.props
+    const rowGetter = ({ index }) => this._getDatum(list, index)
 
     const headerRenderer = ({
       dataKey,
       label,
       sortBy,
-      sortDirection,
+      sortDirection
     }) => {
-      const showSortIndicator = sortBy === dataKey;
+      const showSortIndicator = sortBy === dataKey
       const children = [
         <span
-          className="ReactVirtualized__Table__headerTruncatedText"
+          className='ReactVirtualized__Table__headerTruncatedText'
           style={showSortIndicator ? {} : { marginRight: 16 }}
-          key="label"
-          title={label}>
+          key='label'
+          title={label}
+        >
           {label}
-        </span>,
-      ];
+        </span>
+      ]
       if (showSortIndicator) {
         children.push(
-          <SortIndicator key="SortIndicator" sortDirection={sortDirection} />,
-        );
+          <SortIndicator key='SortIndicator' sortDirection={sortDirection} />
+        )
       }
-      return children;
-    };
+      return children
+    }
 
-    const labelRenderer = ({cellData, rowData}) => {
-      if (cellData == null) return '';
-      const label = <a target='_blank' rel='noopener noreferrer' href={rowData.id}>{cellData}</a>;
+    const labelRenderer = ({ cellData, rowData }) => {
+      if (cellData == null) return ''
+      const label = <a target='_blank' rel='noopener noreferrer' href={rowData.id}>{cellData}</a>
 
-      let  marker = '';
+      let marker = ''
       if (typeof rowData.lat !== 'undefined' || typeof rowData.long !== 'undefined') {
-
         // onMouseOver={handleMarkerMouseOver(rowData.s)}
         // onMouseOut={handleMarkerMouseOut(rowData.s)}
         // onClick={handleMarkerClick(rowData.s)}
 
         marker = (
           <IconButton
-            disabled={true}
-            aria-label="Marker"
+            disabled
+            aria-label='Marker'
           >
             <PlaceIcon />
           </IconButton>
-        );
+        )
       }
       return (
         <div key={rowData.id}>
           {label}{marker}
         </div>
-      );
-    };
+      )
+    }
 
-    const sourceRenderer = ({cellData, rowData}) => {
-      if (cellData == null) return '';
+    const sourceRenderer = ({ cellData, rowData }) => {
+      if (cellData == null) return ''
       return (
         <div key={rowData.s}>
           <a target='_blank' rel='noopener noreferrer' href={rowData.namesArchiveLink}>{cellData}</a>
         </div>
-      );
-    };
+      )
+    }
 
     // const handleMarkerClick = value => () => {
     //   this.props.openMarkerPopup(value);
@@ -174,20 +173,20 @@ class VirtualizedTable extends React.PureComponent {
                 >
                   <Column
                     label={strings.name}
-                    cellDataGetter={({rowData}) => rowData.prefLabel}
-                    dataKey="prefLabel"
+                    cellDataGetter={({ rowData }) => rowData.prefLabel}
+                    dataKey='prefLabel'
                     headerRenderer={headerRenderer}
                     cellRenderer={labelRenderer}
                     width={columnWidth + 70}
                   />
                   <Column
                     label={strings.type}
-                    cellDataGetter={({rowData}) => has(rowData,'broaderTypeLabel') ? rowData.broaderTypeLabel.toLowerCase() : ''}
-                    dataKey="broaderTypeLabel"
+                    cellDataGetter={({ rowData }) => has(rowData, 'broaderTypeLabel') ? rowData.broaderTypeLabel.toLowerCase() : ''}
+                    dataKey='broaderTypeLabel'
                     headerRenderer={headerRenderer}
                     width={columnWidth + 10}
                   />
-                  {/*<Column
+                  {/* <Column
                     label="NA type"
                     cellDataGetter={({rowData}) => has(rowData,'typeLabel') ? rowData.typeLabel.toLowerCase() : ''}
                     dataKey="typeLabel"
@@ -196,26 +195,26 @@ class VirtualizedTable extends React.PureComponent {
                   /> */}
                   <Column
                     label={strings.area}
-                    cellDataGetter={({rowData}) => rowData.broaderAreaLabel}
-                    dataKey="broaderAreaLabel"
+                    cellDataGetter={({ rowData }) => rowData.broaderAreaLabel}
+                    dataKey='broaderAreaLabel'
                     headerRenderer={headerRenderer}
                     width={columnWidth}
                   />
                   <Column
                     label={strings.modifier}
-                    cellDataGetter={({rowData}) => rowData.modifier}
-                    dataKey="modifier"
+                    cellDataGetter={({ rowData }) => rowData.modifier}
+                    dataKey='modifier'
                     headerRenderer={headerRenderer}
                     width={columnWidth + 10}
                   />
                   <Column
                     label={strings.base}
-                    cellDataGetter={({rowData}) => rowData.basicElement}
-                    dataKey="basicElement"
+                    cellDataGetter={({ rowData }) => rowData.basicElement}
+                    dataKey='basicElement'
                     headerRenderer={headerRenderer}
                     width={columnWidth}
                   />
-                  { /*
+                  {/*
                   <Column
                     label="Collector"
                     cellDataGetter={({rowData}) => rowData.collector}
@@ -225,15 +224,15 @@ class VirtualizedTable extends React.PureComponent {
                   /> */}
                   <Column
                     label={strings.year}
-                    cellDataGetter={({rowData}) => rowData.collectionYear}
-                    dataKey="collectionYear"
+                    cellDataGetter={({ rowData }) => rowData.collectionYear}
+                    dataKey='collectionYear'
                     headerRenderer={headerRenderer}
                     width={columnWidth}
                   />
                   <Column
                     label={strings.source}
-                    cellDataGetter={({rowData}) => rowData.source}
-                    dataKey="source"
+                    cellDataGetter={({ rowData }) => rowData.source}
+                    dataKey='source'
                     headerRenderer={headerRenderer}
                     cellRenderer={sourceRenderer}
                     width={columnWidth}
@@ -241,25 +240,23 @@ class VirtualizedTable extends React.PureComponent {
                 </Table>
               )}
             </AutoSizer>
-          </div>
-        }
+          </div>}
       </div>
-    );
+    )
   }
 
-  _getDatum(list, index) {
-    return list.get(index % list.size);
+  _getDatum (list, index) {
+    return list.get(index % list.size)
   }
 
-  _getRowHeight({index}) {
-    const list = this.props.list;
-    return this._getDatum(list, index).size;
+  _getRowHeight ({ index }) {
+    const list = this.props.list
+    return this._getDatum(list, index).size
   }
 
-  _noRowsRenderer() {
-    return <div className={tableStyles.noRows}>No rows</div>;
+  _noRowsRenderer () {
+    return <div className={tableStyles.noRows}>No rows</div>
   }
-
 
   // _onScrollToRowChange(event) {
   //   const {rowCount} = this.state;
@@ -276,11 +273,11 @@ class VirtualizedTable extends React.PureComponent {
   // }
 
   // https://stackoverflow.com/questions/40412114/how-to-do-proper-column-filtering-with-react-virtualized-advice-needed
-  _sort({ sortBy, event, sortDirection }) {
+  _sort ({ sortBy, event, sortDirection }) {
     if (has(event.target, 'className') && event.target.className.startsWith('Mui')) {
-      event.stopPropagation();
+      event.stopPropagation()
     } else {
-      this.props.sortResults({ sortBy, sortDirection: sortDirection.toLowerCase() });
+      this.props.sortResults({ sortBy, sortDirection: sortDirection.toLowerCase() })
     }
   }
 }
@@ -294,6 +291,6 @@ VirtualizedTable.propTypes = {
   openMarkerPopup: PropTypes.func.isRequired,
   removeTempMarker: PropTypes.func.isRequired,
   strings: PropTypes.object.isRequired
-};
+}
 
-export default withStyles(styles)(VirtualizedTable);
+export default withStyles(styles)(VirtualizedTable)

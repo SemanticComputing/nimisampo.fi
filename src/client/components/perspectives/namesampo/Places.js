@@ -1,26 +1,26 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Immutable from 'immutable';
-import { Route, Redirect } from 'react-router-dom';
-import PerspectiveTabs from '../main_layout/PerspectiveTabs';
-import LeafletMap from '../facet_results/LeafletMap';
-import GMap from '../facet_results/GMap';
-import VirtualizedTable from '../facet_results/VirtualizedTable';
-import Pie from '../facet_results/Pie.js';
-import CSVButton from '../facet_results/CSVButton';
-import ResultInfo from '../facet_results/ResultInfo';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Immutable from 'immutable'
+import { Route, Redirect } from 'react-router-dom'
+import PerspectiveTabs from '../../main_layout/PerspectiveTabs'
+import LeafletMap from '../../facet_results/LeafletMap'
+import GMap from '../../facet_results/GMap'
+import VirtualizedTable from '../../facet_results/VirtualizedTable'
+import Pie from '../../facet_results/Pie.js'
+import CSVButton from '../../facet_results/CSVButton'
+import ResultInfo from '../../facet_results/ResultInfo'
 
-let Places = props => {
-  //console.log(props.results)
+const Places = props => {
+  // console.log(props.results)
   return (
-    <React.Fragment>
+    <>
       <PerspectiveTabs routeProps={props.routeProps} strings={props.strings} />
       <Route
         exact path='/app'
         render={() => <Redirect to='/app/table' />}
       />
       <Route
-        path={'/app/table'}
+        path='/app/table'
         render={() =>
           <VirtualizedTable
             list={Immutable.List(props.results)}
@@ -32,15 +32,14 @@ let Places = props => {
             openMarkerPopup={props.openMarkerPopup}
             removeTempMarker={props.removeTempMarker}
             strings={props.strings}
-          />
-        }
+          />}
       />
       <Route
-        path={'/app/map_clusters'}
+        path='/app/map_clusters'
         render={() =>
           <LeafletMap
             results={props.results}
-            mapMode="cluster"
+            mapMode='cluster'
             geoJSON={props.map.geoJSON}
             geoJSONKey={props.map.geoJSONKey}
             getGeoJSON={props.getGeoJSON}
@@ -50,20 +49,19 @@ let Places = props => {
             openPopupMarkerKey={props.map.openPopupMarkerKey}
             strings={props.strings}
             reduceHeight={72}
-            mapElementId={'resultMap'}
-          />
-        }
+            mapElementId='resultMap'
+          />}
       />
       <Route
-        path={'/app/map_markers'}
+        path='/app/map_markers'
         render={() => {
           if (props.results.length > 5000) {
-            return <ResultInfo message={props.strings.tooManyResults} />;
+            return <ResultInfo message={props.strings.tooManyResults} />
           } else {
-            return(
+            return (
               <LeafletMap
                 results={props.results}
-                mapMode="noCluster"
+                mapMode='noCluster'
                 geoJSON={props.map.geoJSON}
                 geoJSONKey={props.map.geoJSONKey}
                 getGeoJSON={props.getGeoJSON}
@@ -73,27 +71,26 @@ let Places = props => {
                 openPopupMarkerKey={props.map.openPopupMarkerKey}
                 strings={props.strings}
                 reduceHeight={72}
-                mapElementId={'resultMap'}
+                mapElementId='resultMap'
               />
-            );
+            )
           }
         }}
       />
       <Route
-        path={'/app/heatmap'}
+        path='/app/heatmap'
         render={() =>
           <GMap
             results={props.results}
-            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCKWw5FjhwLsfp_l2gjVAifPkT3cxGXhA4&v=3.exp&libraries=geometry,drawing,places,visualization"
-            loadingElement={<div style={{ height: `100%` }} />}
-            containerElement={<div style={{ height: `calc(100% - 72px` }} />}
-            mapElement={<div style={{ height: `100%` }} />}
+            googleMapURL='https://maps.googleapis.com/maps/api/js?key=AIzaSyCKWw5FjhwLsfp_l2gjVAifPkT3cxGXhA4&v=3.exp&libraries=geometry,drawing,places,visualization'
+            loadingElement={<div style={{ height: '100%' }} />}
+            containerElement={<div style={{ height: 'calc(100% - 72px' }} />}
+            mapElement={<div style={{ height: '100%' }} />}
             strings={props.strings}
-          />
-        }
+          />}
       />
       <Route
-        path={'/app/statistics'}
+        path='/app/statistics'
         render={() =>
           <Pie
             data={props.results}
@@ -101,22 +98,20 @@ let Places = props => {
             groupByLabel={props.search.groupByLabel}
             query={props.search.query}
             strings={props.strings}
-          />
-        }
+          />}
       />
       <Route
-        path={'/app/download'}
+        path='/app/download'
         render={() =>
-          <CSVButton results={props.results} strings={props.strings} />
-        }
+          <CSVButton results={props.results} strings={props.strings} />}
       />
-    </React.Fragment>
-  );
-};
+    </>
+  )
+}
 
 Places.propTypes = {
   options: PropTypes.object.isRequired,
-  search: PropTypes.object.isRequired,
+  clientSideFacetedSearch: PropTypes.object.isRequired,
   map: PropTypes.object.isRequired,
   results: PropTypes.array,
   resultValues: PropTypes.object,
@@ -133,8 +128,7 @@ Places.propTypes = {
   updateResultFormat: PropTypes.func.isRequired,
   updateMapMode: PropTypes.func.isRequired,
   updateFacet: PropTypes.func.isRequired,
-  routeProps: PropTypes.object.isRequired,
-  strings: PropTypes.object.isRequired
-};
+  routeProps: PropTypes.object.isRequired
+}
 
-export default Places;
+export default Places

@@ -11,10 +11,10 @@ import {
 } from 'rxjs/operators'
 import { combineEpics, ofType } from 'redux-observable'
 import intl from 'react-intl-universal'
-import localeEN from '../translations/sampo/localeEN'
-import localeFI from '../translations/sampo/localeFI'
-import localeSV from '../translations/sampo/localeSV'
-import { stateToUrl, handleAxiosError } from '../helpers/helpers'
+import localeEN from '../translations/namesampo/localeEN'
+import localeFI from '../translations/namesampo/localeFI'
+import localeSV from '../translations/namesampo/localeSV'
+import { stateToUrl, handleAxiosError, pickSelectedDatasets } from '../helpers/helpers'
 import querystring from 'querystring'
 import {
   FETCH_RESULT_COUNT,
@@ -32,10 +32,13 @@ import {
   FETCH_SIMILAR_DOCUMENTS_BY_ID_FAILED,
   FETCH_FACET_FAILED,
   FETCH_GEOJSON_LAYERS,
+  CLIENT_FS_FETCH_RESULTS,
+  CLIENT_FS_FETCH_RESULTS_FAILED,
   LOAD_LOCALES,
   updateResultCount,
   updatePaginatedResults,
   updateResults,
+  clientFSUpdateResults,
   updateInstance,
   updateInstanceRelatedData,
   updateFacetValues,
@@ -123,6 +126,38 @@ const fetchResultsEpic = (action$, state$) => action$.pipe(
       catchError(error => of({
         type: FETCH_RESULTS_FAILED,
         resultClass: resultClass,
+        error: error,
+        message: {
+          text: backendErrorText,
+          title: 'Error'
+        }
+      }))
+    )
+  })
+)
+
+const clientFSFetchResultsEpic = (action$, state$) => action$.pipe(
+  ofType(CLIENT_FS_FETCH_RESULTS),
+  withLatestFrom(state$),
+  debounceTime(500),
+  switchMap(([action, state]) => {
+    const { jenaIndex } = action
+    const selectedDatasets = pickSelectedDatasets(state.clientSideFacetedSearch.datasets)
+    const dsParams = selectedDatasets.map(ds => `dataset=${ds}`).join('&')
+    let requestUrl
+    if (action.jenaIndex === 'text') {
+      requestUrl = `${apiUrl}federatedSearch?q=${action.query}&${dsParams}`
+    } else if (action.jenaIndex === 'spatial') {
+      const { latMin, longMin, latMax, longMax } = state.map
+      requestUrl = `${apiUrl}?latMin=${latMin}&longMin=${longMin}&latMax=${latMax}&longMax=${longMax}&${dsParams}`
+    }
+    return ajax.getJSON(requestUrl).pipe(
+      map(response => clientFSUpdateResults({
+        results: response,
+        jenaIndex
+      })),
+      catchError(error => of({
+        type: CLIENT_FS_FETCH_RESULTS_FAILED,
         error: error,
         message: {
           text: backendErrorText,
@@ -372,6 +407,7 @@ const fetchGeoJSONLayer = async (layerID, bounds) => {
 const rootEpic = combineEpics(
   fetchPaginatedResultsEpic,
   fetchResultsEpic,
+  clientFSFetchResultsEpic,
   fetchResultCountEpic,
   fetchResultsClientSideEpic,
   fetchByURIEpic,

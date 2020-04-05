@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { CSVLink } from 'react-csv';
-import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
-import Button from '@material-ui/core/Button';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import { CSVLink } from 'react-csv'
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
+import Button from '@material-ui/core/Button'
 
 const styles = theme => ({
   root: {
@@ -17,32 +17,32 @@ const styles = theme => ({
     textDecoration: 'none'
   },
   csvButton: {
-    margin: theme.spacing.unit * 3,
+    margin: theme.spacing(3)
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit,
-  },
-});
+    marginLeft: theme.spacing(1)
+  }
+})
 
-let CSVButton = props => {
-  const { classes, strings } = props;
+const CSVButton = props => {
+  const { classes, strings } = props
 
   return (
     <div className={classes.root}>
       <CSVLink className={classes.csvLink} data={props.results}>
-        <Button variant="contained" color="primary" className={classes.csvButton}>
+        <Button variant='contained' color='primary' className={classes.csvButton}>
           {strings.resultsAsCSV}
           <CloudDownloadIcon className={classes.rightIcon} />
         </Button>
       </CSVLink>
     </div>
-  );
-};
+  )
+}
 
 CSVButton.propTypes = {
   classes: PropTypes.object.isRequired,
   results: PropTypes.array.isRequired,
   strings: PropTypes.object.isRequired
-};
+}
 
-export default withStyles(styles)(CSVButton);
+export default withStyles(styles)(CSVButton)

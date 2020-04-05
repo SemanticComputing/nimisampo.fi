@@ -3,7 +3,7 @@ import { reducer as toastrReducer } from 'react-redux-toastr'
 import error from './error'
 import options from './options'
 import animation from './animation'
-import leafletMapLayers from './leafletMapLayers'
+import leafletMap from './leafletMap'
 import clientSideFacetedSearch from './clientSideFacetedSearch'
 import perspective1 from './sampo/perspective1'
 import perspective2 from './sampo/perspective2'
@@ -23,7 +23,7 @@ const reducer = combineReducers({
   perspective2Facets,
   perspective3Facets,
   places,
-  leafletMapLayers,
+  leafletMap,
   animation,
   options,
   error,

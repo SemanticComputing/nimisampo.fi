@@ -1,73 +1,139 @@
 import {
-  FETCH_RESULTS_CLIENT_SIDE,
-  UPDATE_RESULTS,
-  CLEAR_RESULTS,
-  UPDATE_CLIENT_SIDE_FILTER,
-  SORT_RESULTS
+  CLIENT_FS_UPDATE_QUERY,
+  CLIENT_FS_TOGGLE_DATASET,
+  CLIENT_FS_FETCH_RESULTS,
+  CLIENT_FS_UPDATE_RESULTS,
+  CLIENT_FS_CLEAR_RESULTS,
+  CLIENT_FS_UPDATE_FACET,
+  CLIENT_FS_SORT_RESULTS
 } from '../actions'
 
 export const INITIAL_STATE = {
   query: '',
-  results: [],
-  latestFilter: {
-    id: ''
+  datasets: {
+    kotus: {
+      titleEn: 'Names Archive of the Institute for the Languages of Finland',
+      titleFi: 'Kotimaisten kielten keskuksen Nimiarkisto (NA)',
+      shortTitle: 'DNA',
+      timePeriod: '1900s',
+      link: 'https://nimiarkisto.fi/wiki/Nimiarkisto:Tietoja',
+      selected: true
+    },
+    pnr: {
+      titleEn: 'Finnish Geographic Names Registry',
+      titleFi: 'Maanmittauslaitoksen paikannimirekisteri (PNR)',
+      shortTitle: 'PNR',
+      timePeriod: 'contemporary',
+      link: 'https://www.maanmittauslaitos.fi/kartat-ja-paikkatieto/asiantuntevalle-kayttajalle/tuotekuvaukset/nimisto',
+      selected: true
+    },
+    warsa_karelian_places: {
+      titleEn: 'Karelian map names',
+      titleFi: 'Maanmittauslaitoksen Karjalan karttanimet (KK)',
+      shortTitle: 'KK',
+      timePeriod: '1922-1944',
+      link: 'https://www.suomi.fi/palvelut/verkkoasiointi/vanhat-karjalan-kartat-maanmittauslaitos/f51d72a2-510c-4c34-bb3e-b752f5d38250',
+      selected: false
+    },
+    tgn: {
+      titleEn: 'The Getty Thesaurus of Geographic Names (TGN)',
+      titleFi: 'The Getty Thesaurus of Geographic Names (TGN)',
+      shortTitle: 'TGN',
+      timePeriod: '?',
+      link: 'http://www.getty.edu/research/tools/vocabularies/tgn/about.html',
+      selected: false
+    }
   },
+  results: null,
+  latestFilter: null,
+  facetUpdateID: 0,
   latestFilterValues: [],
-  resultsFilter: {
+  facets: {
     prefLabel: new Set(),
-    type: new Set()
+    modifier: new Set(),
+    basicElement: new Set(),
+    typeLabel: new Set(),
+    broaderTypeLabel: new Set(),
+    broaderAreaLabel: new Set(),
+    collector: new Set(),
+    collectionYear: new Set(),
+    source: new Set(),
+    // datasetSelector: {
+    //   id: 'datasetSelector',
+    //   filterType: 'datasetSelector'
+    // }
   },
-  sortBy: 'prefLabel',
+  sortBy: 'broaderAreaLabel',
   sortDirection: 'asc',
-  // groupBy: 'broaderTypeLabel',
-  // groupByLabel: 'Paikanlaji',
+  groupBy: 'broaderTypeLabel',
+  groupByLabel: 'Paikanlaji',
   textResultsFetching: false,
   spatialResultsFetching: false
 }
 
 const clientSideFacetedSearch = (state = INITIAL_STATE, action) => {
-  if (action.resultClass === 'all') {
-    switch (action.type) {
-      case FETCH_RESULTS_CLIENT_SIDE:
-        return {
-          ...state,
-          [`${action.jenaIndex}ResultsFetching`]: true
-        }
-      case UPDATE_RESULTS:
-        return {
-          ...state,
-          query: action.query,
-          results: action.data,
-          [`${action.jenaIndex}ResultsFetching`]: false
-        }
-      case CLEAR_RESULTS:
-        return {
-          ...state,
-          results: null,
-          fetchingResults: false,
-          query: '',
-          resultsFilter: {
-            prefLabel: new Set(),
-            type: new Set()
+  switch (action.type) {
+    case CLIENT_FS_UPDATE_QUERY:
+      return { ...state, query: action.query || '' }
+    case CLIENT_FS_TOGGLE_DATASET:
+      return {
+        ...state,
+        suggestions: [],
+        results: null,
+        datasets: {
+          ...state.datasets,
+          [action.dataset]: {
+            ...state.datasets[action.dataset],
+            selected: !state.datasets[action.dataset].selected
           }
         }
-      case UPDATE_CLIENT_SIDE_FILTER:
-        return updateResultsFilter(state, action)
-      case SORT_RESULTS:
-        return {
-          ...state,
-          sortBy: action.options.sortBy,
-          sortDirection: action.options.sortDirection
+      }
+    case CLIENT_FS_FETCH_RESULTS:
+      return {
+        ...state,
+        [`${action.jenaIndex}ResultsFetching`]: true
+      }
+    case CLIENT_FS_CLEAR_RESULTS:
+      return {
+        ...state,
+        results: null,
+        fetchingResults: false,
+        query: '',
+        resultsFilter: {
+          prefLabel: new Set(),
+          modifier: new Set(),
+          basicElement: new Set(),
+          typeLabel: new Set(),
+          broaderTypeLabel: new Set(),
+          broaderAreaLabel: new Set(),
+          collector: new Set(),
+          collectionYear: new Set(),
+          source: new Set()
         }
-      default:
-        return state
-    }
-  } else return state
+      }
+    case CLIENT_FS_UPDATE_RESULTS:
+      console.log(action)
+      return {
+        ...state,
+        results: action.results,
+        [`${action.jenaIndex}ResultsFetching`]: false
+      }
+    case CLIENT_FS_UPDATE_FACET:
+      return updateFacet(state, action)
+    case CLIENT_FS_SORT_RESULTS:
+      return {
+        ...state,
+        sortBy: action.options.sortBy,
+        sortDirection: action.options.sortDirection
+      }
+    default:
+      return state
+  }
 }
 
-const updateResultsFilter = (state, action) => {
-  const { property, value, latestValues } = action.filterObj
-  const nSet = state.resultsFilter[property]
+const updateFacet = (state, action) => {
+  const { facetId, value, latestValues } = action
+  const nSet = state.facets[facetId]
   if (nSet.has(value)) {
     nSet.delete(value)
   } else {
@@ -75,13 +141,14 @@ const updateResultsFilter = (state, action) => {
   }
   const newFilter = {
     ...state.resultsFilter,
-    [property]: nSet
+    [facetId]: nSet
   }
   return {
     ...state,
+    facetUpdateID: ++state.facetUpdateID,
     resultsFilter: newFilter,
     latestFilter: {
-      id: property
+      facetId: facetId
     },
     latestFilterValues: latestValues
   }

@@ -161,7 +161,7 @@ class TopBar extends React.Component {
       open={Boolean(this.state.mobileMoreAnchorEl)}
       onClose={this.handleMobileMenuClose}
     >
-      {perspectives.map(perspective => this.renderMobileMenuItem(perspective))}
+      {perspectives && perspectives.map(perspective => this.renderMobileMenuItem(perspective))}
       <Divider />
       <MenuItem
         key='feedback'
@@ -216,7 +216,7 @@ class TopBar extends React.Component {
             />
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              {perspectives.map((perspective, index) => this.renderDesktopTopMenuItem(perspective, index))}
+              {perspectives && perspectives.map((perspective, index) => this.renderDesktopTopMenuItem(perspective, index))}
               <div className={classes.appBarDivider} />
               <Button
                 className={classes.appBarButton}
@@ -270,7 +270,7 @@ TopBar.propTypes = {
   fetchResultsClientSide: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
   loadLocales: PropTypes.func.isRequired,
-  perspectives: PropTypes.array.isRequired,
+  perspectives: PropTypes.array,
   currentLocale: PropTypes.string.isRequired,
   availableLocales: PropTypes.array.isRequired,
   xsScreen: PropTypes.bool.isRequired

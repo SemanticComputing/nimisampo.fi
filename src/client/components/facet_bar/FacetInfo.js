@@ -18,10 +18,12 @@ const styles = theme => ({
 
 class FacetInfo extends React.Component {
   componentDidMount = () => {
-    this.props.fetchResultCount({
-      resultClass: this.props.resultClass,
-      facetClass: this.props.facetClass
-    })
+    if (this.props.facetedSearchMode === 'serverFS') {
+      this.props.fetchResultCount({
+        resultClass: this.props.resultClass,
+        facetClass: this.props.facetClass
+      })
+    }
   }
 
   componentDidUpdate = prevProps => {
@@ -106,6 +108,7 @@ class FacetInfo extends React.Component {
 
 FacetInfo.propTypes = {
   classes: PropTypes.object.isRequired,
+  facetedSearchMode: PropTypes.string.isRequired,
   facetUpdateID: PropTypes.number.isRequired,
   facetData: PropTypes.object.isRequired,
   facetClass: PropTypes.string.isRequired,

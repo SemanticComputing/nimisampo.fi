@@ -1,9 +1,9 @@
 module.exports = {
-  'warsa_karelian_places': {
-    'title': 'Karelian map names',
-    'shortTitle': 'KK',
-    'timePeriod': '1922-1944',
-    'endpoint': 'http://ldf.fi/warsa/sparql',
+  warsa_karelian_places: {
+    title: 'Karelian map names',
+    shortTitle: 'KK',
+    timePeriod: '1922-1944',
+    endpoint: 'http://ldf.fi/warsa/sparql',
     // 'suggestionQuery': `
     //   PREFIX text: <http://jena.apache.org/text#>
     //   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -22,7 +22,7 @@ module.exports = {
     //   ORDER BY DESC(MAX(?idcore)) ?label
     //   LIMIT 50
     //   `,
-    'simpleSuggestionQuery': `
+    simpleSuggestionQuery: `
         PREFIX text: <http://jena.apache.org/text#>
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -38,7 +38,7 @@ module.exports = {
           BIND(STR(?lbl) AS ?label)
         }
         `,
-    'resultQuery': `
+    resultQuery: `
       PREFIX text: <http://jena.apache.org/text#>
       PREFIX spatial: <http://jena.apache.org/spatial#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -69,14 +69,14 @@ module.exports = {
         FILTER(LANGMATCHES(LANG(?broaderTypeLabel), 'fi'))
         FILTER(LANGMATCHES(LANG(?broaderAreaLabel), 'fi'))
       }
-      `,
+      `
   },
-  'pnr': {
-    'title': 'Finnish Geographic Names Registry (contemporary)',
-    'shortTitle': 'FGN',
-    'timePeriod': 'contemporary',
-    'endpoint': 'http://ldf.fi/pnr-keyword-index/sparql',
-    'simpleSuggestionQuery': `
+  pnr: {
+    title: 'Finnish Geographic Names Registry (contemporary)',
+    shortTitle: 'FGN',
+    timePeriod: 'contemporary',
+    endpoint: 'http://ldf.fi/pnr-keyword-index/sparql',
+    simpleSuggestionQuery: `
       PREFIX text: <http://jena.apache.org/text#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -91,7 +91,7 @@ module.exports = {
         BIND(STR(?lbl) AS ?label)
       }
         `,
-    'resultQuery': `
+    resultQuery: `
       PREFIX text: <http://jena.apache.org/text#>
       PREFIX spatial: <http://jena.apache.org/spatial#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -120,20 +120,20 @@ module.exports = {
         BIND("yellow" AS ?markerColor)
         BIND("-" AS ?missingValue)
       }
-      `,
+      `
   },
-  'tgn': {
+  tgn: {
     // Getty LOD documentation:
     // http://vocab.getty.edu/queries#Places_by_Type
     // https://groups.google.com/forum/#!topic/gettyvocablod/r4wsSJyne84
     // https://confluence.ontotext.com/display/OWLIMv54/OWLIM-SE+Full-text+Search
     // http://vocab.getty.edu/queries#Combination_Full-Text_and_Exact_String_Match
     // http://vocab.getty.edu/doc/#TGN_Place_Types
-    'title': 'The Getty Thesaurus of Geographic Names',
-    'shortTitle': 'TGN',
-    'timePeriod': '',
-    'endpoint': 'http://vocab.getty.edu/sparql.json',
-    //'simpleSuggestionQuery':
+    title: 'The Getty Thesaurus of Geographic Names',
+    shortTitle: 'TGN',
+    timePeriod: '',
+    endpoint: 'http://vocab.getty.edu/sparql.json',
+    // 'simpleSuggestionQuery':
     //  'SELECT+DISTINCT+?label+' +
     //  'WHERE+{' +
     //  '?id+a+skos:Concept;+' +
@@ -144,7 +144,7 @@ module.exports = {
     //  'FILTER+(STRSTARTS(LCASE(?lbl),+"<QUERYTERM>"))' +
     //  '}' +
     //  'LIMIT+20',
-    'resultQuery': `
+    resultQuery: `
       SELECT ?id (COALESCE(?labelEn,?labelGVP) AS ?prefLabel) ?broaderTypeLabel
         ?broaderAreaLabel ?source ?lat ?long ?markerColor
       WHERE {
@@ -178,13 +178,13 @@ module.exports = {
         BIND("TGN" AS ?source)
         BIND("orange" AS ?markerColor)
       }
-      `,
+      `
   },
-  'kotus': {
-    'title': 'Institute for the Languages of Finland (Kotus) Digital Names archive',
-    'shortTitle': 'DNA',
-    'timePeriod': '',
-    'endpoint': 'http://ldf.fi/kotus-names-archive/sparql',
+  kotus: {
+    title: 'Institute for the Languages of Finland (Kotus) Digital Names archive',
+    shortTitle: 'DNA',
+    timePeriod: '',
+    endpoint: 'http://ldf.fi/kotus-names-archive/sparql',
     // 'endpoint': 'http://localhost:3037/ds/sparql',
     // 'suggestionQuery': `
     //   PREFIX text: <http://jena.apache.org/text#>
@@ -203,7 +203,7 @@ module.exports = {
     //   ORDER BY DESC(MAX(?idcore)) ?label
     //   LIMIT 20
     //   `,
-    'simpleSuggestionQuery': `
+    simpleSuggestionQuery: `
       PREFIX text: <http://jena.apache.org/text#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -219,7 +219,7 @@ module.exports = {
         BIND(STR(?lbl) AS ?label)
       }
       `,
-    'resultQuery': `
+    resultQuery: `
       PREFIX text: <http://jena.apache.org/text#>
       PREFIX spatial: <http://jena.apache.org/spatial#>
       PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -262,6 +262,6 @@ module.exports = {
         OPTIONAL { ?id na-schema:collector ?collector }
         OPTIONAL { ?id na-schema:stamp_date ?collectionYear }
       }
-    `,
-  },
-};
+    `
+  }
+}

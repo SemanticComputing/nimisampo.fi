@@ -1,18 +1,18 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormControl from '@material-ui/core/FormControl'
 // import FormLabel from '@material-ui/core/FormLabel';
-import FormGroup from '@material-ui/core/FormGroup';
-import Checkbox from '@material-ui/core/Checkbox';
-import InfoIcon from '@material-ui/icons/Info';
+import FormGroup from '@material-ui/core/FormGroup'
+import Checkbox from '@material-ui/core/Checkbox'
+import InfoIcon from '@material-ui/icons/Info'
 
 const styles = theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    marginLeft: theme.spacing.unit * 2
+    marginLeft: theme.spacing(2)
   },
   formControl: {
     width: '100%'
@@ -20,56 +20,56 @@ const styles = theme => ({
   formControlLabelRoot: {
     width: '100%',
     [theme.breakpoints.down('md')]: {
-      marginBottom: theme.spacing.unit * 2
-    },
+      marginBottom: theme.spacing(1)
+    }
   },
   formControlLabelLabel: {
-    width: '100%',
+    width: '100%'
   },
   checkboxLabel: {
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    fontSize: '0.875rem'
   },
   link: {
     display: 'flex',
     textDecoration: 'none',
     alignItems: 'center',
-    color: theme.palette.primary.main,
-  },
-});
+    color: theme.palette.primary.main
+  }
+})
 
 class DatasetSelector extends React.Component {
-
   handleToggleDataset = value => () => {
-    this.props.toggleDataset(value);
+    this.props.clientFSToggleDataset(value)
   };
 
   generateLabel = id => {
-    const title = this.props.language == 'fi' ? this.props.search.datasets[id].titleFi : this.props.search.datasets[id].titleEn;
+    const title = this.props.language === 'fi' ? this.props.datasets[id].titleFi : this.props.datasets[id].titleEn
     return (
       <div className={this.props.classes.checkboxLabel}>
         <span>{title}</span>
         <a
           className={this.props.classes.link}
-          href={this.props.search.datasets[id].link}
+          href={this.props.datasets[id].link}
           target='_blank'
           rel='noopener noreferrer'
         >
           <InfoIcon />
         </a>
       </div>
-    );
+    )
   }
 
-  render() {
-    const { classes } = this.props;
+  render () {
+    const { classes } = this.props
     return (
       <div className={classes.root}>
-        <FormControl component="fieldset" className={classes.formControl}>
+        <FormControl component='fieldset' className={classes.formControl}>
           <FormGroup className={classes.formGroup}>
-            {Object.keys(this.props.search.datasets).map(id => (
+            {Object.keys(this.props.datasets).map(id => (
               <FormControlLabel
                 classes={{
                   root: classes.formControlLabelRoot,
@@ -78,7 +78,7 @@ class DatasetSelector extends React.Component {
                 key={id}
                 control={
                   <Checkbox
-                    checked={this.props.search.datasets[id].selected}
+                    checked={this.props.datasets[id].selected}
                     onChange={this.handleToggleDataset(id)}
                     tabIndex={-1}
                     disableRipple
@@ -91,16 +91,14 @@ class DatasetSelector extends React.Component {
           </FormGroup>
         </FormControl>
       </div>
-    );
+    )
   }
 }
 
 DatasetSelector.propTypes = {
   classes: PropTypes.object.isRequired,
-  search: PropTypes.object.isRequired,
-  toggleDataset: PropTypes.func.isRequired,
-  strings: PropTypes.object.isRequired,
-  language: PropTypes.string.isRequired
-};
+  datasets: PropTypes.object.isRequired,
+  clientFSToggleDataset: PropTypes.func.isRequired
+}
 
-export default withStyles(styles)(DatasetSelector);
+export default withStyles(styles)(DatasetSelector)

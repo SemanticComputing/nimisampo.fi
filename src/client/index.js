@@ -10,7 +10,7 @@ import reducer from './reducers'
 import rootEpic from './epics'
 import App from './components/App'
 import { loadLocales } from './actions'
-import { defaultLocale } from './configs/sampo/GeneralConfig'
+import { defaultLocale } from './configs/namesampo/GeneralConfig'
 
 import './index.css'
 import 'react-sortable-tree/style.css'
@@ -22,10 +22,6 @@ const epicMiddleware = createEpicMiddleware()
 const middleware = applyMiddleware(epicMiddleware)
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-
-const epicMiddleware = createEpicMiddleware();
-const middleware = applyMiddleware(epicMiddleware);
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   reducer,

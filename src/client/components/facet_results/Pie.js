@@ -1,23 +1,23 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from 'react'
+import PropTypes from 'prop-types'
 import {
   VictoryPie,
   VictoryLegend,
-  VictoryContainer,
-  //VictoryLabel,
-} from 'victory';
-import PieTooltip from './PieTooltip';
-import _ from 'lodash';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import ResultInfo from './ResultInfo';
+  VictoryContainer
+  // VictoryLabel,
+} from 'victory'
+import PieTooltip from './PieTooltip'
+import _ from 'lodash'
+import { withStyles } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import Paper from '@material-ui/core/Paper'
+import ResultInfo from './ResultInfo'
 
 const styles = theme => ({
   root: {
     height: '100%',
     display: 'flex',
-    flexGrow: 1,
+    flexGrow: 1
 
   },
   container: {
@@ -29,61 +29,61 @@ const styles = theme => ({
     alignItems: 'center'
   },
   pie: {
-    paddingLeft: theme.spacing.unit * 4,
-    paddingRight: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(2)
   },
   legend: {
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 4,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(4)
   },
   legendPaper: {
     height: 275,
-    overflowY: 'auto',
+    overflowY: 'auto'
   }
-});
+})
 
 const combineSmallGroups = (dataArray) => {
-  const totalLength = dataArray.length;
-  const threshold = 0.1;
-  let other = { x: 'Other', y: 0, values: [] };
-  let newArray = [];
-  for (let item of dataArray) {
-    const portion = item.y / totalLength;
+  const totalLength = dataArray.length
+  const threshold = 0.1
+  const other = { x: 'Other', y: 0, values: [] }
+  const newArray = []
+  for (const item of dataArray) {
+    const portion = item.y / totalLength
     if (portion < threshold) {
-      other.y += item.y;
-      other.values.push(item.values);
+      other.y += item.y
+      other.values.push(item.values)
     } else {
-      newArray.push(item);
+      newArray.push(item)
     }
   }
   if (other.y > 0) {
-    newArray.push(other);
-    return newArray;
+    newArray.push(other)
+    return newArray
   } else {
-    return dataArray;
+    return dataArray
   }
-};
+}
 
-let Pie = (props) => {
-  const { classes, data, groupBy } = props;
-  const resultCount = data.length;
+const Pie = (props) => {
+  const { classes, data, groupBy } = props
+  const resultCount = data.length
   if (resultCount < 10) {
-    return <ResultInfo message="Need over 10 results to create a distribution." />;
+    return <ResultInfo message='Need over 10 results to create a distribution.' />
   }
-  const grouped = _.groupBy(data, groupBy);
-  let dataArray = [];
-  for (let key in grouped) {
-    const length = grouped[key].length;
+  const grouped = _.groupBy(data, groupBy)
+  let dataArray = []
+  for (const key in grouped) {
+    const length = grouped[key].length
     dataArray.push({
       x: key,
       y: length,
       values: grouped[key]
-    });
+    })
   }
-  dataArray = _.orderBy(dataArray, 'y', 'desc');
-  dataArray = combineSmallGroups(dataArray);
-  const legendArray = dataArray.map(group => ({ name: group.x.toLowerCase() + ' (' + group.y + ')' }));
-  const legendHeigth = legendArray.length * 35;
+  dataArray = _.orderBy(dataArray, 'y', 'desc')
+  dataArray = combineSmallGroups(dataArray)
+  const legendArray = dataArray.map(group => ({ name: group.x.toLowerCase() + ' (' + group.y + ')' }))
+  const legendHeigth = legendArray.length * 35
   // const pieTitle = resultCount + ' results for the query "' + query + '"';
   // <VictoryLabel
   //   style={{
@@ -102,7 +102,7 @@ let Pie = (props) => {
             padding={{
               left: 0, bottom: 0, top: 32
             }}
-            colorScale={'qualitative'}
+            colorScale='qualitative'
             data={dataArray}
             labelComponent={<PieTooltip resultCount={resultCount} />}
           />
@@ -112,11 +112,11 @@ let Pie = (props) => {
             <VictoryLegend
               height={legendHeigth}
               title={props.groupByLabel}
-              colorScale={'qualitative'}
+              colorScale='qualitative'
               data={legendArray}
               style={{
                 labels: { fontFamily: 'Roboto, Helvetica, Arial, sans-serif' },
-                title: { fontFamily: 'Roboto, Helvetica, Arial, sans-serif' },
+                title: { fontFamily: 'Roboto, Helvetica, Arial, sans-serif' }
               }}
               containerComponent={
                 <VictoryContainer
@@ -129,16 +129,15 @@ let Pie = (props) => {
         </Grid>
       </Grid>
     </div>
-  );
-
-};
+  )
+}
 
 Pie.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.array.isRequired,
   groupBy: PropTypes.string.isRequired,
   groupByLabel: PropTypes.string.isRequired,
-  query: PropTypes.string.isRequired,
-};
+  query: PropTypes.string.isRequired
+}
 
-export default withStyles(styles)(Pie);
+export default withStyles(styles)(Pie)

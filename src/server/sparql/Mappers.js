@@ -64,6 +64,28 @@ export const mapTimespanFacet = sparqlBindings => {
   }
 }
 
+export const mapNameSampoResults = sparqlBindings => {
+  // console.log(sparqlBindings)
+  const results = sparqlBindings.map(b => {
+    return {
+      id: b.id.value,
+      prefLabel: b.prefLabel.value,
+      modifier: has(b, 'modifier') ? b.modifier.value : '',
+      basicElement: has(b, 'basicElement') ? b.basicElement.value : '',
+      typeLabel: has(b, 'typeLabel') ? b.typeLabel.value : '',
+      broaderTypeLabel: b.broaderTypeLabel.value,
+      broaderAreaLabel: b.broaderAreaLabel.value,
+      collector: has(b, 'collector') ? b.collector.value : '',
+      collectionYear: has(b, 'collectionYear') ? b.collectionYear.value : '',
+      source: b.source.value,
+      markerColor: b.markerColor.value,
+      lat: has(b, 'lat') ? b.lat.value : '',
+      long: has(b, 'long') ? b.long.value : ''
+    }
+  })
+  return results
+}
+
 const mapFacetValues = sparqlBindings => {
   const results = sparqlBindings.map(b => {
     try {

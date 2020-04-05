@@ -1,113 +1,119 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import FormControl from '@material-ui/core/FormControl';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import React from 'react'
+import PropTypes from 'prop-types'
+import { withStyles } from '@material-ui/core/styles'
+import intl from 'react-intl-universal'
+import IconButton from '@material-ui/core/IconButton'
+import SearchIcon from '@material-ui/icons/Search'
+import Input from '@material-ui/core/Input'
+import InputLabel from '@material-ui/core/InputLabel'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import FormControl from '@material-ui/core/FormControl'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Paper from '@material-ui/core/Paper'
 
 const styles = theme => ({
-  textSearch: {
-    margin: theme.spacing.unit,
+  root: {
+    marginBottom: theme.spacing(1),
+    padding: theme.spacing(0.5)
   },
-});
+  textSearch: {
+    margin: theme.spacing(1)
+  }
+})
 
 class SearchField extends React.Component {
   state = {
-    value: '',
+    value: ''
   };
 
   componentDidUpdate = prevProps => {
-    if (prevProps.search.query != this.props.search.query) {
+    if (prevProps.search.query !== this.props.search.query) {
       this.setState({
         value: this.props.search.query
-      });
+      })
     }
   }
 
   handleChange = (event) => {
-    this.setState({ value: event.target.value });
+    this.setState({ value: event.target.value })
   };
 
   handleMouseDown = (event) => {
-    event.preventDefault();
+    event.preventDefault()
   };
 
   handleOnKeyDown = (event) => {
     if (event.key === 'Enter' && this.hasDatasets() && this.hasValidQuery()) {
-      this.props.clearResults();
-      this.props.updateQuery(this.state.value);
-      this.props.fetchResults('text', this.state.value);
+      this.props.clearResults()
+      this.props.updateQuery(this.state.value)
+      this.props.fetchResults('text', this.state.value)
     }
   };
 
   handleClick = () => {
     if (this.hasDatasets() && this.hasValidQuery()) {
-      this.props.clearResults();
-      this.props.updateQuery(this.state.value);
-      this.props.fetchResults('text', this.state.value);
+      this.props.clearResults()
+      this.props.updateQuery(this.state.value)
+      this.props.fetchResults('text', this.state.value)
     }
   };
 
   hasDatasets = () => {
-    let hasDs = false;
+    let hasDs = false
     Object.values(this.props.datasets).forEach(value => {
       if (value.selected) {
-        hasDs = true;
+        hasDs = true
       }
-    });
-    return hasDs;
+    })
+    return hasDs
   }
 
   hasValidQuery = () => {
-    return this.state.value.length > 2;
+    return this.state.value.length > 2
   }
 
-  render() {
-    const { classes, strings } = this.props;
-    let searchButton = null;
+  render () {
+    const { classes } = this.props
+    let searchButton = null
     if (this.props.search.textResultsFetching) {
       searchButton = (
         <IconButton
-          aria-label="Search places"
+          aria-label='Search places'
         >
           <CircularProgress size={24} />
         </IconButton>
-      );
+      )
     } else {
       searchButton = (
         <IconButton
-          aria-label="Search"
+          aria-label='Search'
           onClick={this.handleClick}
           onMouseDown={this.handleMouseDown}
         >
           <SearchIcon />
         </IconButton>
-      );
+      )
     }
 
     return (
-      <div className={classes.root}>
+      <Paper className={classes.root}>
         <FormControl className={classes.textSearch}>
-          <InputLabel htmlFor="adornment-search">{strings.searchPlaceNames}</InputLabel>
+          <InputLabel htmlFor='adornment-search'>{intl.get('perspectives.placesClientFS.searchPlaceNames')}</InputLabel>
           <Input
-            id="adornment-search"
+            id='adornment-search'
             type='text'
             value={this.state.value}
             onChange={this.handleChange}
             onKeyDown={this.handleOnKeyDown}
             endAdornment={
-              <InputAdornment position="end">
+              <InputAdornment position='end'>
                 {searchButton}
               </InputAdornment>
             }
           />
         </FormControl>
-      </div>
-    );
+      </Paper>
+    )
   }
 }
 
@@ -117,8 +123,7 @@ SearchField.propTypes = {
   fetchResults: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
   updateQuery: PropTypes.func.isRequired,
-  datasets: PropTypes.object.isRequired,
-  strings: PropTypes.object.isRequired
-};
+  datasets: PropTypes.object.isRequired
+}
 
-export default withStyles(styles)(SearchField);
+export default withStyles(styles)(SearchField)

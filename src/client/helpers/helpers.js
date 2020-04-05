@@ -99,3 +99,13 @@ export const handleAxiosError = error => {
   }
   console.log(error.config)
 }
+
+export const pickSelectedDatasets = datasets => {
+  const selected = []
+  Object.keys(datasets).map(key => {
+    if (datasets[key].selected) {
+      selected.push(key)
+    }
+  })
+  return selected
+}
