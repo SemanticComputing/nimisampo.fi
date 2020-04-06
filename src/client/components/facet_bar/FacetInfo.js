@@ -113,12 +113,12 @@ FacetInfo.propTypes = {
   facetData: PropTypes.object.isRequired,
   facetClass: PropTypes.string.isRequired,
   resultClass: PropTypes.string.isRequired,
-  resultCount: PropTypes.number.isRequired,
+  resultCount: PropTypes.number,
   fetchingResultCount: PropTypes.bool.isRequired,
-  updateFacetOption: PropTypes.func.isRequired,
-  fetchResultCount: PropTypes.func.isRequired,
+  updateFacetOption: PropTypes.func,
+  fetchResultCount: PropTypes.func,
   someFacetIsFetching: PropTypes.bool.isRequired,
-  fetchFacet: PropTypes.func.isRequired
+  fetchFacet: PropTypes.func
 }
 
 export default withStyles(styles)(FacetInfo)

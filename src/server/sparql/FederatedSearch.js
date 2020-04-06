@@ -1,11 +1,11 @@
-import { runSelectQuery, getWFSLayer } from './Requests'
-import { flatten } from 'lodash'
-import datasetConfig from './SparqlQueries'
+import { runSelectQuery } from './SparqlApi'
+// import { flatten } from 'lodash'
+import datasetConfig from './namesampo/SparqlQueries'
 import {
   mapNameSampoResults
-} from './sparql/Mappers'
+} from './Mappers'
 
-const getResults = async (queryTerm, latMin, longMin, latMax, longMax, datasetId) => {
+const getResults = async (queryTerm, latMin, longMin, latMax, longMax, datasetId, resultFormat) => {
   const { endpoint, resultQuery } = datasetConfig[datasetId]
   let query = ''
   if (datasetId !== 'tgn') {
@@ -17,19 +17,39 @@ const getResults = async (queryTerm, latMin, longMin, latMax, longMax, datasetId
   } else {
     query = resultQuery.replace(/<QUERYTERM>/g, queryTerm.toLowerCase())
   }
-  return runSelectQuery(query, endpoint, mapNameSampoResults)
+  return runSelectQuery({
+    query,
+    endpoint,
+    resultMapper: mapNameSampoResults,
+    resultFormat
+  })
 }
 
-export const getFederatedResults = async (queryTerm, latMin, longMin, latMax, longMax, datasets) => {
-  const results = await Promise.all(datasets.map((datasetId) =>
-    getResults(queryTerm, latMin, longMin, latMax, longMax, datasetId)))
-  return flatten(results)
+export const getFederatedResults = async ({
+  queryTerm,
+  latMin,
+  longMin,
+  latMax,
+  longMax,
+  datasets,
+  resultFormat
+}) => {
+  const federatedResults = await Promise.all(datasets.map((datasetId) =>
+    getResults(queryTerm, latMin, longMin, latMax, longMax, datasetId, resultFormat)))
+
+  // merge search results from multiple endpoints into a single array
+  let results = []
+  federatedResults.forEach(resultSet => {
+    results = [...results, ...resultSet.data]
+  })
+
+  return results
 }
 
-export const getWFSLayers = async layerIDs => {
-  const data = await Promise.all(layerIDs.map((layerID) => getWFSLayer(layerID)))
-  return data
-}
+// export const getWFSLayers = async layerIDs => {
+//   const data = await Promise.all(layerIDs.map((layerID) => getWFSLayer(layerID)))
+//   return data
+// }
 
 // export const getSimpleSuggestions = async (queryTerm, datasetId) => {
 //     const { endpoint, simpleSuggestionQuery } = datasetConfig[datasetId];

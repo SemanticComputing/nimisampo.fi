@@ -65,7 +65,6 @@ export const mapTimespanFacet = sparqlBindings => {
 }
 
 export const mapNameSampoResults = sparqlBindings => {
-  // console.log(sparqlBindings)
   const results = sparqlBindings.map(b => {
     return {
       id: b.id.value,

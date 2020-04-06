@@ -11,7 +11,7 @@ import { withStyles } from '@material-ui/core/styles'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import Button from '@material-ui/core/Button'
 import { Link, NavLink } from 'react-router-dom'
-import TopBarSearchField from './TopBarSearchField'
+// import TopBarSearchField from './TopBarSearchField'
 import TopBarInfoButton from './TopBarInfoButton'
 import TopBarLanguageButton from './TopBarLanguageButton'
 import Divider from '@material-ui/core/Divider'
@@ -162,7 +162,7 @@ class TopBar extends React.Component {
       onClose={this.handleMobileMenuClose}
     >
       {perspectives && perspectives.map(perspective => this.renderMobileMenuItem(perspective))}
-      <Divider />
+      {/* <Divider /> */}
       <MenuItem
         key='feedback'
         component={this.AdapterLink}
@@ -209,15 +209,15 @@ class TopBar extends React.Component {
             <Button component={this.AdapterLink} to='/'>
               <Typography variant='h6'>{intl.get('appTitle.short')}</Typography>
             </Button>
-            <TopBarSearchField
+            {/* <TopBarSearchField
               fetchResultsClientSide={this.props.fetchResultsClientSide}
               clearResults={this.props.clearResults}
               xsScreen={this.props.xsScreen}
-            />
+            /> */}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               {perspectives && perspectives.map((perspective, index) => this.renderDesktopTopMenuItem(perspective, index))}
-              <div className={classes.appBarDivider} />
+              {/* <div className={classes.appBarDivider} /> */}
               <Button
                 className={classes.appBarButton}
                 component={this.AdapterNavLink}
@@ -227,8 +227,15 @@ class TopBar extends React.Component {
               >
                 {intl.get('topBar.feedback')}
               </Button>
-              <TopBarInfoButton />
-              <Button
+              <a
+                href='https://seco.cs.aalto.fi/projects/nimisampo/en'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <Button className={classes.appBarButton}>{intl.get('topBar.info.info')}</Button>
+              </a>
+              {/* <TopBarInfoButton /> */}
+              {/* <Button
                 className={classes.appBarButton}
                 component={this.AdapterNavLink}
                 to='/instructions'
@@ -236,7 +243,7 @@ class TopBar extends React.Component {
                 activeClassName={this.props.classes.appBarButtonActive}
               >
                 {intl.get('topBar.instructions')}
-              </Button>
+              </Button> */}
               {showLanguageButton &&
                 <TopBarLanguageButton
                   currentLocale={currentLocale}
@@ -246,7 +253,7 @@ class TopBar extends React.Component {
             </div>
             <a
               className={classes.secoLogo}
-              href='https://seco.cs.aalto.fi/projects/mmm'
+              href='https://seco.cs.aalto.fi/projects/nimisampo/en'
               target='_blank'
               rel='noopener noreferrer'
             >

@@ -10,7 +10,7 @@ import {
 } from './sparql/FacetResults'
 import { getFacet } from './sparql/FacetValues'
 import { queryJenaIndex } from './sparql/JenaQuery'
-import { getFederatedResults } from './Search'
+import { getFederatedResults } from './sparql/FederatedSearch'
 const DEFAULT_PORT = 3001
 const app = express()
 app.set('port', process.env.PORT || DEFAULT_PORT)
@@ -172,7 +172,15 @@ app.get(`${apiPath}/federatedSearch`, async (req, res, next) => {
     longMax = req.query.longMax
   }
   try {
-    const data = await getFederatedResults(queryTerm, latMin, longMin, latMax, longMax, castArray(req.query.dataset))
+    const data = await getFederatedResults({
+      queryTerm,
+      latMin,
+      longMin,
+      latMax,
+      longMax,
+      datasets: castArray(req.query.dataset),
+      resultFormat: req.query.resultFormat == null ? 'json' : req.query.resultFormat
+    })
     res.json(data)
   } catch (error) {
     next(error)

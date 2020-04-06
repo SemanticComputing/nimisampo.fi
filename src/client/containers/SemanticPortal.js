@@ -23,7 +23,7 @@ import Footer from '../components/perspectives/namesampo/Footer'
 import FacetBar from '../components/facet_bar/FacetBar'
 import Places from '../components/perspectives/namesampo/Places'
 // import All from '../components/perspectives/sampo/All'
-// import { perspectiveConfig } from '../configs/sampo/PerspectiveConfig'
+import { perspectiveConfig } from '../configs/namesampo/PerspectiveConfig'
 // import { perspectiveConfigOnlyInfoPages } from '../configs/sampo/PerspectiveConfigOnlyInfoPages'
 import { rootUrl } from '../configs/namesampo/GeneralConfig'
 import {
@@ -46,6 +46,7 @@ import {
   animateMap,
   clientFSToggleDataset,
   clientFSFetchResults,
+  clientFSSortResults,
   clientFSClearResults,
   clientFSUpdateQuery
 } from '../actions'
@@ -184,19 +185,20 @@ const styles = theme => ({
 const SemanticPortal = props => {
   const { classes, error } = props
   const xsScreen = useMediaQuery(theme => theme.breakpoints.down('xs'))
-  // const smScreen = useMediaQuery(theme => theme.breakpoints.between('sm', 'md'))
-  // const mdScreen = useMediaQuery(theme => theme.breakpoints.between('md', 'lg'))
-  // const lgScreen = useMediaQuery(theme => theme.breakpoints.between('lg', 'xl'))
-  // const xlScreen = useMediaQuery(theme => theme.breakpoints.up('xl'))
-  // let screenSize = ''
-  // if (xsScreen) { screenSize = 'xs' }
-  // if (smScreen) { screenSize = 'sm' }
-  // if (mdScreen) { screenSize = 'md' }
-  // if (lgScreen) { screenSize = 'lg' }
-  // if (xlScreen) { screenSize = 'xl' }
-  const hasResults = !props.clientSideFacetedSearch.results == null
+  const smScreen = useMediaQuery(theme => theme.breakpoints.between('sm', 'md'))
+  const mdScreen = useMediaQuery(theme => theme.breakpoints.between('md', 'lg'))
+  const lgScreen = useMediaQuery(theme => theme.breakpoints.between('lg', 'xl'))
+  const xlScreen = useMediaQuery(theme => theme.breakpoints.up('xl'))
+  let screenSize = ''
+  if (xsScreen) { screenSize = 'xs' }
+  if (smScreen) { screenSize = 'sm' }
+  if (mdScreen) { screenSize = 'md' }
+  if (lgScreen) { screenSize = 'lg' }
+  if (xlScreen) { screenSize = 'xl' }
+  const noResults = props.clientFS.results == null
   // console.log(props.clientSideFacetedSearch.results)
-  console.log(props.resultValues)
+  // console.log(props.resultValues)
+  // console.log(noResults)
   return (
     <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={props.options.currentLocale}>
       <div className={classes.root}>
@@ -223,47 +225,32 @@ const SemanticPortal = props => {
                 <Grid item sm={12} md={4} lg={3} className={classes.facetBarContainer}>
                   <FacetBar
                     facetedSearchMode='clientFS'
-                    facetData={props.clientSideFacetedSearch}
-                    clientSideFacetValues={props.resultValues}
-                    fetchingResultCount={props.clientSideFacetedSearch.textResultsFetching}
                     facetClass='placesClientFS'
                     resultClass='placesClientFS'
-                    resultCount={hasResults ? props.clientSideFacetedSearch.results.length : 0}
-                    fetchFacet={props.fetchFacet}
-                    fetchFacetConstrainSelf={props.fetchFacetConstrainSelf}
-                    fetchResultCount={props.fetchResultCount}
-                    updateFacetOption={props.updateFacetOption}
+                    facetData={props.clientFS}
+                    clientFSFacetValues={props.clientFSFacetValues}
+                    fetchingResultCount={props.clientFS.textResultsFetching}
+                    resultCount={noResults ? 0 : props.clientFS.results.length}
                     clientFSToggleDataset={props.clientFSToggleDataset}
                     clientFSFetchResults={props.clientFSFetchResults}
                     clientFSClearResults={props.clientFSClearResults}
                     clientFSUpdateQuery={props.clientFSUpdateQuery}
-                    defaultActiveFacets={new Set(['datasetSelector'])}
+                    defaultActiveFacets={perspectiveConfig[0].defaultActiveFacets}
                     leafletMap={props.leafletMap}
+                    screenSize={screenSize}
                   />
                 </Grid>
                 <Grid item sm={12} md={8} lg={9} className={classes.perspectiveContainerNoHeader}>
-                  {!hasResults && <Main />}
-                  {hasResults &&
+                  {noResults && <Main />}
+                  {!noResults &&
                     <Places
-                      results={props.clientSideFacetedSearch.results}
-                      resultValues={props.resultValues}
-                      clientSideFacetedSearch={props.clientSideFacetedSearch}
-                      map={props.map}
-                      options={props.options}
-                      sortResults={props.sortResults}
-                      updateFacet={props.updateFacet}
-                      updateQuery={props.updateQuery}
-                      fetchResults={props.fetchResults}
-                      clearResults={props.clearResults}
-                      fetchSuggestions={props.fetchSuggestions}
-                      clearSuggestions={props.clearSuggestions}
-                      bounceMarker={props.bounceMarker}
-                      openMarkerPopup={props.openMarkerPopup}
-                      removeTempMarker={props.removeTempMarker}
-                      getGeoJSON={props.getGeoJSON}
-                      updateResultFormat={props.updateResultFormat}
-                      updateMapMode={props.updateMapMode}
                       routeProps={routeProps}
+                      perspective={perspectiveConfig[0]}
+                      screenSize={screenSize}
+                      clientFS={props.clientFS}
+                      clientFSResults={props.clientFSResults}
+                      clientFSSortResults={props.clientFSSortResults}
+                      leafletMap={props.leafletMap}
                     />}
                 </Grid>
               </Grid>}
@@ -276,12 +263,12 @@ const SemanticPortal = props => {
 }
 
 const mapStateToProps = state => {
-  const { results, resultValues } = filterResults(state.clientSideFacetedSearch)
+  const { clientFSResults, clientFSFacetValues } = filterResults(state.clientSideFacetedSearch)
   return {
     leafletMap: state.leafletMap,
-    clientSideFacetedSearch: state.clientSideFacetedSearch,
-    results,
-    resultValues,
+    clientFS: state.clientSideFacetedSearch,
+    clientFSResults,
+    clientFSFacetValues,
     animationValue: state.animation.value,
     options: state.options,
     error: state.error
@@ -309,6 +296,7 @@ const mapDispatchToProps = ({
   clientFSToggleDataset,
   clientFSFetchResults,
   clientFSClearResults,
+  clientFSSortResults,
   clientFSUpdateQuery
 })
 
@@ -335,10 +323,11 @@ SemanticPortal.propTypes = {
   updatePerspectiveHeaderExpanded: PropTypes.func.isRequired,
   loadLocales: PropTypes.func.isRequired,
   animateMap: PropTypes.func.isRequired,
-  clientSideFacetedSearch: PropTypes.object.isRequired,
+  clientFS: PropTypes.object.isRequired,
   clientFSToggleDataset: PropTypes.func.isRequired,
   clientFSFetchResults: PropTypes.func.isRequired,
   clientFSClearResults: PropTypes.func.isRequired,
+  clientFSSortResults: PropTypes.func.isRequired,
   clientFSUpdateQuery: PropTypes.func.isRequired
 }
 

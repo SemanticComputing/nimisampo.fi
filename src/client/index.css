@@ -19,6 +19,7 @@ fieldset, .opacity-slider {
 
 a, a:visited, a:hover, a:active {
     color: inherit;
+    text-decoration: none;
 }
 
 .rstcustom__rowWrapper {
@@ -45,3 +46,8 @@ a, a:visited, a:hover, a:active {
 .apexcharts-legend-marker {
     top: 3px !important;
 }
+
+/* TODO: breaks layout   
+.ReactVirtualized__Table__headerRow {
+    border-bottom: 1px solid rgb(224, 224, 224); 
+} */

@@ -1,8 +1,8 @@
 import React from 'react'
 import Immutable from 'immutable'
 import PropTypes from 'prop-types'
+import intl from 'react-intl-universal'
 import { withStyles } from '@material-ui/core/styles'
-// import ResultFilterDialogSingle from './ResultFilterDialogSingle';
 import IconButton from '@material-ui/core/IconButton'
 import PlaceIcon from '@material-ui/icons/Place'
 import { has } from 'lodash'
@@ -16,12 +16,14 @@ import {
 // https://github.com/bvaughn/react-virtualized/issues/650
 // https://github.com/bvaughn/react-virtualized/blob/master/docs/usingAutoSizer.md
 
-const styles = () => ({
+const styles = theme => ({
   root: {
     display: 'flex',
     height: 'calc(100% - 74px)',
-    width: 'calc(100% - 1px)',
-    flexGrow: 1
+    // width: 'calc(100% - 1px)',
+    flexGrow: 1,
+    borderTop: '1px solid rgb(224, 224, 224)',
+    backgroundColor: theme.palette.background.paper
   },
   resultsInfo: {
     flexGrow: 0
@@ -33,8 +35,8 @@ const tableStyles = {
     fontFamily: 'Roboto'
   },
   headerRow: {
-    textTransform: 'none',
-    borderBottom: '1px solid rgba(224, 224, 224, 1)'
+    textTransform: 'none'
+    // borderBottom: '1px solid rgba(224, 224, 224, 1)'
   },
   evenRow: {
     borderBottom: '1px solid rgba(224, 224, 224, 1)'
@@ -75,7 +77,8 @@ class VirtualizedTable extends React.PureComponent {
   }
 
   render () {
-    const { classes, list, strings } = this.props
+    const { classes, list, perspectiveID } = this.props
+    console.log(list)
     const rowGetter = ({ index }) => this._getDatum(list, index)
 
     const headerRenderer = ({
@@ -106,13 +109,8 @@ class VirtualizedTable extends React.PureComponent {
     const labelRenderer = ({ cellData, rowData }) => {
       if (cellData == null) return ''
       const label = <a target='_blank' rel='noopener noreferrer' href={rowData.id}>{cellData}</a>
-
       let marker = ''
       if (typeof rowData.lat !== 'undefined' || typeof rowData.long !== 'undefined') {
-        // onMouseOver={handleMarkerMouseOver(rowData.s)}
-        // onMouseOut={handleMarkerMouseOut(rowData.s)}
-        // onClick={handleMarkerClick(rowData.s)}
-
         marker = (
           <IconButton
             disabled
@@ -138,18 +136,6 @@ class VirtualizedTable extends React.PureComponent {
       )
     }
 
-    // const handleMarkerClick = value => () => {
-    //   this.props.openMarkerPopup(value);
-    // };
-    //
-    // const handleMarkerMouseOver = value => () => {
-    //   this.props.bounceMarker(value);
-    // };
-    //
-    // const handleMarkerMouseOut = () => () => {
-    //   this.props.removeTempMarker();
-    // };
-
     return (
       <div className={classes.root}>
         {this.props.list.size > 0 &&
@@ -162,8 +148,8 @@ class VirtualizedTable extends React.PureComponent {
                   rowGetter={rowGetter}
                   rowCount={this.props.list.size}
                   sort={this._sort}
-                  sortBy={this.props.search.sortBy}
-                  sortDirection={this.props.search.sortDirection.toUpperCase()}
+                  sortBy={this.props.clientFS.sortBy}
+                  sortDirection={this.props.clientFS.sortDirection.toUpperCase()}
                   width={width}
                   height={height}
                   headerHeight={50}
@@ -172,7 +158,7 @@ class VirtualizedTable extends React.PureComponent {
                   rowStyle={calculateRowStyle}
                 >
                   <Column
-                    label={strings.name}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.prefLabel.label`)}
                     cellDataGetter={({ rowData }) => rowData.prefLabel}
                     dataKey='prefLabel'
                     headerRenderer={headerRenderer}
@@ -180,7 +166,7 @@ class VirtualizedTable extends React.PureComponent {
                     width={columnWidth + 70}
                   />
                   <Column
-                    label={strings.type}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.broaderType.label`)}
                     cellDataGetter={({ rowData }) => has(rowData, 'broaderTypeLabel') ? rowData.broaderTypeLabel.toLowerCase() : ''}
                     dataKey='broaderTypeLabel'
                     headerRenderer={headerRenderer}
@@ -194,21 +180,21 @@ class VirtualizedTable extends React.PureComponent {
                     width={columnWidth}
                   /> */}
                   <Column
-                    label={strings.area}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.area.label`)}
                     cellDataGetter={({ rowData }) => rowData.broaderAreaLabel}
                     dataKey='broaderAreaLabel'
                     headerRenderer={headerRenderer}
                     width={columnWidth}
                   />
                   <Column
-                    label={strings.modifier}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.modifier.label`)}
                     cellDataGetter={({ rowData }) => rowData.modifier}
                     dataKey='modifier'
                     headerRenderer={headerRenderer}
                     width={columnWidth + 10}
                   />
                   <Column
-                    label={strings.base}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.base.label`)}
                     cellDataGetter={({ rowData }) => rowData.basicElement}
                     dataKey='basicElement'
                     headerRenderer={headerRenderer}
@@ -223,14 +209,14 @@ class VirtualizedTable extends React.PureComponent {
                     width={columnWidth}
                   /> */}
                   <Column
-                    label={strings.year}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.collectionYear.label`)}
                     cellDataGetter={({ rowData }) => rowData.collectionYear}
                     dataKey='collectionYear'
                     headerRenderer={headerRenderer}
                     width={columnWidth}
                   />
                   <Column
-                    label={strings.source}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.source.label`)}
                     cellDataGetter={({ rowData }) => rowData.source}
                     dataKey='source'
                     headerRenderer={headerRenderer}
@@ -277,7 +263,7 @@ class VirtualizedTable extends React.PureComponent {
     if (has(event.target, 'className') && event.target.className.startsWith('Mui')) {
       event.stopPropagation()
     } else {
-      this.props.sortResults({ sortBy, sortDirection: sortDirection.toLowerCase() })
+      this.props.clientFSSortResults({ sortBy, sortDirection: sortDirection.toLowerCase() })
     }
   }
 }
@@ -285,12 +271,9 @@ class VirtualizedTable extends React.PureComponent {
 VirtualizedTable.propTypes = {
   classes: PropTypes.object.isRequired,
   list: PropTypes.instanceOf(Immutable.List).isRequired,
-  search: PropTypes.object.isRequired,
-  sortResults: PropTypes.func.isRequired,
-  bounceMarker: PropTypes.func.isRequired,
-  openMarkerPopup: PropTypes.func.isRequired,
-  removeTempMarker: PropTypes.func.isRequired,
-  strings: PropTypes.object.isRequired
+  clientFS: PropTypes.object,
+  clientFSSortResults: PropTypes.func,
+  perspectiveID: PropTypes.string.isRequired
 }
 
 export default withStyles(styles)(VirtualizedTable)

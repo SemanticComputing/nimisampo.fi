@@ -63,11 +63,11 @@ export const filterResults = createSelector(
     for (const facetId in visibleValues) {
       visibleValues[facetId] = orderBy(visibleValues[facetId], 'prefLabel')
     }
-    console.log(results)
-    console.log(visibleValues)
+    // console.log(results)
+    // console.log(visibleValues)
     return {
-      results: results,
-      resultValues: visibleValues
+      clientFSResults: results,
+      clientFSFacetValues: visibleValues
     }
   }
 )

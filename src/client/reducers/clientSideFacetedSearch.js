@@ -57,7 +57,7 @@ export const INITIAL_STATE = {
     broaderAreaLabel: new Set(),
     collector: new Set(),
     collectionYear: new Set(),
-    source: new Set(),
+    source: new Set()
     // datasetSelector: {
     //   id: 'datasetSelector',
     //   filterType: 'datasetSelector'
@@ -112,7 +112,6 @@ const clientSideFacetedSearch = (state = INITIAL_STATE, action) => {
         }
       }
     case CLIENT_FS_UPDATE_RESULTS:
-      console.log(action)
       return {
         ...state,
         results: action.results,
