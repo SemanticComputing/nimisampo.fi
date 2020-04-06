@@ -4,70 +4,67 @@ import { orderBy, has } from 'lodash'
 // https://redux.js.org/recipes/computing-derived-data
 
 const getFacets = state => state.facets
-const getLatestFilter = state => state.latestFilter
-const getLatestFilterValues = state => state.latestFilterValues
+const getLastlyUpdatedFacet = state => state.lastlyUpdatedFacet
 const getResults = state => state.results
 const getSortBy = state => state.sortBy
 const getSortDirection = state => state.sortDirection
 
 export const filterResults = createSelector(
-  [getResults, getFacets, getLatestFilter, getLatestFilterValues, getSortBy, getSortDirection],
-  (results, facets, latestFilter, latestFilterValues, sortBy, sortDirection) => {
-    // Apply result filters
-    Object.entries(facets).forEach(([key, value]) => {
-      if (value.size === 0) {
-
-      } else {
-        results = results.filter(result => {
-          if (value.has(result[key])) {
-            return true
-          }
-        })
+  [getResults, getFacets, getLastlyUpdatedFacet, getSortBy, getSortDirection],
+  (results, facets, lastlyUpdatedFacet, sortBy, sortDirection) => {
+    // Filter results by current facet selections
+    Object.values(facets).forEach(facet => {
+      const { facetID, filterType } = facet
+      if (filterType === 'clientFSLiteral' && facet.selectionsSet.size !== 0) {
+        results = results.filter(result => facet.selectionsSet.has(result[facetID]))
       }
     })
-
     results = orderBy(results, sortBy, sortDirection)
 
-    // Calculate result values
-    // If a filter was added, first handle that filter
-    const visibleValues = {}
-    let skipProperty = ''
+    // Calculate values for all facets
+    const facetValues = {}
+    let skipFacetID = ''
+    // Initialize the facetValues object with facet IDs
     for (const facetId in facets) {
-      visibleValues[facetId] = {}
+      facetValues[facetId] = {}
     }
-    if (latestFilter) {
-      skipProperty = latestFilter.id
-      latestFilterValues = latestFilterValues.map(value => ({
+    // If a facet selection was added, first handle that facet
+    if (lastlyUpdatedFacet !== null) {
+      skipFacetID = lastlyUpdatedFacet.id
+      lastlyUpdatedFacet.values = lastlyUpdatedFacet.values.map(value => ({
         ...value,
-        selected: facets[latestFilter.facetId].has(value.id)
+        selected: facets[lastlyUpdatedFacet.id].has(value.id)
       }))
-      visibleValues[latestFilter.facetId] = latestFilterValues
+      facetValues[lastlyUpdatedFacet.id] = lastlyUpdatedFacet.values
     }
-    // Then handle all the remainder filters
+    // Then handle all the remainder facets
     for (const result of results) {
-      for (const facetId in facets) {
-        if (facetId !== skipProperty && has(result, facetId)) {
-          if (!has(visibleValues[facetId], result[facetId])) {
-            visibleValues[facetId][result[facetId]] = {
-              id: result[facetId],
-              prefLabel: result[facetId],
-              selected: facets[facetId].has(result[facetId]),
-              instanceCount: 1
+      Object.values(facets).forEach(facet => {
+        const { facetID, filterType, selectionsSet } = facet
+        if (facetID !== skipFacetID && filterType === 'clientFSLiteral' && has(result, facetID)) {
+          const literalValue = result[facetID]
+          if (!has(facetValues[facetID], literalValue)) {
+            facetValues[facetID][literalValue] = {
+              id: literalValue,
+              prefLabel: literalValue,
+              selected: selectionsSet.has(literalValue),
+              instanceCount: 1,
+              parent: null
             }
           } else {
-            visibleValues[facetId][result[facetId]].instanceCount += 1
+            facetValues[facetID][literalValue].instanceCount += 1
           }
         }
-      }
+      })
     }
-    for (const facetId in visibleValues) {
-      visibleValues[facetId] = orderBy(visibleValues[facetId], 'prefLabel')
+    for (const facetID in facetValues) {
+      facetValues[facetID] = orderBy(facetValues[facetID], 'prefLabel')
     }
     // console.log(results)
-    // console.log(visibleValues)
+    // console.log(facetValues)
     return {
       clientFSResults: results,
-      clientFSFacetValues: visibleValues
+      clientFSFacetValues: facetValues
     }
   }
 )

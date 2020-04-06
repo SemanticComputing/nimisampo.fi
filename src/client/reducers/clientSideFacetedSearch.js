@@ -45,24 +45,32 @@ export const INITIAL_STATE = {
     }
   },
   results: null,
-  latestFilter: null,
-  facetUpdateID: 0,
-  latestFilterValues: [],
   facets: {
-    prefLabel: new Set(),
-    modifier: new Set(),
-    basicElement: new Set(),
-    typeLabel: new Set(),
-    broaderTypeLabel: new Set(),
-    broaderAreaLabel: new Set(),
-    collector: new Set(),
-    collectionYear: new Set(),
-    source: new Set()
-    // datasetSelector: {
-    //   id: 'datasetSelector',
-    //   filterType: 'datasetSelector'
-    // }
+    datasetSelector: {
+      facetID: 'datasetSelector',
+      filterType: 'datasetSelector',
+    },
+    prefLabel: {
+      facetID: 'prefLabel',
+      filterType: 'clientFSLiteral',
+      selectionsSet: new Set(),
+      isFetching: false,
+      searchField: true,
+      containerClass: 'ten',
+      type: 'hierarchical'
+    }
+    // modifier: new Set(),
+    // basicElement: new Set(),
+    // typeLabel: new Set(),
+    // broaderTypeLabel: new Set(),
+    // broaderAreaLabel: new Set(),
+    // collector: new Set(),
+    // collectionYear: new Set(),
+    // source: new Set()
+    //
   },
+  lastlyUpdatedFacet: null,
+  facetUpdateID: 0,
   sortBy: 'broaderAreaLabel',
   sortDirection: 'asc',
   groupBy: 'broaderTypeLabel',
@@ -98,27 +106,18 @@ const clientSideFacetedSearch = (state = INITIAL_STATE, action) => {
         ...state,
         results: null,
         fetchingResults: false,
-        query: '',
-        resultsFilter: {
-          prefLabel: new Set(),
-          modifier: new Set(),
-          basicElement: new Set(),
-          typeLabel: new Set(),
-          broaderTypeLabel: new Set(),
-          broaderAreaLabel: new Set(),
-          collector: new Set(),
-          collectionYear: new Set(),
-          source: new Set()
-        }
+        query: INITIAL_STATE.query,
+        facets: INITIAL_STATE.facets
       }
     case CLIENT_FS_UPDATE_RESULTS:
       return {
         ...state,
         results: action.results,
+        facetUpdateID: ++state.facetUpdateID,
         [`${action.jenaIndex}ResultsFetching`]: false
       }
     case CLIENT_FS_UPDATE_FACET:
-      return updateFacet(state, action)
+      return clientFSUpdateFacet(state, action)
     case CLIENT_FS_SORT_RESULTS:
       return {
         ...state,
@@ -130,26 +129,29 @@ const clientSideFacetedSearch = (state = INITIAL_STATE, action) => {
   }
 }
 
-const updateFacet = (state, action) => {
-  const { facetId, value, latestValues } = action
-  const nSet = state.facets[facetId]
-  if (nSet.has(value)) {
-    nSet.delete(value)
+const clientFSUpdateFacet = (state, action) => {
+  const { facetID, value, latestValues } = action
+  const newSelectionsSet = state.facets[facetID].selectionsSet
+  if (newSelectionsSet.has(value)) {
+    newSelectionsSet.delete(value)
   } else {
-    nSet.add(value)
+    newSelectionsSet.add(value)
   }
-  const newFilter = {
-    ...state.resultsFilter,
-    [facetId]: nSet
+  const updatedFacets = {
+    ...state.facets,
+    [facetID]: {
+      facetID,
+      selectionsSet: newSelectionsSet
+    }
   }
   return {
     ...state,
     facetUpdateID: ++state.facetUpdateID,
-    resultsFilter: newFilter,
-    latestFilter: {
-      facetId: facetId
-    },
-    latestFilterValues: latestValues
+    facets: updatedFacets,
+    lastlyUpdatedFacet: {
+      facetID: facetID,
+      values: latestValues
+    }
   }
 }
 

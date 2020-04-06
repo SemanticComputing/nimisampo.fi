@@ -299,9 +299,9 @@ export const clientFSUpdateResults = ({ results, jenaIndex }) => ({
 export const clientFSClearResults = () => ({
   type: CLIENT_FS_CLEAR_RESULTS
 })
-export const clientFSUpdateFacet = ({ facetId, value, latestValues }) => ({
+export const clientFSUpdateFacet = ({ facetID, value, latestValues }) => ({
   type: CLIENT_FS_UPDATE_FACET,
-  facetId,
+  facetID,
   value,
   latestValues
 })

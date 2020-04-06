@@ -13,6 +13,7 @@ import Paper from '@material-ui/core/Paper'
 
 const styles = theme => ({
   root: {
+    marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     padding: theme.spacing(0.5)
   },

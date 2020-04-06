@@ -89,11 +89,13 @@ class FacetBar extends React.Component {
       ? null
       : this.props.facetDataConstrainSelf.facets[facetID]
     let facetComponent = null
-    if (facetID === '') {
-      console.log(this.props.facetData.facets)
-    }
     const isActive = this.state.activeFacets.has(facetID)
-    console.log(facet)
+    if (this.props.facetedSearchMode === 'clientFS' && facetID !== 'datasetSelector') {
+      if (this.props.facetData.results == null) {
+        return null
+      }
+      facet.values = this.props.clientFSFacetValues[facetID]
+    }
     switch (facet.filterType) {
       case 'uriFilter':
       case 'spatialFilter':
@@ -109,6 +111,21 @@ class FacetBar extends React.Component {
             fetchFacet={this.props.fetchFacet}
             someFacetIsFetching={someFacetIsFetching}
             updateFacetOption={this.props.updateFacetOption}
+          />
+        )
+        break
+      case 'clientFSLiteral':
+        // console.log(someFacetIsFetching)
+        facetComponent = (
+          <HierarchicalFacet
+            facetID={facetID}
+            facet={facet}
+            facetClass={this.props.facetClass}
+            resultClass={this.props.resultClass}
+            facetUpdateID={facetUpdateID}
+            clientFSUpdateFacet={this.props.clientFSUpdateFacet}
+            someFacetIsFetching={someFacetIsFetching}
+            facetedSearchMode='clientFS'
           />
         )
         break
@@ -210,7 +227,6 @@ class FacetBar extends React.Component {
         )
         break
     }
-
     return (
       <ExpansionPanel
         key={facetID}
@@ -261,12 +277,12 @@ class FacetBar extends React.Component {
         }
       })
     } else if (facetedSearchMode === 'clientFS') {
-      facets = this.props.clientSideFacetValues
+      facets = this.props.clientFSFacetValues
     }
 
     return (
       <div className={classes.root}>
-        {/* {facetedSearchMode === 'clientFS' && this.renderFacet('datasetSelector', false)} */}
+        {facetedSearchMode === 'clientFS' && this.renderFacet('datasetSelector', false)}
         {facetedSearchMode === 'clientFS' &&
           <SearchField
             search={this.props.facetData}
@@ -298,7 +314,11 @@ class FacetBar extends React.Component {
               fetchFacet={this.props.fetchFacet}
             />
           </Paper>}
-        {/* {facets && Object.keys(facets).map(facetID => this.renderFacet(facetID, someFacetIsFetching))} */}
+        {facets && Object.keys(facets).map(facetID => {
+          if (facetID !== 'datasetSelector') {
+            return this.renderFacet(facetID, someFacetIsFetching)
+          }
+        })}
       </div>
     )
   }
@@ -317,10 +337,12 @@ FacetBar.propTypes = {
   fetchFacetConstrainSelf: PropTypes.func,
   fetchResultCount: PropTypes.func,
   updateFacetOption: PropTypes.func,
+  clientFSFacetValues: PropTypes.object,
   clientFSToggleDataset: PropTypes.func,
   clientFSFetchResults: PropTypes.func,
   clientFSClearResults: PropTypes.func,
   clientFSUpdateQuery: PropTypes.func,
+  clientFSUpdateFacet: PropTypes.func,
   map: PropTypes.object,
   defaultActiveFacets: PropTypes.instanceOf(Set).isRequired,
   leafletMap: PropTypes.object

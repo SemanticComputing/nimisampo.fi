@@ -48,7 +48,8 @@ import {
   clientFSFetchResults,
   clientFSSortResults,
   clientFSClearResults,
-  clientFSUpdateQuery
+  clientFSUpdateQuery,
+  clientFSUpdateFacet
 } from '../actions'
 import { filterResults } from '../selectors'
 
@@ -235,6 +236,7 @@ const SemanticPortal = props => {
                     clientFSFetchResults={props.clientFSFetchResults}
                     clientFSClearResults={props.clientFSClearResults}
                     clientFSUpdateQuery={props.clientFSUpdateQuery}
+                    clientFSUpdateFacet={props.clientFSUpdateFacet}
                     defaultActiveFacets={perspectiveConfig[0].defaultActiveFacets}
                     leafletMap={props.leafletMap}
                     screenSize={screenSize}
@@ -297,7 +299,8 @@ const mapDispatchToProps = ({
   clientFSFetchResults,
   clientFSClearResults,
   clientFSSortResults,
-  clientFSUpdateQuery
+  clientFSUpdateQuery,
+  clientFSUpdateFacet
 })
 
 SemanticPortal.propTypes = {
@@ -328,7 +331,8 @@ SemanticPortal.propTypes = {
   clientFSFetchResults: PropTypes.func.isRequired,
   clientFSClearResults: PropTypes.func.isRequired,
   clientFSSortResults: PropTypes.func.isRequired,
-  clientFSUpdateQuery: PropTypes.func.isRequired
+  clientFSUpdateQuery: PropTypes.func.isRequired,
+  clientFSUpdateFacet: PropTypes.func.isRequired
 }
 
 export default compose(

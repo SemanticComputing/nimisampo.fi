@@ -78,7 +78,7 @@ class VirtualizedTable extends React.PureComponent {
 
   render () {
     const { classes, list, perspectiveID } = this.props
-    console.log(list)
+    // console.log(list)
     const rowGetter = ({ index }) => this._getDatum(list, index)
 
     const headerRenderer = ({

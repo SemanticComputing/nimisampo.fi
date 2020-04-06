@@ -68,7 +68,7 @@ export const mapNameSampoResults = sparqlBindings => {
   const results = sparqlBindings.map(b => {
     return {
       id: b.id.value,
-      prefLabel: b.prefLabel.value,
+      prefLabel: b.prefLabel.value.charAt(0).toUpperCase() + b.prefLabel.value.slice(1), // capitalize
       modifier: has(b, 'modifier') ? b.modifier.value : '',
       basicElement: has(b, 'basicElement') ? b.basicElement.value : '',
       typeLabel: has(b, 'typeLabel') ? b.typeLabel.value : '',

@@ -11,7 +11,7 @@ import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay'
 export const perspectiveConfig = [
   {
     id: 'placesClientFS',
-    defaultActiveFacets: new Set(['datasetSelector']),
+    defaultActiveFacets: new Set(['datasetSelector', 'prefLabel']),
     tabs: [
       {
         id: 'table',

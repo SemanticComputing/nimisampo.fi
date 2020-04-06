@@ -73,7 +73,8 @@ class HierarchicalFacet extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      treeData: [],
+      treeData: this.props.facetedSearchMode === 'clientFS'
+        ? this.props.facet.values : [],
       searchString: '',
       searchFocusIndex: 0,
       searchFoundCount: null,
@@ -263,9 +264,6 @@ class HierarchicalFacet extends Component {
     const { searchString, searchFocusIndex, searchFoundCount } = this.state
     const { classes, facet, facetClass, facetID } = this.props
     const { isFetching, searchField } = facet
-    // if (this.props.facetID == 'owner') {
-    //   console.log(this.state.treeData)
-    // }
 
     // Case insensitive search of `node.title`
     const customSearchMethod = ({ node, searchQuery }) => {
@@ -289,7 +287,6 @@ class HierarchicalFacet extends Component {
             ? (searchFocusIndex + 1) % searchFoundCount
             : 0
       })
-
     return (
       <>
         {isFetching ? (
@@ -376,7 +373,8 @@ HierarchicalFacet.propTypes = {
     PropTypes.object,
     PropTypes.string,
     PropTypes.array]),
-  updatedFacet: PropTypes.string
+  updatedFacet: PropTypes.string,
+  facetedSearchMode: PropTypes.string
 }
 
 export default withStyles(styles)(HierarchicalFacet)

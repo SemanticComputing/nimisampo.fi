@@ -37,7 +37,10 @@ const styles = theme => ({
     display: 'flex',
     textDecoration: 'none',
     alignItems: 'center',
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
+    '&:visited': {
+      color: theme.palette.primary.main
+    }
   }
 })
 
