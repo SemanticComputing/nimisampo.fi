@@ -8,23 +8,23 @@ import GMap from '../../facet_results/GMap'
 import VirtualizedTable from '../../facet_results/VirtualizedTable'
 import Pie from '../../facet_results/Pie.js'
 import CSVButton from '../../facet_results/CSVButton'
-import ResultInfo from '../../facet_results/ResultInfo'
 
 const Places = props => {
+  const { rootUrl, perspective } = props
   // console.log(props.clientFSResults)
   return (
     <>
       <PerspectiveTabs
         routeProps={props.routeProps}
-        tabs={props.perspective.tabs}
+        tabs={perspective.tabs}
         screenSize={props.screenSize}
       />
       <Route
-        exact path='/app'
-        render={() => <Redirect to='/app/table' />}
+        exact path={`${rootUrl}/app`}
+        render={() => <Redirect to={`${rootUrl}/app/table`} />}
       />
       <Route
-        path='/app/table'
+        path={`${rootUrl}/app/table`}
         render={() =>
           <VirtualizedTable
             list={Immutable.List(props.clientFSResults)}
@@ -34,50 +34,25 @@ const Places = props => {
           />}
       />
       <Route
-        path='/app/map_clusters'
+        path={`${rootUrl}/app/map_clusters`}
         render={() =>
           <LeafletMap
-            results={props.results}
+            results={props.clientFSResults}
+            layers={props.leafletMap}
+            pageType='clientFSResults'
             mapMode='cluster'
-            geoJSON={props.map.geoJSON}
-            geoJSONKey={props.map.geoJSONKey}
-            getGeoJSON={props.getGeoJSON}
-            bouncingMarker={props.map.bouncingMarker}
-            popupMarker={props.map.popupMarker}
-            bouncingMarkerKey={props.map.bouncingMarkerKey}
-            openPopupMarkerKey={props.map.openPopupMarkerKey}
-            strings={props.strings}
-            reduceHeight={72}
-            mapElementId='resultMap'
+            showMapModeControl={false}
+            instance={{}}
+            fetchGeoJSONLayers={props.fetchGeoJSONLayers}
+            fetchByURI={props.fetchByURI}
+            fetching={false}
+            showInstanceCountInClusters={false}
+            updateFacetOption={props.updateFacetOption}
+            showExternalLayers
           />}
       />
       <Route
-        path='/app/map_markers'
-        render={() => {
-          if (props.results.length > 5000) {
-            return <ResultInfo message={props.strings.tooManyResults} />
-          } else {
-            return (
-              <LeafletMap
-                results={props.results}
-                mapMode='noCluster'
-                geoJSON={props.map.geoJSON}
-                geoJSONKey={props.map.geoJSONKey}
-                getGeoJSON={props.getGeoJSON}
-                bouncingMarker={props.map.bouncingMarker}
-                popupMarker={props.map.popupMarker}
-                bouncingMarkerKey={props.map.bouncingMarkerKey}
-                openPopupMarkerKey={props.map.openPopupMarkerKey}
-                strings={props.strings}
-                reduceHeight={72}
-                mapElementId='resultMap'
-              />
-            )
-          }
-        }}
-      />
-      <Route
-        path='/app/heatmap'
+        path={`${rootUrl}/app/heatmap`}
         render={() =>
           <GMap
             results={props.results}
@@ -89,7 +64,7 @@ const Places = props => {
           />}
       />
       <Route
-        path='/app/statistics'
+        path={`${rootUrl}/app/statistics`}
         render={() =>
           <Pie
             data={props.results}
@@ -100,7 +75,7 @@ const Places = props => {
           />}
       />
       <Route
-        path='/app/download'
+        path={`${rootUrl}/app/download`}
         render={() =>
           <CSVButton results={props.results} strings={props.strings} />}
       />
@@ -115,7 +90,9 @@ Places.propTypes = {
   clientFS: PropTypes.object.isRequired,
   clientFSResults: PropTypes.array,
   clientFSSortResults: PropTypes.func.isRequired,
-  leafletMap: PropTypes.object.isRequired
+  leafletMap: PropTypes.object.isRequired,
+  fetchGeoJSONLayers: PropTypes.func.isRequired,
+  rootUrl: PropTypes.string.isRequired
 }
 
 export default Places

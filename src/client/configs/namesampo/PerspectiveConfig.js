@@ -1,12 +1,10 @@
 import React from 'react'
 import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay'
-// import AddLocationIcon from '@material-ui/icons/AddLocation'
-// import LocationOnIcon from '@material-ui/icons/LocationOn'
-// import RedoIcon from '@material-ui/icons/Redo'
-// import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
-// import manuscriptsImage from '../../img/manuscripts-452x262.jpg'
-// import worksImage from '../../img/works-452x262_2.jpg'
-// import eventsImage from '../../img/events-452x262.jpg'
+import TripOriginIcon from '@material-ui/icons/TripOrigin'
+import LocationOnIcon from '@material-ui/icons/LocationOn'
+import SettingsBrightnessIcon from '@material-ui/icons/SettingsBrightness'
+import PieChartIcon from '@material-ui/icons/PieChart'
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 
 export const perspectiveConfig = [
   {
@@ -17,6 +15,31 @@ export const perspectiveConfig = [
         id: 'table',
         value: 0,
         icon: <CalendarViewDayIcon />
+      },
+      {
+        id: 'map_clusters',
+        value: 1,
+        icon: <TripOriginIcon />
+      },
+      {
+        id: 'map_markers',
+        value: 2,
+        icon: <LocationOnIcon />
+      },
+      {
+        id: 'heatmap',
+        value: 3,
+        icon: <SettingsBrightnessIcon />
+      },
+      {
+        id: 'statistics',
+        value: 4,
+        icon: <PieChartIcon />
+      },
+      {
+        id: 'download',
+        value: 5,
+        icon: <CloudDownloadIcon />
       }
     ]
   }

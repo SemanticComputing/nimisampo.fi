@@ -6,7 +6,7 @@ import L from 'leaflet'
 import { has, orderBy } from 'lodash'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { purple } from '@material-ui/core/colors'
-import { MAPBOX_ACCESS_TOKEN, MAPBOX_STYLE } from '../../configs/sampo/GeneralConfig'
+// import { MAPBOX_ACCESS_TOKEN, MAPBOX_STYLE } from '../../configs/sampo/GeneralConfig'
 import 'leaflet/dist/leaflet.css' // Official Leaflet styles
 import './LeafletMap.css' // Customizations to Leaflet styles
 
@@ -27,6 +27,7 @@ import 'leaflet-draw/dist/leaflet.draw.js'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import 'leaflet.zoominfo/dist/L.Control.Zoominfo'
 import 'leaflet.zoominfo/dist/L.Control.Zoominfo.css'
+import 'leaflet.gridlayer.googlemutant/Leaflet.GoogleMutant.js'
 
 import markerShadowIcon from '../../img/markers/marker-shadow.png'
 import markerIconViolet from '../../img/markers/marker-icon-violet.png'
@@ -36,6 +37,13 @@ import markerIconOrange from '../../img/markers/marker-icon-orange.png'
 
 const styles = theme => ({
   leafletContainerfacetResults: {
+    height: 400,
+    [theme.breakpoints.up('md')]: {
+      height: 'calc(100% - 72px)'
+    },
+    position: 'relative'
+  },
+  leafletContainerclientFSResults: {
     height: 400,
     [theme.breakpoints.up('md')]: {
       height: 'calc(100% - 72px)'
@@ -94,6 +102,9 @@ class LeafletMap extends React.Component {
       })
     }
     this.initMap()
+    if (this.props.pageType === 'clientFSResults') {
+      this.drawPointData()
+    }
   }
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -148,10 +159,13 @@ class LeafletMap extends React.Component {
 
   initMap = () => {
     // Base layer(s)
-    const mapboxBaseLayer = L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/${MAPBOX_STYLE}/tiles/{z}/{x}/{y}?access_token=${MAPBOX_ACCESS_TOKEN}`, {
-      attribution: '&copy; <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      tileSize: 512,
-      zoomOffset: -1
+    // const mapboxBaseLayer = L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/${MAPBOX_STYLE}/tiles/{z}/{x}/{y}?access_token=${MAPBOX_ACCESS_TOKEN}`, {
+    //   attribution: '&copy; <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    //   tileSize: 512,
+    //   zoomOffset: -1
+    // })
+    const googleBaseLayer = L.gridLayer.googleMutant({
+      type: 'roadmap'
     })
 
     // layer for markers
@@ -164,7 +178,7 @@ class LeafletMap extends React.Component {
       zoomControl: false,
       zoominfoControl: true,
       layers: [
-        mapboxBaseLayer,
+        googleBaseLayer,
         this.resultMarkerLayer
       ],
       fullscreenControl: true
@@ -173,7 +187,7 @@ class LeafletMap extends React.Component {
     // initialize layers from external sources
     if (this.props.showExternalLayers) {
       const basemaps = {
-        'Mapbox base layer': mapboxBaseLayer
+        'Google Maps base layer': googleBaseLayer
       }
       this.initOverLays(basemaps)
     }
@@ -554,6 +568,9 @@ class LeafletMap extends React.Component {
       if (this.props.pageType === 'instancePage') {
         marker.bindPopup(this.createPopUpContent(marker.options))
       }
+      if (this.props.pageType === 'clientFSResults') {
+        marker.bindPopup(this.createPopUpContentNameSampo(result))
+      }
       return marker
     }
   }
@@ -597,6 +614,19 @@ class LeafletMap extends React.Component {
       popUpTemplate += '<p>Events:</p>'
       popUpTemplate += this.createInstanceListing(result.events)
     }
+    // console.log(popUpTemplate)
+    return popUpTemplate
+  }
+
+  createPopUpContentNameSampo = data => {
+    let popUpTemplate = ''
+    console.log(data)
+    popUpTemplate += `<a href=${data.id} target='_blank'><h3>${data.prefLabel}</h3></a>`
+    if (has(data, 'broaderTypeLabel')) {
+      popUpTemplate += `
+        <p><b>${intl.get('perspectives.placesClientFS.properties.broaderTypeLabel.label')}</b>: ${data.broaderTypeLabel}</p>`
+    }
+
     // console.log(popUpTemplate)
     return popUpTemplate
   }
@@ -673,7 +703,7 @@ class LeafletMap extends React.Component {
 LeafletMap.propTypes = {
   classes: PropTypes.object.isRequired,
   pageType: PropTypes.string.isRequired,
-  results: PropTypes.array.isRequired,
+  results: PropTypes.array,
   layers: PropTypes.object,
   facetID: PropTypes.string,
   facet: PropTypes.object,
@@ -683,7 +713,7 @@ LeafletMap.propTypes = {
   fetchGeoJSONLayers: PropTypes.func,
   resultClass: PropTypes.string,
   facetClass: PropTypes.string,
-  fetchByURI: PropTypes.func.isRequired,
+  fetchByURI: PropTypes.func,
   fetching: PropTypes.bool.isRequired,
   mapMode: PropTypes.string.isRequired,
   showInstanceCountInClusters: PropTypes.bool,

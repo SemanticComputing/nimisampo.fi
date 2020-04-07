@@ -1,8 +1,8 @@
 export default {
   languageLabel: 'English',
   appTitle: {
-    short: 'Nimisampo',
-    long: ' Nimisampo: nimistöntutkijan työpöytä',
+    short: 'NameSampo',
+    long: ' NameSampo: A Workbench for Toponomastic Research',
     subheading: `
       
     `
@@ -49,14 +49,11 @@ export default {
   },
   tabs: {
     table: 'table',
-    map: 'map',
-    production_places: 'production places',
-    production_places_heatmap: 'production places heatmap',
-    last_known_locations: 'last known locations',
-    migrations: 'migrations',
-    network: 'network',
-    export: 'export',
-    'by-period': 'by period'
+    map_clusters: 'clustered map',
+    map_markers: 'map',
+    heatmap: 'heatmap',
+    statistics: 'statistics',
+    download: 'download'
   },
   table: {
     rowsPerPage: 'Rows per page',

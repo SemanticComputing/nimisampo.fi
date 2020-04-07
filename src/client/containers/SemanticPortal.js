@@ -252,11 +252,21 @@ const SemanticPortal = props => {
             xsScreen={xsScreen}
           />
           <Route
-            exact path='/'
-            render={() => <Redirect to='/app' />}
+            exact path={`${rootUrl}/`}
+            render={() => <Redirect to={`${rootUrl}/app`} />}
+          />
+          {/* https://stackoverflow.com/a/41024944 */}
+          <Route
+            path={`${rootUrl}/`} render={({ location }) => {
+              if (typeof window.ga === 'function') {
+                window.ga('set', 'page', location.pathname + location.search)
+                window.ga('send', 'pageview')
+              }
+              return null
+            }}
           />
           <Route
-            path='/app'
+            path={`${rootUrl}/app`}
             render={routeProps =>
               <Grid container className={classes.mainContainerClientFS}>
                 <Grid item sm={12} md={4} lg={3} className={classes.facetBarContainerClientFS}>
@@ -289,6 +299,8 @@ const SemanticPortal = props => {
                       clientFSResults={props.clientFSResults}
                       clientFSSortResults={props.clientFSSortResults}
                       leafletMap={props.leafletMap}
+                      fetchGeoJSONLayers={props.fetchGeoJSONLayers}
+                      rootUrl={rootUrl}
                     />}
                 </Grid>
               </Grid>}
