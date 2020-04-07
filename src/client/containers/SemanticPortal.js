@@ -90,6 +90,18 @@ const styles = theme => ({
       marginTop: 64 // app bar
     }
   },
+  mainContainerClientFS: {
+    height: 'auto',
+    [theme.breakpoints.up('md')]: {
+      height: 'calc(100% - 144px)' // 100% - app bar - padding * 2
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginTop: 56 // app bar
+    },
+    [theme.breakpoints.up('sm')]: {
+      marginTop: 72 // app bar + padding
+    }
+  },
   textPageContainer: {
     width: '100%',
     padding: theme.spacing(1)
@@ -124,7 +136,7 @@ const styles = theme => ({
     height: '100%',
     padding: theme.spacing(1)
   },
-  // perspective container is divided into two columns:
+  // main/perspective container is divided into two columns:
   facetBarContainer: {
     height: 'auto',
     [theme.breakpoints.up('md')]: {
@@ -136,6 +148,17 @@ const styles = theme => ({
     paddingRight: theme.spacing(0.5),
     paddingBottom: theme.spacing(1)
   },
+  facetBarContainerClientFS: {
+    height: 'auto',
+    [theme.breakpoints.up('md')]: {
+      height: '100%'
+    },
+    overflow: 'auto',
+    // paddingTop: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(0.5),
+    paddingBottom: theme.spacing(1)
+  },
   resultsContainer: {
     height: 'auto',
     [theme.breakpoints.up('md')]: {
@@ -143,6 +166,19 @@ const styles = theme => ({
     },
     paddingTop: '0px !important',
     paddingBottom: '0px !important',
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(1)
+    }
+  },
+  resultsContainerClientFS: {
+    height: 'auto',
+    [theme.breakpoints.up('md')]: {
+      height: '100%'
+    },
+    paddingTop: '0px !important',
+    paddingBottom: '0px !important',
+    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(0.5),
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(1)
     }
@@ -222,8 +258,8 @@ const SemanticPortal = props => {
           <Route
             path='/app'
             render={routeProps =>
-              <Grid container className={classes.mainContainer}>
-                <Grid item sm={12} md={4} lg={3} className={classes.facetBarContainer}>
+              <Grid container className={classes.mainContainerClientFS}>
+                <Grid item sm={12} md={4} lg={3} className={classes.facetBarContainerClientFS}>
                   <FacetBar
                     facetedSearchMode='clientFS'
                     facetClass='placesClientFS'
@@ -242,7 +278,7 @@ const SemanticPortal = props => {
                     screenSize={screenSize}
                   />
                 </Grid>
-                <Grid item sm={12} md={8} lg={9} className={classes.perspectiveContainerNoHeader}>
+                <Grid item sm={12} md={8} lg={9} className={classes.resultsContainerClientFS}>
                   {noResults && <Main />}
                   {!noResults &&
                     <Places
