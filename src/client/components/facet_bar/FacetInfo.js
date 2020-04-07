@@ -27,7 +27,7 @@ class FacetInfo extends React.Component {
   }
 
   componentDidUpdate = prevProps => {
-    if (prevProps.facetUpdateID !== this.props.facetUpdateID) {
+    if (this.props.facetedSearchMode === 'serverFS' && prevProps.facetUpdateID !== this.props.facetUpdateID) {
       this.props.fetchResultCount({
         resultClass: this.props.resultClass,
         facetClass: this.props.facetClass

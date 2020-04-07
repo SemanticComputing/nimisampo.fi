@@ -166,7 +166,7 @@ class VirtualizedTable extends React.PureComponent {
                     width={columnWidth + 70}
                   />
                   <Column
-                    label={intl.get(`perspectives.${perspectiveID}.properties.broaderType.label`)}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.broaderTypeLabel.label`)}
                     cellDataGetter={({ rowData }) => has(rowData, 'broaderTypeLabel') ? rowData.broaderTypeLabel.toLowerCase() : ''}
                     dataKey='broaderTypeLabel'
                     headerRenderer={headerRenderer}
@@ -180,7 +180,7 @@ class VirtualizedTable extends React.PureComponent {
                     width={columnWidth}
                   /> */}
                   <Column
-                    label={intl.get(`perspectives.${perspectiveID}.properties.area.label`)}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.broaderAreaLabel.label`)}
                     cellDataGetter={({ rowData }) => rowData.broaderAreaLabel}
                     dataKey='broaderAreaLabel'
                     headerRenderer={headerRenderer}
@@ -194,7 +194,7 @@ class VirtualizedTable extends React.PureComponent {
                     width={columnWidth + 10}
                   />
                   <Column
-                    label={intl.get(`perspectives.${perspectiveID}.properties.base.label`)}
+                    label={intl.get(`perspectives.${perspectiveID}.properties.basicElement.label`)}
                     cellDataGetter={({ rowData }) => rowData.basicElement}
                     dataKey='basicElement'
                     headerRenderer={headerRenderer}

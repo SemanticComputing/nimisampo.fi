@@ -92,10 +92,14 @@ class FacetBar extends React.Component {
     const isActive = this.state.activeFacets.has(facetID)
     if (this.props.facetedSearchMode === 'clientFS' && facetID !== 'datasetSelector') {
       if (this.props.facetData.results == null) {
+        // do not render facets when there are no results
         return null
+      } else {
+        // integrate the facet values which have been calculated with a Redux selector
+        facet.values = this.props.clientFSFacetValues[facetID]
       }
-      facet.values = this.props.clientFSFacetValues[facetID]
     }
+    // console.log(facet.filterType)
     switch (facet.filterType) {
       case 'uriFilter':
       case 'spatialFilter':
@@ -267,17 +271,14 @@ class FacetBar extends React.Component {
 
   render () {
     const { classes, facetClass, resultClass, resultCount, facetData, facetedSearchMode } = this.props
+    const { facets } = facetData
     let someFacetIsFetching = false
-    let facets
     if (facetedSearchMode === 'serverFS') {
-      facets = this.props.facetData
-      Object.values(facets).forEach(facet => {
+      Object.values(facetData).forEach(facet => {
         if (facet.isFetching) {
           someFacetIsFetching = true
         }
       })
-    } else if (facetedSearchMode === 'clientFS') {
-      facets = this.props.clientFSFacetValues
     }
 
     return (

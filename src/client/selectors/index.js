@@ -30,12 +30,14 @@ export const filterResults = createSelector(
     }
     // If a facet selection was added, first handle that facet
     if (lastlyUpdatedFacet !== null) {
-      skipFacetID = lastlyUpdatedFacet.id
+      // console.log(lastlyUpdatedFacet.facetID)
+      // console.log(facets[lastlyUpdatedFacet.facetID])
+      skipFacetID = lastlyUpdatedFacet.facetID
       lastlyUpdatedFacet.values = lastlyUpdatedFacet.values.map(value => ({
         ...value,
-        selected: facets[lastlyUpdatedFacet.id].has(value.id)
+        selected: facets[lastlyUpdatedFacet.facetID].selectionsSet.has(value.id)
       }))
-      facetValues[lastlyUpdatedFacet.id] = lastlyUpdatedFacet.values
+      facetValues[lastlyUpdatedFacet.facetID] = lastlyUpdatedFacet.values
     }
     // Then handle all the remainder facets
     for (const result of results) {

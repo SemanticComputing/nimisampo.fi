@@ -48,7 +48,7 @@ export const INITIAL_STATE = {
   facets: {
     datasetSelector: {
       facetID: 'datasetSelector',
-      filterType: 'datasetSelector',
+      filterType: 'datasetSelector'
     },
     prefLabel: {
       facetID: 'prefLabel',
@@ -58,16 +58,61 @@ export const INITIAL_STATE = {
       searchField: true,
       containerClass: 'ten',
       type: 'hierarchical'
+    },
+    broaderTypeLabel: {
+      facetID: 'broaderTypeLabel',
+      filterType: 'clientFSLiteral',
+      selectionsSet: new Set(),
+      isFetching: false,
+      searchField: true,
+      containerClass: 'ten',
+      type: 'hierarchical'
+    },
+    broaderAreaLabel: {
+      facetID: 'broaderAreaLabel',
+      filterType: 'clientFSLiteral',
+      selectionsSet: new Set(),
+      isFetching: false,
+      searchField: true,
+      containerClass: 'ten',
+      type: 'hierarchical'
+    },
+    modifier: {
+      facetID: 'modifier',
+      filterType: 'clientFSLiteral',
+      selectionsSet: new Set(),
+      isFetching: false,
+      searchField: true,
+      containerClass: 'ten',
+      type: 'hierarchical'
+    },
+    basicElement: {
+      facetID: 'basicElement',
+      filterType: 'clientFSLiteral',
+      selectionsSet: new Set(),
+      isFetching: false,
+      searchField: true,
+      containerClass: 'ten',
+      type: 'hierarchical'
+    },
+    collectionYear: {
+      facetID: 'collectionYear',
+      filterType: 'clientFSLiteral',
+      selectionsSet: new Set(),
+      isFetching: false,
+      searchField: true,
+      containerClass: 'ten',
+      type: 'hierarchical'
+    },
+    source: {
+      facetID: 'source',
+      filterType: 'clientFSLiteral',
+      selectionsSet: new Set(),
+      isFetching: false,
+      searchField: false,
+      containerClass: 'three',
+      type: 'hierarchical'
     }
-    // modifier: new Set(),
-    // basicElement: new Set(),
-    // typeLabel: new Set(),
-    // broaderTypeLabel: new Set(),
-    // broaderAreaLabel: new Set(),
-    // collector: new Set(),
-    // collectionYear: new Set(),
-    // source: new Set()
-    //
   },
   lastlyUpdatedFacet: null,
   facetUpdateID: 0,
@@ -113,7 +158,6 @@ const clientSideFacetedSearch = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         results: action.results,
-        facetUpdateID: ++state.facetUpdateID,
         [`${action.jenaIndex}ResultsFetching`]: false
       }
     case CLIENT_FS_UPDATE_FACET:
@@ -140,7 +184,7 @@ const clientFSUpdateFacet = (state, action) => {
   const updatedFacets = {
     ...state.facets,
     [facetID]: {
-      facetID,
+      ...state.facets[facetID],
       selectionsSet: newSelectionsSet
     }
   }

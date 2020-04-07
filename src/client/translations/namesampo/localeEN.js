@@ -128,37 +128,33 @@ export default {
           label: 'Choose dataset(s)',
           description: 'Description'
         },
-        uri: {
-          label: 'URI',
-          description: 'Uniform Resource Identifier'
-        },
         prefLabel: {
           label: 'Name',
-          description: 'Name'
+          description: 'Description'
         },
-        broaderType: {
+        broaderTypeLabel: {
           label: 'Type',
-          description: 'type'
+          description: 'Description'
         },
-        area: {
+        broaderAreaLabel: {
           label: 'Area',
-          description: 'area'
+          description: 'Description'
         },
         modifier: {
           label: 'Modifier',
-          description: 'modifier'
+          description: 'Description'
         },
-        base: {
+        basicElement: {
           label: 'Base',
-          description: 'base'
+          description: 'Description'
         },
         collectionYear: {
           label: 'Year',
-          description: 'year'
+          description: 'Description'
         },
         source: {
           label: 'Source',
-          description: 'Source'
+          description: 'Description'
         }
       }
     }
