@@ -55,7 +55,7 @@ const Places = props => {
         path={`${rootUrl}/app/heatmap`}
         render={() =>
           <GMap
-            results={props.results}
+            results={props.clientFSResults}
             googleMapURL='https://maps.googleapis.com/maps/api/js?key=AIzaSyCKWw5FjhwLsfp_l2gjVAifPkT3cxGXhA4&v=3.exp&libraries=geometry,drawing,places,visualization'
             loadingElement={<div style={{ height: '100%' }} />}
             containerElement={<div style={{ height: 'calc(100% - 72px' }} />}

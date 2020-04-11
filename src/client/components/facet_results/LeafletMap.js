@@ -620,7 +620,6 @@ class LeafletMap extends React.Component {
 
   createPopUpContentNameSampo = data => {
     let popUpTemplate = ''
-    console.log(data)
     popUpTemplate += `<a href=${data.id} target='_blank'><h3>${data.prefLabel}</h3></a>`
     if (has(data, 'broaderTypeLabel')) {
       popUpTemplate += `

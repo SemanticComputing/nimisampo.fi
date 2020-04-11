@@ -69,17 +69,17 @@ export const mapNameSampoResults = sparqlBindings => {
     return {
       id: b.id.value,
       prefLabel: b.prefLabel.value.charAt(0).toUpperCase() + b.prefLabel.value.slice(1), // capitalize
-      modifier: has(b, 'modifier') ? b.modifier.value : '',
-      basicElement: has(b, 'basicElement') ? b.basicElement.value : '',
-      typeLabel: has(b, 'typeLabel') ? b.typeLabel.value : '',
-      broaderTypeLabel: b.broaderTypeLabel.value,
-      broaderAreaLabel: b.broaderAreaLabel.value,
-      collector: has(b, 'collector') ? b.collector.value : '',
-      collectionYear: has(b, 'collectionYear') ? b.collectionYear.value : '',
-      source: b.source.value,
-      markerColor: b.markerColor.value,
-      lat: has(b, 'lat') ? b.lat.value : '',
-      long: has(b, 'long') ? b.long.value : ''
+      ...(Object.prototype.hasOwnProperty.call(b, 'modifier') && { modifier: b.modifier.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'basicElement') && { basicElement: b.basicElement.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'typeLabel') && { typeLabel: b.typeLabel.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'broaderTypeLabel') && { broaderTypeLabel: b.broaderTypeLabel.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'collector') && { collector: b.collector.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'broaderAreaLabel') && { broaderAreaLabel: b.broaderAreaLabel.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'collectionYear') && { collectionYear: b.collectionYear.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'source') && { source: b.source.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'markerColor') && { markerColor: b.markerColor.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'lat') && { lat: b.lat.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'long') && { long: b.long.value })
     }
   })
   return results
