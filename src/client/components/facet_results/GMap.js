@@ -5,6 +5,7 @@ import { has } from 'lodash'
 // Google Maps JS API is loaded in index.html
 
 const GMap = props => {
+  const google = window.google
   const data = props.results.reduce((data, obj) => {
     if (has(obj, 'lat') && has(obj, 'long')) {
       data.push(new google.maps.LatLng(+obj.lat, +obj.long))
