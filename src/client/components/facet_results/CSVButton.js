@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { CSVLink } from 'react-csv'
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 import Button from '@material-ui/core/Button'
+import intl from 'react-intl-universal'
 
 const styles = theme => ({
   root: {
@@ -25,13 +26,13 @@ const styles = theme => ({
 })
 
 const CSVButton = props => {
-  const { classes, strings } = props
+  const { classes } = props
 
   return (
     <div className={classes.root}>
       <CSVLink className={classes.csvLink} data={props.results}>
         <Button variant='contained' color='primary' className={classes.csvButton}>
-          {strings.resultsAsCSV}
+          {intl.get('resultsAsCSV')}
           <CloudDownloadIcon className={classes.rightIcon} />
         </Button>
       </CSVLink>
@@ -41,8 +42,7 @@ const CSVButton = props => {
 
 CSVButton.propTypes = {
   classes: PropTypes.object.isRequired,
-  results: PropTypes.array.isRequired,
-  strings: PropTypes.object.isRequired
+  results: PropTypes.array.isRequired
 }
 
 export default withStyles(styles)(CSVButton)

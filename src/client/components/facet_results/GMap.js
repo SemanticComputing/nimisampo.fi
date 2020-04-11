@@ -12,7 +12,6 @@ const GMap = props => {
     }
     return data
   }, [])
-  console.log(data)
   return (
     <GoogleMap
       mapContainerStyle={{

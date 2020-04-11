@@ -60,24 +60,22 @@ const Places = props => {
             loadingElement={<div style={{ height: '100%' }} />}
             containerElement={<div style={{ height: 'calc(100% - 72px' }} />}
             mapElement={<div style={{ height: '100%' }} />}
-            strings={props.strings}
           />}
       />
       <Route
         path={`${rootUrl}/app/statistics`}
         render={() =>
           <Pie
-            data={props.results}
-            groupBy={props.search.groupBy}
-            groupByLabel={props.search.groupByLabel}
-            query={props.search.query}
-            strings={props.strings}
+            data={props.clientFSResults}
+            groupBy={props.clientFS.groupBy}
+            groupByLabel={props.clientFS.groupByLabel}
+            query={props.clientFS.query}
           />}
       />
       <Route
         path={`${rootUrl}/app/download`}
         render={() =>
-          <CSVButton results={props.results} strings={props.strings} />}
+          <CSVButton results={props.clientFSResults} />}
       />
     </>
   )

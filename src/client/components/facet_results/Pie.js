@@ -134,7 +134,7 @@ const Pie = (props) => {
 
 Pie.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.array.isRequired,
+  data: PropTypes.array,
   groupBy: PropTypes.string.isRequired,
   groupByLabel: PropTypes.string.isRequired,
   query: PropTypes.string.isRequired

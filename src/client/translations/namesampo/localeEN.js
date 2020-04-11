@@ -61,6 +61,7 @@ export default {
   },
   exportToYasgui: 'open the result table query in yasgui sparql editor',
   openInLinkedDataBrowser: 'open in linked data browser',
+  resultsAsCSV: 'download the search results as a CSV table',
   facets: {
     dateFacet: {
       invalidDate: 'Epäkelpo päivämäärä.',
