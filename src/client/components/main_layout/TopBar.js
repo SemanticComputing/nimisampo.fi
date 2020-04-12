@@ -19,6 +19,8 @@ import TopBarLanguageButton from './TopBarLanguageButton'
 import { has } from 'lodash'
 // import mmmLogo from '../../img/mmm-logo-52x50.png'
 import secoLogo from '../../img/seco-logo-48x50.png'
+// import nameSampoLogoEn from '../../img/logos/namesampo.png'
+import nameSampoLogoFi from '../../img/logos/nimisampo-logo.png'
 import { showLanguageButton } from '../../configs/sampo/GeneralConfig'
 
 const styles = theme => ({
@@ -53,6 +55,9 @@ const styles = theme => ({
   },
   mainLogoButton: {
     textTransform: 'none'
+  },
+  mainLogoImg: {
+    height: 35
   },
   appBarButtonActive: {
     border: '1px solid white'
@@ -211,7 +216,8 @@ class TopBar extends React.Component {
         <AppBar position='absolute'>
           <Toolbar className={classes.toolbar}>
             <Button className={classNames(classes.appBarButton, classes.mainLogoButton)} component={this.AdapterLink} to='/'>
-              <Typography variant='h6'>{intl.get('appTitle.short')}</Typography>
+              {/* <Typography variant='h6'>{intl.get('appTitle.short')}</Typography> */}
+              <img className={classes.mainLogoImg} src={this.props.currentLocale === 'fi' ? nameSampoLogoFi : nameSampoLogoFi} />
             </Button>
             {/* <TopBarSearchField
               fetchResultsClientSide={this.props.fetchResultsClientSide}
