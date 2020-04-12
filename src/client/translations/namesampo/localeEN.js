@@ -84,7 +84,8 @@ export default {
     mapModeButtons: {
       markers: 'Markers',
       heatmap: 'Heatmap'
-    }
+    },
+    wrongZoomLevel: 'The map zoom level has to at least 11'
   },
   instancePageGeneral: {
     introduction: `

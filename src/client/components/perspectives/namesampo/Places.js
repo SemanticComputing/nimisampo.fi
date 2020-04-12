@@ -37,6 +37,8 @@ const Places = props => {
         path={`${rootUrl}/app/map_clusters`}
         render={() =>
           <LeafletMap
+            center={[65.184809, 27.314050]}
+            zoom={5}
             results={props.clientFSResults}
             layers={props.leafletMap}
             pageType='clientFSResults'

@@ -95,7 +95,7 @@ class LeafletMap extends React.Component {
   }
 
   componentDidMount = () => {
-    if (this.props.pageType === 'facetResults') {
+    if (this.props.mapMode && this.props.pageType === 'facetResults') {
       this.props.fetchResults({
         resultClass: this.props.resultClass,
         facetClass: this.props.facetClass,
@@ -103,7 +103,7 @@ class LeafletMap extends React.Component {
       })
     }
     this.initMap()
-    if (this.props.pageType === 'clientFSResults') {
+    if (this.props.mapMode && this.props.pageType === 'clientFSResults') {
       this.drawPointData()
     }
   }
@@ -111,6 +111,11 @@ class LeafletMap extends React.Component {
   componentDidUpdate = prevProps => {
     this.props.facetedSearchMode === 'clientFS'
       ? this.clientFScomponentDidUpdate(prevProps) : this.serverFScomponentDidUpdate(prevProps)
+  }
+
+  componentWillUnmount = () => {
+    // console.log(this.leafletMap)
+    this.leafletMap.remove()
   }
 
   clientFScomponentDidUpdate = prevProps => {
@@ -156,7 +161,7 @@ class LeafletMap extends React.Component {
     }
 
     if (this.props.showExternalLayers &&
-        (this.props.layers.updateID !== prevProps.layers.updateID)) {
+      (this.props.layers.updateID !== prevProps.layers.updateID)) {
       this.props.layers.layerData.map(layerObj => this.populateOverlay(layerObj))
     }
 
@@ -183,10 +188,11 @@ class LeafletMap extends React.Component {
     // layer for markers
     this.resultMarkerLayer = L.layerGroup()
 
-    // create map
-    this.leafletMap = L.map('map', {
-      center: [22.43, 10.37],
-      zoom: 2,
+    const container = this.props.container ? this.props.container : 'map'
+
+    this.leafletMap = L.map(container, {
+      center: this.props.center,
+      zoom: this.props.zoom,
       zoomControl: false,
       zoominfoControl: true,
       layers: [
@@ -213,6 +219,28 @@ class LeafletMap extends React.Component {
     }
 
     if (this.props.showMapModeControl) { this.addMapModeControl() }
+
+    if (this.props.updateMapBounds) {
+      this.props.updateMapBounds(this.boundsToValues())
+      this.leafletMap.on('moveend', () => {
+        this.props.updateMapBounds(this.boundsToValues())
+      })
+    }
+  }
+
+  boundsToValues = () => {
+    const bounds = this.leafletMap.getBounds()
+    const latMin = bounds._southWest.lat
+    const longMin = bounds._southWest.lng
+    const latMax = bounds._northEast.lat
+    const longMax = bounds._northEast.lng
+    return {
+      latMin: latMin,
+      longMin: longMin,
+      latMax: latMax,
+      longMax: longMax,
+      zoom: this.leafletMap.getZoom()
+    }
   }
 
   drawPointData = () => {
@@ -290,7 +318,7 @@ class LeafletMap extends React.Component {
 
   isSafeToLoadLargeLayersAfterZooming = () => {
     return (this.leafletMap.getZoom() === 13 ||
-    (this.leafletMap.getZoom() >= 13 && this.state.prevZoomLevel > this.leafletMap.getZoom()))
+      (this.leafletMap.getZoom() >= 13 && this.state.prevZoomLevel > this.leafletMap.getZoom()))
   }
 
   isSafeToLoadLargeLayers = () => this.leafletMap.getZoom() >= 13
@@ -523,9 +551,9 @@ class LeafletMap extends React.Component {
 
   createMarker = result => {
     if (!has(result, 'lat') ||
-        !has(result, 'long') ||
-        result.lat === 'Undefined' ||
-        result.long === 'Undefined'
+      !has(result, 'long') ||
+      result.lat === 'Undefined' ||
+      result.long === 'Undefined'
     ) {
       return null
     } else {
@@ -730,7 +758,7 @@ class LeafletMap extends React.Component {
     return (
       <>
         <div className={this.props.classes[`leafletContainer${this.props.pageType}`]}>
-          <div id='map' className={this.props.classes.mapElement} />
+          <div id={this.props.container ? this.props.container : 'map'} className={this.props.classes.mapElement} />
           {(this.props.fetching ||
             (this.props.showExternalLayers && this.props.layers.fetching)) &&
               <div className={this.props.classes.spinnerContainer}>
@@ -757,11 +785,12 @@ LeafletMap.propTypes = {
   facetClass: PropTypes.string,
   fetchByURI: PropTypes.func,
   fetching: PropTypes.bool.isRequired,
-  mapMode: PropTypes.string.isRequired,
+  mapMode: PropTypes.string,
   showInstanceCountInClusters: PropTypes.bool,
   showExternalLayers: PropTypes.bool,
   updateFacetOption: PropTypes.func,
-  facetedSearchMode: PropTypes.string
+  facetedSearchMode: PropTypes.string,
+  container: PropTypes.string
 }
 
 export default withStyles(styles)(LeafletMap)

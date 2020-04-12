@@ -41,6 +41,7 @@ import {
   updateFacetOption,
   updatePage,
   updateRowsPerPage,
+  updateMapBounds,
   showError,
   updatePerspectiveHeaderExpanded,
   loadLocales,
@@ -279,6 +280,7 @@ const SemanticPortal = props => {
                     clientFSFacetValues={props.clientFSFacetValues}
                     fetchingResultCount={props.clientFS.textResultsFetching}
                     resultCount={noResults ? 0 : props.clientFS.results.length}
+                    clientFS={props.clientFS}
                     clientFSToggleDataset={props.clientFSToggleDataset}
                     clientFSFetchResults={props.clientFSFetchResults}
                     clientFSClearResults={props.clientFSClearResults}
@@ -286,7 +288,9 @@ const SemanticPortal = props => {
                     clientFSUpdateFacet={props.clientFSUpdateFacet}
                     defaultActiveFacets={perspectiveConfig[0].defaultActiveFacets}
                     leafletMap={props.leafletMap}
+                    updateMapBounds={props.updateMapBounds}
                     screenSize={screenSize}
+                    showError={props.showError}
                   />
                 </Grid>
                 <Grid item sm={12} md={8} lg={9} className={classes.resultsContainerClientFS}>
@@ -347,6 +351,7 @@ const mapDispatchToProps = ({
   updateFacetOption,
   updatePage,
   updateRowsPerPage,
+  updateMapBounds,
   showError,
   updatePerspectiveHeaderExpanded,
   loadLocales,
@@ -380,6 +385,7 @@ SemanticPortal.propTypes = {
   fetchFacet: PropTypes.func.isRequired,
   showError: PropTypes.func.isRequired,
   updatePerspectiveHeaderExpanded: PropTypes.func.isRequired,
+  updateMapBounds: PropTypes.func.isRequired,
   loadLocales: PropTypes.func.isRequired,
   animateMap: PropTypes.func.isRequired,
   clientFS: PropTypes.object.isRequired,

@@ -53,19 +53,19 @@ class LeafletMapDialog extends React.Component {
 
   handleSearchByArea = () => {
     if (this.props.map.zoomLevel > 10) {
-      this.props.clearResults()
-      this.props.fetchResults('spatial')
+      this.props.clientFSClearResults()
+      this.props.clientFSFetchResults({ jenaIndex: 'spatial' })
       this.setState({ open: false })
     } else {
       this.props.showError({
         title: '',
-        text: this.props.strings.wrongZoomLevel
+        text: intl.get('leafletMap.wrongZoomLevel')
       })
     }
   }
 
   render () {
-    const { classes, strings } = this.props
+    const { classes } = this.props
 
     return (
       <Paper className={classes.root}>
@@ -94,14 +94,16 @@ class LeafletMapDialog extends React.Component {
         >
           <DialogTitle id='dialog-title'>{intl.get('perspectives.placesClientFS.searchByAreaTitle')}</DialogTitle>
           <LeafletMap
-            mapMode='noCluster'
-            strings={strings}
-            geoJSON={this.props.map.geoJSON}
-            geoJSONKey={this.props.map.geoJSONKey}
-            getGeoJSON={this.props.getGeoJSON}
-            reduceHeight={128}
-            mapElementId='dialogMap'
+            center={[65.184809, 27.314050]}
+            zoom={5}
+            pageType='clientFSResults'
+            showMapModeControl={false}
+            showInstanceCountInClusters={false}
+            showExternalLayers={false}
+            fetching={false}
+            facetedSearchMode='clientFS'
             updateMapBounds={this.props.updateMapBounds}
+            container='mapDialog'
           />
           <DialogActions>
             <Button onClick={this.handleClose} variant='contained' color='primary' autoFocus>
@@ -123,9 +125,8 @@ LeafletMapDialog.propTypes = {
   map: PropTypes.object.isRequired,
   getGeoJSON: PropTypes.func,
   updateMapBounds: PropTypes.func,
-  fetchResults: PropTypes.func.isRequired,
-  clearResults: PropTypes.func.isRequired,
-  updateQuery: PropTypes.func.isRequired,
+  clientFSFetchResults: PropTypes.func.isRequired,
+  clientFSClearResults: PropTypes.func.isRequired,
   showError: PropTypes.func,
   fetching: PropTypes.bool
 }

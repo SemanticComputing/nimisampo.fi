@@ -148,8 +148,8 @@ const clientFSFetchResultsEpic = (action$, state$) => action$.pipe(
     if (action.jenaIndex === 'text') {
       requestUrl = `${apiUrl}federatedSearch?q=${action.query}&${dsParams}`
     } else if (action.jenaIndex === 'spatial') {
-      const { latMin, longMin, latMax, longMax } = state.map
-      requestUrl = `${apiUrl}?latMin=${latMin}&longMin=${longMin}&latMax=${latMax}&longMax=${longMax}&${dsParams}`
+      const { latMin, longMin, latMax, longMax } = state.leafletMap
+      requestUrl = `${apiUrl}federatedSearch?latMin=${latMin}&longMin=${longMin}&latMax=${latMax}&longMax=${longMax}&${dsParams}`
     }
     return ajax.getJSON(requestUrl).pipe(
       map(response => clientFSUpdateResults({

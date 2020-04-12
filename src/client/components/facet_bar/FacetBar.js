@@ -295,9 +295,11 @@ class FacetBar extends React.Component {
         {facetedSearchMode === 'clientFS' &&
           <LeafletMapDialog
             map={this.props.leafletMap}
-            fetchResults={this.props.clientFSFetchResults}
-            clearResults={this.props.clientFSClearResults}
-            updateQuery={this.props.clientFSUpdateQuery}
+            clientFSFetchResults={this.props.clientFSFetchResults}
+            clientFSClearResults={this.props.clientFSClearResults}
+            updateMapBounds={this.props.updateMapBounds}
+            fetching={this.props.clientFS.spatialResultsFetching}
+            showError={this.props.showError}
           />}
         {(facetedSearchMode === 'serverFS' || facetData.results !== null) &&
           <Paper className={classes.facetInfoContainer}>
@@ -338,6 +340,8 @@ FacetBar.propTypes = {
   fetchFacetConstrainSelf: PropTypes.func,
   fetchResultCount: PropTypes.func,
   updateFacetOption: PropTypes.func,
+  updateMapBounds: PropTypes.func,
+  clientFS: PropTypes.object,
   clientFSFacetValues: PropTypes.object,
   clientFSToggleDataset: PropTypes.func,
   clientFSFetchResults: PropTypes.func,
@@ -346,7 +350,8 @@ FacetBar.propTypes = {
   clientFSUpdateFacet: PropTypes.func,
   map: PropTypes.object,
   defaultActiveFacets: PropTypes.instanceOf(Set).isRequired,
-  leafletMap: PropTypes.object
+  leafletMap: PropTypes.object,
+  showError: PropTypes.func
 }
 
 export default withStyles(styles)(FacetBar)
