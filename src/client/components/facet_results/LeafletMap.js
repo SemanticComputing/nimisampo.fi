@@ -34,6 +34,7 @@ import markerIconViolet from '../../img/markers/marker-icon-violet.png'
 import markerIconGreen from '../../img/markers/marker-icon-green.png'
 import markerIconRed from '../../img/markers/marker-icon-red.png'
 import markerIconOrange from '../../img/markers/marker-icon-orange.png'
+import markerIconYellow from '../../img/markers/marker-icon-yellow.png'
 
 const styles = theme => ({
   leafletContainerfacetResults: {
@@ -107,7 +108,18 @@ class LeafletMap extends React.Component {
     }
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = prevProps => {
+    this.props.facetedSearchMode === 'clientFS'
+      ? this.clientFScomponentDidUpdate(prevProps) : this.serverFScomponentDidUpdate(prevProps)
+  }
+
+  clientFScomponentDidUpdate = prevProps => {
+    if (prevProps.facetUpdateID !== this.props.facetUpdateID) {
+      this.drawPointData()
+    }
+  }
+
+  serverFScomponentDidUpdate = (prevProps, prevState) => {
     // check if filters have changed
     if (has(prevProps, 'facetUpdateID') && prevProps.facetUpdateID !== this.props.facetUpdateID) {
       this.props.fetchResults({
@@ -138,7 +150,7 @@ class LeafletMap extends React.Component {
           maxHeight: 300,
           maxWidth: 400,
           minWidth: 400
-        // closeButton: false,
+          // closeButton: false,
         })
         .openPopup()
     }
@@ -539,7 +551,7 @@ class LeafletMap extends React.Component {
           events: result.events ? result.events : null
         })
       } else {
-        const color = 'green'
+        const color = result.markerColor || 'green'
         let markerIcon = ''
         switch (color) {
           case 'violet':
@@ -554,6 +566,11 @@ class LeafletMap extends React.Component {
           case 'orange':
             markerIcon = markerIconOrange
             break
+          case 'yellow':
+            markerIcon = markerIconYellow
+            break
+          default:
+            markerIcon = markerIconGreen
         }
         marker = L.marker(latLng, {
           icon: new ColorIcon({ iconUrl: markerIcon }),
@@ -624,6 +641,26 @@ class LeafletMap extends React.Component {
     if (has(data, 'broaderTypeLabel')) {
       popUpTemplate += `
         <p><b>${intl.get('perspectives.placesClientFS.properties.broaderTypeLabel.label')}</b>: ${data.broaderTypeLabel}</p>`
+    }
+    if (has(data, 'broaderAreaLabel')) {
+      popUpTemplate += `
+        <p><b>${intl.get('perspectives.placesClientFS.properties.broaderAreaLabel.label')}</b>: ${data.broaderAreaLabel}</p>`
+    }
+    if (has(data, 'modifier')) {
+      popUpTemplate += `
+        <p><b>${intl.get('perspectives.placesClientFS.properties.modifier.label')}</b>: ${data.modifier}</p>`
+    }
+    if (has(data, 'basicElement')) {
+      popUpTemplate += `
+        <p><b>${intl.get('perspectives.placesClientFS.properties.basicElement.label')}</b>: ${data.basicElement}</p>`
+    }
+    if (has(data, 'collectionYear')) {
+      popUpTemplate += `
+        <p><b>${intl.get('perspectives.placesClientFS.properties.collectionYear.label')}</b>: ${data.collectionYear}</p>`
+    }
+    if (has(data, 'source')) {
+      popUpTemplate += `
+        <p><b>${intl.get('perspectives.placesClientFS.properties.source.label')}</b>: ${data.source}</p>`
     }
 
     // console.log(popUpTemplate)
@@ -717,7 +754,8 @@ LeafletMap.propTypes = {
   mapMode: PropTypes.string.isRequired,
   showInstanceCountInClusters: PropTypes.bool,
   showExternalLayers: PropTypes.bool,
-  updateFacetOption: PropTypes.func
+  updateFacetOption: PropTypes.func,
+  facetedSearchMode: PropTypes.string
 }
 
 export default withStyles(styles)(LeafletMap)

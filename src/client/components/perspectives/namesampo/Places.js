@@ -41,14 +41,15 @@ const Places = props => {
             layers={props.leafletMap}
             pageType='clientFSResults'
             mapMode='cluster'
+            facetUpdateID={props.clientFS.facetUpdateID}
             showMapModeControl={false}
-            instance={{}}
             fetchGeoJSONLayers={props.fetchGeoJSONLayers}
             fetchByURI={props.fetchByURI}
             fetching={false}
             showInstanceCountInClusters={false}
             updateFacetOption={props.updateFacetOption}
             showExternalLayers
+            facetedSearchMode='clientFS'
           />}
       />
       <Route
