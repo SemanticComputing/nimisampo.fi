@@ -659,8 +659,14 @@ class LeafletMap extends React.Component {
         <p><b>${intl.get('perspectives.placesClientFS.properties.collectionYear.label')}</b>: ${data.collectionYear}</p>`
     }
     if (has(data, 'source')) {
-      popUpTemplate += `
+      if (has(data, 'namesArchiveLink')) {
+        popUpTemplate += `
+        <p><b>${intl.get('perspectives.placesClientFS.properties.source.label')}</b>: 
+          <a href="${data.namesArchiveLink}" target="_blank">${data.source}</a></p>`
+      } else {
+        popUpTemplate += `
         <p><b>${intl.get('perspectives.placesClientFS.properties.source.label')}</b>: ${data.source}</p>`
+      }
     }
 
     // console.log(popUpTemplate)

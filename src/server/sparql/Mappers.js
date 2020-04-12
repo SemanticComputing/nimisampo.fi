@@ -79,7 +79,8 @@ export const mapNameSampoResults = sparqlBindings => {
       ...(Object.prototype.hasOwnProperty.call(b, 'source') && { source: b.source.value }),
       ...(Object.prototype.hasOwnProperty.call(b, 'markerColor') && { markerColor: b.markerColor.value }),
       ...(Object.prototype.hasOwnProperty.call(b, 'lat') && { lat: b.lat.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'long') && { long: b.long.value })
+      ...(Object.prototype.hasOwnProperty.call(b, 'long') && { long: b.long.value }),
+      ...(Object.prototype.hasOwnProperty.call(b, 'namesArchiveLink') && { namesArchiveLink: b.namesArchiveLink.value })
     }
   })
   return results

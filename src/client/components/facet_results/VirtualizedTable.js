@@ -23,7 +23,10 @@ const styles = theme => ({
     // width: 'calc(100% - 1px)',
     flexGrow: 1,
     borderTop: '1px solid rgb(224, 224, 224)',
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
+    '& a': {
+      textDecoration: 'underline'
+    }
   },
   resultsInfo: {
     flexGrow: 0
@@ -129,11 +132,17 @@ class VirtualizedTable extends React.PureComponent {
 
     const sourceRenderer = ({ cellData, rowData }) => {
       if (cellData == null) return ''
-      return (
-        <div key={rowData.s}>
-          <a target='_blank' rel='noopener noreferrer' href={rowData.namesArchiveLink}>{cellData}</a>
-        </div>
-      )
+      if (has(rowData, 'namesArchiveLink')) {
+        return (
+          <div key={rowData.s}>
+            <a target='_blank' rel='noopener noreferrer' href={rowData.namesArchiveLink}>{cellData}</a>
+          </div>
+        )
+      } else {
+        return (
+          <div key={rowData.s}>{cellData}</div>
+        )
+      }
     }
 
     return (
