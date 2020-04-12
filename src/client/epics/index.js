@@ -13,7 +13,7 @@ import { combineEpics, ofType } from 'redux-observable'
 import intl from 'react-intl-universal'
 import localeEN from '../translations/namesampo/localeEN'
 import localeFI from '../translations/namesampo/localeFI'
-import localeSV from '../translations/namesampo/localeSV'
+// import localeSV from '../translations/namesampo/localeSV'
 import { stateToUrl, handleAxiosError, pickSelectedDatasets } from '../helpers/helpers'
 import querystring from 'querystring'
 import {
@@ -64,8 +64,8 @@ export const apiUrl = (process.env.NODE_ENV === 'development')
 
 export const availableLocales = {
   en: localeEN,
-  fi: localeFI,
-  sv: localeSV
+  fi: localeFI
+  // sv: localeSV
 }
 
 const fetchPaginatedResultsEpic = (action$, state$) => action$.pipe(

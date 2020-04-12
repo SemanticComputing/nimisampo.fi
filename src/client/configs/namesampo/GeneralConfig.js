@@ -1,6 +1,6 @@
 export const rootUrl = ''
 
-export const defaultLocale = 'en'
+export const defaultLocale = 'fi'
 
 export const showLanguageButton = true
 
