@@ -1,9 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Immutable from 'immutable'
+import intl from 'react-intl-universal'
 import { Route, Redirect } from 'react-router-dom'
 import PerspectiveTabs from '../../main_layout/PerspectiveTabs'
 import LeafletMap from '../../facet_results/LeafletMap'
+import ResultInfo from '../../facet_results/ResultInfo'
 import GMap from '../../facet_results/GMap'
 import VirtualizedTable from '../../facet_results/VirtualizedTable'
 import Pie from '../../facet_results/Pie.js'
@@ -55,15 +57,37 @@ const Places = props => {
           />}
       />
       <Route
+        path={`${rootUrl}/app/map_markers`}
+        render={() => {
+          if (props.clientFSResults.length > 3000) {
+            return <ResultInfo message={intl.get('leafletMap.tooManyResults')} />
+          } else {
+            return (
+              <LeafletMap
+                center={[65.184809, 27.314050]}
+                zoom={5}
+                results={props.clientFSResults}
+                layers={props.leafletMap}
+                pageType='clientFSResults'
+                mapMode='marker'
+                facetUpdateID={props.clientFS.facetUpdateID}
+                showMapModeControl={false}
+                fetchGeoJSONLayers={props.fetchGeoJSONLayers}
+                fetchByURI={props.fetchByURI}
+                fetching={false}
+                showInstanceCountInClusters={false}
+                updateFacetOption={props.updateFacetOption}
+                showExternalLayers
+                facetedSearchMode='clientFS'
+              />
+            )
+          }
+        }}
+      />
+      <Route
         path={`${rootUrl}/app/heatmap`}
         render={() =>
-          <GMap
-            results={props.clientFSResults}
-            googleMapURL='https://maps.googleapis.com/maps/api/js?key=AIzaSyCKWw5FjhwLsfp_l2gjVAifPkT3cxGXhA4&v=3.exp&libraries=geometry,drawing,places,visualization'
-            loadingElement={<div style={{ height: '100%' }} />}
-            containerElement={<div style={{ height: 'calc(100% - 72px' }} />}
-            mapElement={<div style={{ height: '100%' }} />}
-          />}
+          <GMap results={props.clientFSResults} />}
       />
       <Route
         path={`${rootUrl}/app/statistics`}
