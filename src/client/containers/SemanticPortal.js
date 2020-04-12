@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter, Route, Redirect } from 'react-router-dom'
-// import classNames from 'classnames'
+import classNames from 'classnames'
 import compose from 'recompose/compose'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
@@ -23,6 +23,7 @@ import Footer from '../components/perspectives/namesampo/Footer'
 import FacetBar from '../components/facet_bar/FacetBar'
 import Places from '../components/perspectives/namesampo/Places'
 // import All from '../components/perspectives/sampo/All'
+import FeedbackPage from '../components/main_layout/FeedbackPage'
 import { perspectiveConfig } from '../configs/namesampo/PerspectiveConfig'
 // import { perspectiveConfigOnlyInfoPages } from '../configs/sampo/PerspectiveConfigOnlyInfoPages'
 import { rootUrl } from '../configs/namesampo/GeneralConfig'
@@ -304,6 +305,13 @@ const SemanticPortal = props => {
                     />}
                 </Grid>
               </Grid>}
+          />
+          <Route
+            path={`${rootUrl}/feedback`}
+            render={() =>
+              <div className={classNames(classes.mainContainer, classes.textPageContainer)}>
+                <FeedbackPage />
+              </div>}
           />
           <Footer />
         </div>

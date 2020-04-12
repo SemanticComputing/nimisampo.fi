@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper'
 const styles = theme => ({
   root: {
     width: '100%',
-    height: '100%',
+    height: 'auto',
     display: 'flex',
     justifyContent: 'center'
   },
