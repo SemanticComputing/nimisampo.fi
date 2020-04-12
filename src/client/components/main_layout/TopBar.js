@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import intl from 'react-intl-universal'
+import classNames from 'classnames'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
@@ -12,9 +13,9 @@ import MoreIcon from '@material-ui/icons/MoreVert'
 import Button from '@material-ui/core/Button'
 import { Link, NavLink } from 'react-router-dom'
 // import TopBarSearchField from './TopBarSearchField'
-import TopBarInfoButton from './TopBarInfoButton'
+// import TopBarInfoButton from './TopBarInfoButton'
 import TopBarLanguageButton from './TopBarLanguageButton'
-import Divider from '@material-ui/core/Divider'
+// import Divider from '@material-ui/core/Divider'
 import { has } from 'lodash'
 // import mmmLogo from '../../img/mmm-logo-52x50.png'
 import secoLogo from '../../img/seco-logo-48x50.png'
@@ -49,6 +50,9 @@ const styles = theme => ({
   appBarButton: {
     color: 'white !important',
     border: `1px solid ${theme.palette.primary.main}`
+  },
+  mainLogoButton: {
+    textTransform: 'none'
   },
   appBarButtonActive: {
     border: '1px solid white'
@@ -206,7 +210,7 @@ class TopBar extends React.Component {
         <Typography />
         <AppBar position='absolute'>
           <Toolbar className={classes.toolbar}>
-            <Button component={this.AdapterLink} to='/'>
+            <Button className={classNames(classes.appBarButton, classes.mainLogoButton)} component={this.AdapterLink} to='/'>
               <Typography variant='h6'>{intl.get('appTitle.short')}</Typography>
             </Button>
             {/* <TopBarSearchField
