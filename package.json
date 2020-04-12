@@ -77,7 +77,7 @@
     "node-sass": "^4.13.1",
     "react": "^16.13.0",
     "react-compound-slider": "^1.2.2",
-    "react-csv": "^1.0.18",
+    "react-csv": "^2.0.3",
     "react-dom": "^16.8.6",
     "react-html-parser": "^2.0.2",
     "react-intl-universal": "^2.2.1",
