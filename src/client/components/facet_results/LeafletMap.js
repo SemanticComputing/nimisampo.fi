@@ -17,8 +17,8 @@ import 'leaflet-fullscreen/dist/Leaflet.fullscreen.min.js'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet.markercluster/dist/leaflet.markercluster.js'
-import 'Leaflet.Control.Opacity/dist/L.Control.Opacity.css'
-import 'Leaflet.Control.Opacity/dist/L.Control.Opacity.js'
+import 'leaflet.control.opacity/dist/L.Control.Opacity.css'
+import 'leaflet.control.opacity'
 import 'Leaflet.extra-markers/dist/js/leaflet.extra-markers.min.js'
 import 'Leaflet.extra-markers/dist/css/leaflet.extra-markers.min.css'
 import 'Leaflet.extra-markers/dist/img/markers_default.png'
@@ -430,6 +430,11 @@ class LeafletMap extends React.Component {
       [intl.get('leafletMap.externalLayers.kotus:rajat-lansi-ita')]: kotusParishesDialecticalBorder
     }
     L.control.layers(basemaps, this.overlayLayers).addTo(this.leafletMap)
+    const opacityLayers = {
+      [intl.get('leafletMap.externalLayers.karelianMaps')]: karelianMaps,
+      [intl.get('leafletMap.externalLayers.senateAtlas')]: senateAtlas
+    }
+    this.createOpacitySlider(opacityLayers)
     this.initMapEventListeners()
   }
 
@@ -827,23 +832,14 @@ class LeafletMap extends React.Component {
     return html
   }
 
-  createOpacitySlider = () => {
-    L.Control.OpacitySlider = L.Control.extend({
-      onAdd: function () {
-        const slider = L.DomUtil.create('input', 'opacity-slider')
-        slider.type = 'range'
-        slider.min = 0
-        slider.max = 100
-        slider.value = 100
-        return slider
+  createOpacitySlider = overlayLayers => {
+    L.control.opacity(
+      overlayLayers,
+      {
+        label: null,
+        collapsed: true
       }
-    })
-
-    L.control.opacitySlider = function (opts) {
-      return new L.Control.OpacitySlider(opts)
-    }
-
-    L.control.opacitySlider({ position: 'bottomleft' }).addTo(this.leafletMap)
+    ).addTo(this.leafletMap)
   }
 
   render = () => {
