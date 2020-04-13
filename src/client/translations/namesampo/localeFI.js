@@ -103,6 +103,24 @@ export default {
   },
   perspectives: {
     placesClientFS: {
+      datasets: {
+        kotus: {
+          label: 'Kotimaisten kielten keskuksen Nimiarkisto (NA)',
+          aboutLink: 'https://nimiarkisto.fi/wiki/Nimiarkisto:Tietoja'
+        },
+        pnr: {
+          label: 'Maanmittauslaitoksen paikannimirekisteri (PNR)',
+          aboutLink: 'https://www.maanmittauslaitos.fi/kartat-ja-paikkatieto/asiantuntevalle-kayttajalle/tuotekuvaukset/nimisto'
+        },
+        warsa_karelian_places: {
+          label: 'Maanmittauslaitoksen Karjalan karttanimet (KK)',
+          aboutLink: 'https://www.suomi.fi/palvelut/verkkoasiointi/vanhat-karjalan-kartat-maanmittauslaitos/f51d72a2-510c-4c34-bb3e-b752f5d38250'
+        },
+        tgn: {
+          label: 'The Getty Thesaurus of Geographic Names (TGN)',
+          aboutLink: 'http://www.getty.edu/research/tools/vocabularies/tgn/about.html'
+        }
+      },
       facetResultsType: '',
       searchPlaceNames: 'Hae paikannimellä',
       searchByArea: 'Hae kaikki paikannimet alueelta',
@@ -115,7 +133,7 @@ export default {
       properties: {
         datasetSelector: {
           label: 'Valitse lähdeaineisto(t)',
-          description: 'Haku suoritetaan kaikkiin valittuihin lähdeainoistoihin samanaikaisesti.'
+          description: 'Haku suoritetaan kaikkiin valittuihin lähdeaineistoihin samanaikaisesti.'
         },
         prefLabel: {
           label: 'Nimi',

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
+import intl from 'react-intl-universal'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormControl from '@material-ui/core/FormControl'
 // import FormLabel from '@material-ui/core/FormLabel';
@@ -50,10 +51,9 @@ class DatasetSelector extends React.Component {
   };
 
   generateLabel = id => {
-    const title = this.props.language === 'fi' ? this.props.datasets[id].titleFi : this.props.datasets[id].titleEn
     return (
       <div className={this.props.classes.checkboxLabel}>
-        <span>{title}</span>
+        <span>{intl.get(`perspectives.placesClientFS.datasets.${id}.label`)}</span>
         <a
           className={this.props.classes.link}
           href={this.props.datasets[id].link}
