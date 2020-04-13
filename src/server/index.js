@@ -11,6 +11,7 @@ import {
 import { getFacet } from './sparql/FacetValues'
 import { queryJenaIndex } from './sparql/JenaQuery'
 import { getFederatedResults } from './sparql/FederatedSearch'
+import { fetchGeoJSONLayer } from './wfs/WFSApi'
 const DEFAULT_PORT = 3001
 const app = express()
 app.set('port', process.env.PORT || DEFAULT_PORT)
@@ -181,6 +182,16 @@ app.get(`${apiPath}/federatedSearch`, async (req, res, next) => {
       datasets: castArray(req.query.dataset),
       resultFormat: req.query.resultFormat == null ? 'json' : req.query.resultFormat
     })
+    res.json(data)
+  } catch (error) {
+    next(error)
+  }
+})
+
+app.get(`${apiPath}/wfs`, async (req, res, next) => {
+  const layerIDs = castArray(req.query.layerID)
+  try {
+    const data = await Promise.all(layerIDs.map(layerID => fetchGeoJSONLayer({ layerID })))
     res.json(data)
   } catch (error) {
     next(error)

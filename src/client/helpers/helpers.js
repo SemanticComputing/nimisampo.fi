@@ -68,7 +68,7 @@ export const urlToState = ({ initialState, queryString }) => {
   return params
 }
 
-const boundsToValues = bounds => {
+export const boundsToValues = bounds => {
   const latMin = bounds._southWest.lat
   const longMin = bounds._southWest.lng
   const latMax = bounds._northEast.lat

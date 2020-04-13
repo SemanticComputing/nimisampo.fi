@@ -1,5 +1,6 @@
 import {
   FETCH_GEOJSON_LAYERS,
+  FETCH_GEOJSON_LAYERS_BACKEND,
   UPDATE_GEOJSON_LAYERS,
   UPDATE_MAP_BOUNDS
 } from '../actions'
@@ -18,6 +19,7 @@ export const INITIAL_STATE = {
 const leafletMapLayers = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case FETCH_GEOJSON_LAYERS:
+    case FETCH_GEOJSON_LAYERS_BACKEND:
       return {
         ...state,
         fetching: true

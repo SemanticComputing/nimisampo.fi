@@ -14,7 +14,7 @@ import intl from 'react-intl-universal'
 import localeEN from '../translations/namesampo/localeEN'
 import localeFI from '../translations/namesampo/localeFI'
 // import localeSV from '../translations/namesampo/localeSV'
-import { stateToUrl, handleAxiosError, pickSelectedDatasets } from '../helpers/helpers'
+import { stateToUrl, handleAxiosError, pickSelectedDatasets, boundsToValues } from '../helpers/helpers'
 import querystring from 'querystring'
 import {
   FETCH_RESULT_COUNT,
@@ -32,6 +32,7 @@ import {
   FETCH_SIMILAR_DOCUMENTS_BY_ID_FAILED,
   FETCH_FACET_FAILED,
   FETCH_GEOJSON_LAYERS,
+  FETCH_GEOJSON_LAYERS_BACKEND,
   CLIENT_FS_FETCH_RESULTS,
   CLIENT_FS_FETCH_RESULTS_FAILED,
   LOAD_LOCALES,
@@ -44,7 +45,8 @@ import {
   updateFacetValues,
   updateFacetValuesConstrainSelf,
   updateLocale,
-  updateGeoJSONLayers
+  updateGeoJSONLayers,
+  SHOW_ERROR
 } from '../actions'
 import {
   rootUrl,
@@ -370,7 +372,37 @@ const fetchSimilarDocumentsEpic = (action$, state$) => action$.pipe(
   })
 )
 
-const fetchGeoJSONLayers = action$ => action$.pipe(
+const fetchGeoJSONLayersBackendEpic = (action$, state$) => action$.pipe(
+  ofType(FETCH_GEOJSON_LAYERS_BACKEND),
+  withLatestFrom(state$),
+  mergeMap(([action]) => {
+    const { layerIDs, bounds } = action
+    const { latMin, longMin, latMax, longMax } = boundsToValues(bounds)
+    const params = {
+      layerID: layerIDs,
+      latMin,
+      longMin,
+      latMax,
+      longMax
+    }
+    const requestUrl = `${apiUrl}wfs?${querystring.stringify(params)}`
+    return ajax.getJSON(requestUrl).pipe(
+      map(res => updateGeoJSONLayers({
+        payload: res
+      })),
+      catchError(error => of({
+        type: SHOW_ERROR,
+        error: error,
+        message: {
+          text: backendErrorText,
+          title: 'Error'
+        }
+      }))
+    )
+  })
+)
+
+const fetchGeoJSONLayersEpic = action$ => action$.pipe(
   ofType(FETCH_GEOJSON_LAYERS),
   mergeMap(async action => {
     const { layerIDs, bounds } = action
@@ -381,7 +413,8 @@ const fetchGeoJSONLayers = action$ => action$.pipe(
 
 const fetchGeoJSONLayer = async (layerID, bounds) => {
   // const baseUrl = 'http://kartta.nba.fi/arcgis/services/WFS/MV_Kulttuuriymparisto/MapServer/WFSServer'
-  const baseUrl = 'http://avaa.tdata.fi/geoserver/kotus/ows'
+  // const baseUrl = 'http://avaa.tdata.fi/geoserver/kotus/ows'
+  const baseUrl = 'http://avaa.tdata.fi/geoserver/paituli/wfs'
   // const boundsStr =
   //   `${bounds._southWest.lng},${bounds._southWest.lat},${bounds._northEast.lng},${bounds._northEast.lat}`
   const mapServerParams = {
@@ -391,10 +424,11 @@ const fetchGeoJSONLayer = async (layerID, bounds) => {
     typeName: layerID,
     srsName: 'EPSG:4326',
     // outputFormat: 'geojson'
-    outputFormat: 'json'
+    outputFormat: 'application/json'
     // bbox: boundsStr
   }
   const url = `${baseUrl}?${querystring.stringify(mapServerParams)}`
+  console.log(url)
   try {
     const response = await axios.get(url)
     return {
@@ -417,7 +451,8 @@ const rootEpic = combineEpics(
   fetchFacetConstrainSelfEpic,
   loadLocalesEpic,
   fetchSimilarDocumentsEpic,
-  fetchGeoJSONLayers
+  fetchGeoJSONLayersEpic,
+  fetchGeoJSONLayersBackendEpic
 )
 
 export default rootEpic

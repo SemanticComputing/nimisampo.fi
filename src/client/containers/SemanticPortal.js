@@ -37,6 +37,7 @@ import {
   fetchFacet,
   fetchFacetConstrainSelf,
   fetchGeoJSONLayers,
+  fetchGeoJSONLayersBackend,
   sortResults,
   updateFacetOption,
   updatePage,
@@ -303,7 +304,7 @@ const SemanticPortal = props => {
                       clientFSResults={props.clientFSResults}
                       clientFSSortResults={props.clientFSSortResults}
                       leafletMap={props.leafletMap}
-                      fetchGeoJSONLayers={props.fetchGeoJSONLayers}
+                      fetchGeoJSONLayersBackend={props.fetchGeoJSONLayersBackend}
                       rootUrl={rootUrl}
                     />}
                 </Grid>
@@ -345,6 +346,7 @@ const mapDispatchToProps = ({
   fetchFacet,
   fetchFacetConstrainSelf,
   fetchGeoJSONLayers,
+  fetchGeoJSONLayersBackend,
   sortResults,
   clearResults,
   updateFacetOption,
@@ -376,6 +378,7 @@ SemanticPortal.propTypes = {
   fetchPaginatedResults: PropTypes.func.isRequired,
   fetchByURI: PropTypes.func.isRequired,
   fetchGeoJSONLayers: PropTypes.func.isRequired,
+  fetchGeoJSONLayersBackend: PropTypes.func.isRequired,
   sortResults: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
   updatePage: PropTypes.func.isRequired,
