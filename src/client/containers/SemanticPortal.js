@@ -246,8 +246,7 @@ const SemanticPortal = props => {
           <TopBar
             rootUrl={rootUrl}
             search={props.clientSideFacetedSearch}
-            fetchResultsClientSide={props.fetchResultsClientSide}
-            clearResults={props.clearResults}
+            clientFSClearResults={props.clientFSClearResults}
             currentLocale={props.options.currentLocale}
             availableLocales={props.options.availableLocales}
             loadLocales={props.loadLocales}

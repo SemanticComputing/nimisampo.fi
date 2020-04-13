@@ -170,7 +170,7 @@ class TopBar extends React.Component {
       open={Boolean(this.state.mobileMoreAnchorEl)}
       onClose={this.handleMobileMenuClose}
     >
-      {perspectives && perspectives.map(perspective => this.renderMobileMenuItem(perspective))}
+      {/* {perspectives && perspectives.map(perspective => this.renderMobileMenuItem(perspective))} */}
       {/* <Divider /> */}
       <MenuItem
         key='feedback'
@@ -179,32 +179,29 @@ class TopBar extends React.Component {
       >
         {intl.get('topBar.feedback').toUpperCase()}
       </MenuItem>
-      <MenuItem
+      {/* <MenuItem
         key={0}
         component={this.AdapterLink}
         to='/about'
       >
         {intl.get('topBar.info.aboutThePortal').toUpperCase()}
-      </MenuItem>
+      </MenuItem> */}
       <a
         className={this.props.classes.link}
         key={1}
-        href={intl.get('topBar.info.blogUrl')}
+        href='https://seco.cs.aalto.fi/projects/nimisampo/en'
         target='_blank'
         rel='noopener noreferrer'
       >
         <MenuItem>
-          {intl.get('topBar.info.blog').toUpperCase()}
+          {intl.get('topBar.info.info').toUpperCase()}
         </MenuItem>
       </a>
-      <MenuItem
-        key='info'
-        component={this.AdapterLink}
-        to='/instructions'
-      >
-        {intl.get('topBar.instructions').toUpperCase()}
-      </MenuItem>
     </Menu>
+
+  handleLogoButtonOnClick = () => {
+    this.props.clientFSClearResults()
+  }
 
   render () {
     const { classes, perspectives, currentLocale, availableLocales } = this.props
@@ -215,7 +212,11 @@ class TopBar extends React.Component {
         <Typography />
         <AppBar position='absolute'>
           <Toolbar className={classes.toolbar}>
-            <Button className={classNames(classes.appBarButton, classes.mainLogoButton)} component={this.AdapterLink} to='/'>
+            <Button
+              className={classNames(classes.appBarButton, classes.mainLogoButton)}
+              component={this.AdapterLink} to='/'
+              onClick={this.handleLogoButtonOnClick}
+            >
               {/* <Typography variant='h6'>{intl.get('appTitle.short')}</Typography> */}
               <img className={classes.mainLogoImg} src={this.props.currentLocale === 'fi' ? nameSampoLogoFi : nameSampoLogoFi} />
             </Button>
@@ -284,8 +285,9 @@ class TopBar extends React.Component {
 
 TopBar.propTypes = {
   classes: PropTypes.object.isRequired,
-  fetchResultsClientSide: PropTypes.func.isRequired,
-  clearResults: PropTypes.func.isRequired,
+  fetchResultsClientSide: PropTypes.func,
+  clearResults: PropTypes.func,
+  clientFSClearResults: PropTypes.func,
   loadLocales: PropTypes.func.isRequired,
   perspectives: PropTypes.array,
   currentLocale: PropTypes.string.isRequired,
