@@ -1,12 +1,14 @@
 # NameSampo Web App
 
-Project homepage: https://seco.cs.aalto.fi/projects/nimisampo/
+Based on [Sampo-UI &ndash; A framework for building semantic portal user interfaces](https://github.com/SemanticComputing/sampo-ui)
 
-master branch visible at http://nimisampo.fi/
+Project homepage: https://seco.cs.aalto.fi/projects/nimisampo/en
 
-dev branch visible at http://dev.nimisampo.fi/
+master branch visible at https://nimisampo.fi
 
-test branch visible at http://test.nimisampo.fi/
+dev branch visible at http://dev.nimisampo.fi
+
+test branch visible at http://test.nimisampo.fi
 
 ## Requirements
 
