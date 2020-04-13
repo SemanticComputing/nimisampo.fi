@@ -56,7 +56,7 @@ class DatasetSelector extends React.Component {
         <span>{intl.get(`perspectives.placesClientFS.datasets.${id}.label`)}</span>
         <a
           className={this.props.classes.link}
-          href={this.props.datasets[id].link}
+          href={intl.get(`perspectives.placesClientFS.datasets.${id}.aboutLink`)}
           target='_blank'
           rel='noopener noreferrer'
         >
