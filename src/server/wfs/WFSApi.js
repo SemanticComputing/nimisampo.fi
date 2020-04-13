@@ -5,8 +5,8 @@ import querystring from 'querystring'
 
 export const fetchGeoJSONLayer = async ({ layerID, bounds = null }) => {
   // const baseUrl = 'http://kartta.nba.fi/arcgis/services/WFS/MV_Kulttuuriymparisto/MapServer/WFSServer'
-  // const baseUrl = 'http://avaa.tdata.fi/geoserver/kotus/ows'
-  const baseUrl = 'http://avaa.tdata.fi/geoserver/paituli/wfs'
+  const baseUrl = 'http://avaa.tdata.fi/geoserver/kotus/ows'
+  // const baseUrl = 'http://avaa.tdata.fi/geoserver/paituli/wfs'
   // const boundsStr =
   //   `${bounds._southWest.lng},${bounds._southWest.lat},${bounds._northEast.lng},${bounds._northEast.lat}`
   const mapServerParams = {

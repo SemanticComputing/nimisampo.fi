@@ -66,13 +66,20 @@ export default {
     }
   },
   leafletMap: {
+    basemaps: {
+      googleRoadmap: 'Google Maps',
+      topographicalMapNLS: 'Topografinen kartta (Maanmittauslaitos)',
+      backgroundMapNLS: 'Taustakartta (Maanmittauslaitos)'
+    },
     externalLayers: {
       // arkeologiset_kohteet_alue: 'Register of Archaeological Sites, areas',
       // arkeologiset_kohteet_piste: 'Register of Archaeological Sites, points',
-      'paituli:kotus_pitajaAll': 'Finnish parishes in 1938 (Institute for the Languages of Finland)',
-      'kotus:rajat-sms-alueet': 'Dialectical regions in Finland (Institute for the Languages of Finland)',
-      'kotus:rajat-sms-alueosat': 'Dialectical subregions in Finland (Institute for the Languages of Finland)',
-      'kotus:rajat-lansi-ita': 'Border between western and eastern dialects in Finland (Institute for the Languages of Finland)'
+      karelianMaps: 'Karjalan kartat, 1:100 000 topografinen (SeCo)',
+      senateAtlas: 'Senaatin kartasto, 1:21 000 topografinen (SeCo)',
+      'kotus:pitajat': 'Pitäjät: Suomi, Viro, ja raja-alueet, 1:1 000 000, 1938 (Kotus)',
+      'kotus:rajat-sms-alueet': 'Murrealueet (Kotus)',
+      'kotus:rajat-sms-alueosat': 'Murrealueiden osat (Kotus)',
+      'kotus:rajat-lansi-ita': 'Länsi- ja itämurteiden raja (Kotus)'
     },
     mapModeButtons: {
       markers: 'Markers',

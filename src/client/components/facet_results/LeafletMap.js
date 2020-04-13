@@ -185,7 +185,7 @@ class LeafletMap extends React.Component {
     //   tileSize: 512,
     //   zoomOffset: -1
     // })
-    const googleBaseLayer = L.gridLayer.googleMutant({
+    const googleRoadmap = L.gridLayer.googleMutant({
       type: 'roadmap'
     })
     const topographicalMapNLS = L.tileLayer(this.createNLSUrl('maastokartta'), {
@@ -207,7 +207,7 @@ class LeafletMap extends React.Component {
       zoomControl: false,
       zoominfoControl: true,
       layers: [
-        googleBaseLayer,
+        googleRoadmap,
         this.resultMarkerLayer
       ],
       fullscreenControl: true
@@ -216,9 +216,9 @@ class LeafletMap extends React.Component {
     // initialize layers from external sources
     if (this.props.showExternalLayers) {
       const basemaps = {
-        'Google Maps': googleBaseLayer,
-        'Topographical map (National Land Survey of Finland)': topographicalMapNLS,
-        'Background map (National Land Survey of Finland)': backgroundMapNLS
+        [intl.get('leafletMap.basemaps.googleRoadmap')]: googleRoadmap,
+        [intl.get('leafletMap.basemaps.topographicalMapNLS')]: topographicalMapNLS,
+        [intl.get('leafletMap.basemaps.backgroundMapNLS')]: backgroundMapNLS
       }
       this.initOverLays(basemaps)
     }
@@ -290,28 +290,32 @@ class LeafletMap extends React.Component {
   initMapEventListeners = () => {
     // Fired when an overlay is selected using layer controls
     this.leafletMap.on('overlayadd', event => {
-      const layerID = event.layer.options.id
-      // https://www.robinwieruch.de/react-state-array-add-update-remove
-      this.setState(state => {
-        return {
-          activeOverlays: [...state.activeOverlays, layerID]
-        }
-      })
-      if (this.isSafeToLoadLargeLayers()) {
-        this.props.fetchGeoJSONLayers({
-          layerIDs: this.state.activeOverlays,
-          bounds: this.leafletMap.getBounds()
+      if (event.layer.options.type === 'geoJSON') {
+        const layerID = event.layer.options.id
+        // https://www.robinwieruch.de/react-state-array-add-update-remove
+        this.setState(state => {
+          return {
+            activeOverlays: [...state.activeOverlays, layerID]
+          }
         })
+        if (this.isSafeToLoadLargeLayers()) {
+          this.props.fetchGeoJSONLayers({
+            layerIDs: this.state.activeOverlays,
+            bounds: this.leafletMap.getBounds()
+          })
+        }
       }
     })
     // Fired when an overlay is selected using layer controls
     this.leafletMap.on('overlayremove', event => {
-      const layerIDremoved = event.layer.options.id
-      this.clearOverlay(layerIDremoved)
-      this.setState(state => {
-        const activeOverlays = state.activeOverlays.filter(layerID => layerID !== layerIDremoved)
-        return { activeOverlays }
-      })
+      if (event.layer.options.type === 'geoJSON') {
+        const layerIDremoved = event.layer.options.id
+        this.clearOverlay(layerIDremoved)
+        this.setState(state => {
+          const activeOverlays = state.activeOverlays.filter(layerID => layerID !== layerIDremoved)
+          return { activeOverlays }
+        })
+      }
     })
     // Fired when zooming starts
     this.leafletMap.on('zoomstart', () => {
@@ -368,7 +372,8 @@ class LeafletMap extends React.Component {
     //   }
     // })
     const kotusParishes1938 = L.layerGroup([], {
-      id: 'paituli:kotus_pitajaAll',
+      id: 'kotus:pitajat',
+      type: 'geoJSON',
       // this layer includes only GeoJSON Polygons, define style for them
       geojsonMPolygonOptions: {
         color: '#dd2c00',
@@ -376,10 +381,53 @@ class LeafletMap extends React.Component {
         dashArray: '3, 5'
       }
     })
+    const kotusParishesDialecticalRegions = L.layerGroup([], {
+      id: 'kotus:rajat-sms-alueet',
+      type: 'geoJSON',
+      // this layer includes only GeoJSON Polygons, define style for them
+      geojsonMPolygonOptions: {
+        color: '#fca903',
+        cursor: 'pointer',
+        dashArray: '3, 5'
+      }
+    })
+    const kotusParishesDialecticalSubRegions = L.layerGroup([], {
+      id: 'kotus:rajat-sms-alueosat',
+      type: 'geoJSON',
+      // this layer includes only GeoJSON Polygons, define style for them
+      geojsonMPolygonOptions: {
+        color: '#119100',
+        cursor: 'pointer',
+        dashArray: '3, 5'
+      }
+    })
+    const kotusParishesDialecticalBorder = L.layerGroup([], {
+      id: 'kotus:rajat-lansi-ita',
+      type: 'geoJSON',
+      // this layer includes only GeoJSON Polygons, define style for them
+      geojsonMPolygonOptions: {
+        color: '#2403fc',
+        cursor: 'pointer',
+        dashArray: '3, 5'
+      }
+    })
+    const karelianMaps = L.tileLayer('http:///mapwarper.onki.fi/mosaics/tile/4/{z}/{x}/{y}.png', {
+      type: 'tile',
+      attribution: 'SeCo'
+    })
+    const senateAtlas = L.tileLayer('http:///mapwarper.onki.fi/mosaics/tile/5/{z}/{x}/{y}.png', {
+      type: 'tile',
+      attribution: 'SeCo'
+    })
     this.overlayLayers = {
       // [intl.get('leafletMap.externalLayers.arkeologiset_kohteet_alue')]: fhaArchaeologicalSiteRegistryAreas,
       // [intl.get('leafletMap.externalLayers.arkeologiset_kohteet_piste')]: fhaArchaeologicalSiteRegistryPoints,
-      [intl.get('leafletMap.externalLayers.paituli:kotus_pitajaAll')]: kotusParishes1938
+      [intl.get('leafletMap.externalLayers.karelianMaps')]: karelianMaps,
+      [intl.get('leafletMap.externalLayers.senateAtlas')]: senateAtlas,
+      [intl.get('leafletMap.externalLayers.kotus:pitajat')]: kotusParishes1938,
+      [intl.get('leafletMap.externalLayers.kotus:rajat-sms-alueet')]: kotusParishesDialecticalRegions,
+      [intl.get('leafletMap.externalLayers.kotus:rajat-sms-alueosat')]: kotusParishesDialecticalSubRegions,
+      [intl.get('leafletMap.externalLayers.kotus:rajat-lansi-ita')]: kotusParishesDialecticalBorder
     }
     L.control.layers(basemaps, this.overlayLayers).addTo(this.leafletMap)
     this.initMapEventListeners()
