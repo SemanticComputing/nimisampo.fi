@@ -67,8 +67,12 @@ export default {
   },
   leafletMap: {
     externalLayers: {
-      arkeologiset_kohteet_alue: 'Register of Archaeological Sites, areas',
-      arkeologiset_kohteet_piste: 'Register of Archaeological Sites, points'
+      // arkeologiset_kohteet_alue: 'Register of Archaeological Sites, areas',
+      // arkeologiset_kohteet_piste: 'Register of Archaeological Sites, points',
+      'kotus:pitajat': 'Finnish parishes in 1938 (Institute for the Languages of Finland)',
+      'kotus:rajat-sms-alueet': 'Dialectical regions in Finland (Institute for the Languages of Finland)',
+      'kotus:rajat-sms-alueosat': 'Dialectical subregions in Finland (Institute for the Languages of Finland)',
+      'kotus:rajat-lansi-ita': 'Border between western and eastern dialects in Finland (Institute for the Languages of Finland)'
     },
     mapModeButtons: {
       markers: 'Markers',
