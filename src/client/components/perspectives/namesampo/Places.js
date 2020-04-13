@@ -52,7 +52,7 @@ const Places = props => {
             fetching={false}
             showInstanceCountInClusters={false}
             updateFacetOption={props.updateFacetOption}
-            showExternalLayers
+            showExternalLayers={false}
             facetedSearchMode='clientFS'
           />}
       />
@@ -77,7 +77,7 @@ const Places = props => {
                 fetching={false}
                 showInstanceCountInClusters={false}
                 updateFacetOption={props.updateFacetOption}
-                showExternalLayers
+                showExternalLayers={false}
                 facetedSearchMode='clientFS'
               />
             )
