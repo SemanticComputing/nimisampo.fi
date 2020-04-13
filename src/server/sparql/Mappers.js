@@ -69,18 +69,19 @@ export const mapNameSampoResults = sparqlBindings => {
     return {
       id: b.id.value,
       prefLabel: b.prefLabel.value.charAt(0).toUpperCase() + b.prefLabel.value.slice(1), // capitalize
-      ...(Object.prototype.hasOwnProperty.call(b, 'modifier') && { modifier: b.modifier.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'basicElement') && { basicElement: b.basicElement.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'typeLabel') && { typeLabel: b.typeLabel.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'broaderTypeLabel') && { broaderTypeLabel: b.broaderTypeLabel.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'collector') && { collector: b.collector.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'broaderAreaLabel') && { broaderAreaLabel: b.broaderAreaLabel.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'collectionYear') && { collectionYear: b.collectionYear.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'source') && { source: b.source.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'markerColor') && { markerColor: b.markerColor.value }),
+      modifier: has(b, 'modifier') ? b.modifier.value : '-',
+      basicElement: has(b, 'basicElement') ? b.basicElement.value : '-',
+      typeLabel: has(b, 'typeLabel') ? b.typeLabel.value : '-',
+      broaderTypeLabel: has(b, 'broaderTypeLabel') ? b.broaderTypeLabel.value : '-',
+      collector: has(b, 'collector') ? b.collector.value : '-',
+      broaderAreaLabel: has(b, 'broaderAreaLabel') ? b.broaderAreaLabel.value : '-',
+      collectionYear: has(b, 'collectionYear') ? b.collectionYear.value : '-',
+      source: has(b, 'source') ? b.source.value : '-',
+      markerColor: has(b, 'markerColor') ? b.markerColor.value : '-',
+      namesArchiveLink: has(b, 'namesArchiveLink') ? b.namesArchiveLink.value : '-',
+      positioningAccuracy: has(b, 'positioningAccuracy') ? b.positioningAccuracy.value : '-',
       ...(Object.prototype.hasOwnProperty.call(b, 'lat') && { lat: b.lat.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'long') && { long: b.long.value }),
-      ...(Object.prototype.hasOwnProperty.call(b, 'namesArchiveLink') && { namesArchiveLink: b.namesArchiveLink.value })
+      ...(Object.prototype.hasOwnProperty.call(b, 'long') && { long: b.long.value })
     }
   })
   return results
