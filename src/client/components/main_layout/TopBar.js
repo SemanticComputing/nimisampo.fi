@@ -189,7 +189,7 @@ class TopBar extends React.Component {
       <a
         className={this.props.classes.link}
         key={1}
-        href='https://seco.cs.aalto.fi/projects/nimisampo/en'
+        href='https://seco.cs.aalto.fi/projects/nimisampo'
         target='_blank'
         rel='noopener noreferrer'
       >
@@ -239,7 +239,7 @@ class TopBar extends React.Component {
                 {intl.get('topBar.feedback')}
               </Button>
               <a
-                href='https://seco.cs.aalto.fi/projects/nimisampo/en'
+                href='https://seco.cs.aalto.fi/projects/nimisampo'
                 target='_blank'
                 rel='noopener noreferrer'
               >
@@ -264,7 +264,7 @@ class TopBar extends React.Component {
             </div>
             <a
               className={classes.secoLogo}
-              href='https://seco.cs.aalto.fi/projects/nimisampo/en'
+              href='https://seco.cs.aalto.fi'
               target='_blank'
               rel='noopener noreferrer'
             >
