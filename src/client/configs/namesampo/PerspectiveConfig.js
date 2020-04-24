@@ -8,7 +8,7 @@ import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
 
 export const perspectiveConfig = [
   {
-    id: 'placesClientFS',
+    id: 'clientFSPlaces',
     defaultActiveFacets: new Set(['datasetSelector', 'prefLabel']),
     tabs: [
       {

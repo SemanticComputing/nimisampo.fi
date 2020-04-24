@@ -13,7 +13,6 @@ import CSVButton from '../../facet_results/CSVButton'
 
 const Places = props => {
   const { rootUrl, perspective } = props
-  // console.log(props.clientFSResults)
   return (
     <>
       <PerspectiveTabs
@@ -32,7 +31,7 @@ const Places = props => {
             list={Immutable.List(props.clientFSResults)}
             clientFS={props.clientFS}
             clientFSSortResults={props.clientFSSortResults}
-            perspectiveID='placesClientFS'
+            perspectiveID={perspective.id}
           />}
       />
       <Route
@@ -54,6 +53,7 @@ const Places = props => {
             updateFacetOption={props.updateFacetOption}
             showExternalLayers
             facetedSearchMode='clientFS'
+            perspectiveID={perspective.id}
           />}
       />
       <Route
@@ -79,6 +79,7 @@ const Places = props => {
                 updateFacetOption={props.updateFacetOption}
                 showExternalLayers
                 facetedSearchMode='clientFS'
+                perspectiveID={perspective.id}
               />
             )
           }

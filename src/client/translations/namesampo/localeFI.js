@@ -113,7 +113,7 @@ export default {
     `
   },
   perspectives: {
-    placesClientFS: {
+    clientFSPlaces: {
       datasets: {
         kotus: {
           label: 'Kotimaisten kielten keskuksen Nimiarkisto (NA)',
@@ -133,11 +133,11 @@ export default {
         }
       },
       facetResultsType: '',
-      searchPlaceNames: 'Hae paikannimellä',
+      inputPlaceHolder: 'Hae paikannimellä',
       searchByArea: 'Hae kaikki paikannimet alueelta',
       searchByAreaTitle: `
         Siirrä karttanäkymä tutkittavalle alueelle, aseta zoomaustasoksi 
-        vähintään 11 ja käytä alareunan hakupainiketta.
+        vähintään 11 ja käytä alareunan hakupainiketta.   
       `,
       searchByAreaCancel: 'Peruuta',
       searchByAreaSearch: 'Hae',

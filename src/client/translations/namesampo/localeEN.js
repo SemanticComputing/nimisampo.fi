@@ -112,7 +112,7 @@ export default {
     `
   },
   perspectives: {
-    placesClientFS: {
+    clientFSPlaces: {
       datasets: {
         kotus: {
           label: 'Names Archive of the Institute for the Languages of Finland (NA)',
@@ -132,11 +132,11 @@ export default {
         }
       },
       facetResultsType: '',
-      searchPlaceNames: 'Search place names',
+      inputPlaceHolder: 'Search place names',
       searchByArea: 'Search by area',
       searchByAreaTitle: `
-        Siirrä karttanäkymä tutkittavalle alueelle, aseta zoomaustasoksi 
-        vähintään 11 ja käytä alareunan hakupainiketta.
+        Limit the area by zooming and moving the map view, and use the buttoms on bottom for confirmation.
+        The zoom level must be at least 11.
       `,
       searchByAreaCancel: 'Cancel',
       searchByAreaSearch: 'Search',

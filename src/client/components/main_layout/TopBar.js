@@ -195,13 +195,13 @@ class TopBar extends React.Component {
           {intl.get('topBar.info.info').toUpperCase()}
         </MenuItem>
       </a>
-      <MenuItem
+      {/* <MenuItem
         key='info'
         component={this.AdapterLink}
         to={`${this.props.rootUrl}/instructions`}
       >
         {intl.get('topBar.instructions').toUpperCase()}
-      </MenuItem>
+      </MenuItem> */}
     </Menu>
 
   handleLogoButtonOnClick = () => {
