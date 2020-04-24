@@ -51,12 +51,13 @@ class DatasetSelector extends React.Component {
   };
 
   generateLabel = id => {
+    const { perspectiveID } = this.props
     return (
       <div className={this.props.classes.checkboxLabel}>
-        <span>{intl.get(`perspectives.placesClientFS.datasets.${id}.label`)}</span>
+        <span>{intl.get(`perspectives.${perspectiveID}.datasets.${id}.label`)}</span>
         <a
           className={this.props.classes.link}
-          href={intl.get(`perspectives.placesClientFS.datasets.${id}.aboutLink`)}
+          href={intl.get(`perspectives.${perspectiveID}.datasets.${id}.aboutLink`)}
           target='_blank'
           rel='noopener noreferrer'
         >
@@ -101,7 +102,8 @@ class DatasetSelector extends React.Component {
 DatasetSelector.propTypes = {
   classes: PropTypes.object.isRequired,
   datasets: PropTypes.object.isRequired,
-  clientFSToggleDataset: PropTypes.func.isRequired
+  clientFSToggleDataset: PropTypes.func.isRequired,
+  perspectiveID: PropTypes.string.isRequired
 }
 
 export default withStyles(styles)(DatasetSelector)

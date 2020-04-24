@@ -65,7 +65,7 @@ class LeafletMapDialog extends React.Component {
   }
 
   render () {
-    const { classes } = this.props
+    const { classes, perspectiveID } = this.props
 
     return (
       <Paper className={classes.root}>
@@ -76,7 +76,7 @@ class LeafletMapDialog extends React.Component {
           classes={{ label: classes.buttonLabel }}
           onClick={this.handleClickOpen}
         >
-          {intl.get('perspectives.placesClientFS.searchByArea')}
+          {intl.get(`perspectives.${perspectiveID}.searchByArea`)}
           {this.props.fetching
             ? <CircularProgress className={classes.rightIcon} color='inherit' size={24} />
             : <CropFreeIcon className={classes.rightIcon} />}
@@ -92,7 +92,7 @@ class LeafletMapDialog extends React.Component {
           onClose={this.handleClose}
           aria-labelledby='dialog-title'
         >
-          <DialogTitle id='dialog-title'>{intl.get('perspectives.placesClientFS.searchByAreaTitle')}</DialogTitle>
+          <DialogTitle id='dialog-title'>{intl.get(`perspectives.${perspectiveID}.searchByAreaTitle`)}</DialogTitle>
           <LeafletMap
             center={[65.184809, 27.314050]}
             zoom={5}
@@ -107,10 +107,10 @@ class LeafletMapDialog extends React.Component {
           />
           <DialogActions>
             <Button onClick={this.handleClose} variant='contained' color='primary' autoFocus>
-              {intl.get('perspectives.placesClientFS.searchByAreaCancel')}
+              {intl.get(`perspectives.${perspectiveID}.searchByAreaCancel`)}
             </Button>
             <Button onClick={this.handleSearchByArea} variant='contained' color='primary' autoFocus>
-              {intl.get('perspectives.placesClientFS.searchByAreaSearch')}
+              {intl.get(`perspectives.${perspectiveID}.searchByAreaSearch`)}
             </Button>
           </DialogActions>
         </Dialog>
@@ -128,7 +128,8 @@ LeafletMapDialog.propTypes = {
   clientFSFetchResults: PropTypes.func.isRequired,
   clientFSClearResults: PropTypes.func.isRequired,
   showError: PropTypes.func,
-  fetching: PropTypes.bool
+  fetching: PropTypes.bool,
+  perspectiveID: PropTypes.string.isRequired
 }
 
 export default withStyles(styles)(LeafletMapDialog)

@@ -5,14 +5,14 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import MainCard from './MainCard'
-import bannerImage from '../../img/mmm-banner.jpg'
+import bannerImage from '../../img/main_page/mmm-banner.jpg'
 
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
     marginBottom: theme.spacing(1),
     [theme.breakpoints.up('md')]: {
-      height: 'calc(100% - 150px)',
+      height: 'calc(100% - 60px)',
       overflow: 'auto'
     }
   },
@@ -47,14 +47,14 @@ const useStyles = makeStyles(theme => ({
     width: 'auto',
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
-    [theme.breakpoints.up(1100 + theme.spacing(6))]: {
-      width: 1100,
+    [theme.breakpoints.up(800 + theme.spacing(6))]: {
+      width: 800,
       marginLeft: 'auto',
       marginRight: 'auto'
     }
   },
   heroContent: {
-    paddingTop: theme.spacing(3),
+    // paddingTop: theme.spacing(3),
     paddingBottom: theme.spacing(1)
   },
   licenceText: {
@@ -143,6 +143,7 @@ const Main = props => {
               key={perspective.id}
               perspective={perspective}
               cardHeadingVariant='h5'
+              rootUrl={props.rootUrl}
             />)}
         </Grid>
         <div className={classes.licenceTextContainer}>
@@ -155,7 +156,8 @@ const Main = props => {
 
 Main.propTypes = {
   perspectives: PropTypes.array.isRequired,
-  screenSize: PropTypes.string.isRequired
+  screenSize: PropTypes.string.isRequired,
+  rootUrl: PropTypes.string.isRequired
 }
 
 export default Main

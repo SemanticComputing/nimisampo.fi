@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { Link } from 'react-router-dom'
 import { has } from 'lodash'
-import defaultImage from '../../img/thumb.png'
+import defaultImage from '../../img/main_page/thumb.png'
 
 const useStyles = makeStyles(theme => ({
   gridItem: props => ({
@@ -54,14 +54,15 @@ const MainCard = props => {
   // const smScreen = useMediaQuery(theme => theme.breakpoints.between('sm', 'md'))
   const externalPerspective = has(perspective, 'externalUrl')
   const card = has(perspective, 'frontPageElement') && perspective.frontPageElement === 'card'
+  const searchMode = perspective.id.startsWith('clientFS') ? 'federated-search' : 'faceted-search'
 
   return (
     <Grid
       className={classes.gridItem}
       key={perspective.id}
-      item xs={12} sm={6} md={4} // optimized for three perspectives
+      item xs={12} sm={6} // optimized for four perspectives
       component={externalPerspective ? 'a' : Link}
-      to={externalPerspective ? null : `/${perspective.id}/faceted-search`}
+      to={externalPerspective ? null : `${props.rootUrl}/${perspective.id}/${searchMode}`}
       container={xsScreen}
       href={externalPerspective ? perspective.externalUrl : null}
       target={externalPerspective ? '_blank' : null}
@@ -101,7 +102,8 @@ const MainCard = props => {
 
 MainCard.propTypes = {
   perspective: PropTypes.object.isRequired,
-  cardHeadingVariant: PropTypes.string.isRequired
+  cardHeadingVariant: PropTypes.string.isRequired,
+  rootUrl: PropTypes.string.isRequired
 }
 
 export default MainCard

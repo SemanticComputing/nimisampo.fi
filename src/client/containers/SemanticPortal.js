@@ -236,88 +236,102 @@ const SemanticPortal = props => {
   if (lgScreen) { screenSize = 'lg' }
   if (xlScreen) { screenSize = 'xl' }
   const noResults = props.clientFS.results == null
-  // console.log(props.clientSideFacetedSearch.results)
-  // console.log(props.resultValues)
-  // console.log(noResults)
+  const rootUrlWithLang = `${rootUrl}/${props.options.currentLocale}`
+
   return (
     <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={props.options.currentLocale}>
       <div className={classes.root}>
         <div className={classes.appFrame}>
           <Message error={error} />
-          <TopBar
-            rootUrl={rootUrl}
-            search={props.clientSideFacetedSearch}
-            clientFSClearResults={props.clientFSClearResults}
-            currentLocale={props.options.currentLocale}
-            availableLocales={props.options.availableLocales}
-            loadLocales={props.loadLocales}
-            xsScreen={xsScreen}
-          />
-          <Route
-            exact path={`${rootUrl}/`}
-            render={() => <Redirect to={`${rootUrl}/app`} />}
-          />
-          {/* https://stackoverflow.com/a/41024944 */}
-          <Route
-            path={`${rootUrl}/`} render={({ location }) => {
-              if (typeof window.ga === 'function') {
-                window.ga('set', 'page', location.pathname + location.search)
-                window.ga('send', 'pageview')
-              }
-              return null
-            }}
-          />
-          <Route
-            path={`${rootUrl}/app`}
-            render={routeProps =>
-              <Grid container className={classes.mainContainerClientFS}>
-                <Grid item sm={12} md={4} lg={3} className={classes.facetBarContainerClientFS}>
-                  <FacetBar
-                    facetedSearchMode='clientFS'
-                    facetClass='placesClientFS'
-                    resultClass='placesClientFS'
-                    facetData={props.clientFS}
-                    clientFSFacetValues={props.clientFSFacetValues}
-                    fetchingResultCount={props.clientFS.textResultsFetching}
-                    resultCount={noResults ? 0 : props.clientFS.results.length}
-                    clientFS={props.clientFS}
-                    clientFSToggleDataset={props.clientFSToggleDataset}
-                    clientFSFetchResults={props.clientFSFetchResults}
-                    clientFSClearResults={props.clientFSClearResults}
-                    clientFSUpdateQuery={props.clientFSUpdateQuery}
-                    clientFSUpdateFacet={props.clientFSUpdateFacet}
-                    defaultActiveFacets={perspectiveConfig[0].defaultActiveFacets}
-                    leafletMap={props.leafletMap}
-                    updateMapBounds={props.updateMapBounds}
+          <>
+            <TopBar
+              rootUrl={rootUrlWithLang}
+              search={props.clientSideFacetedSearch}
+              fetchResultsClientSide={props.fetchResultsClientSide}
+              clearResults={props.clearResults}
+              perspectives={perspectiveConfig}
+              currentLocale={props.options.currentLocale}
+              availableLocales={props.options.availableLocales}
+              loadLocales={props.loadLocales}
+              xsScreen={xsScreen}
+              location={props.location}
+            />
+            <Route exact path={`${rootUrl}/`}>
+              <Redirect to={rootUrlWithLang} />
+            </Route>
+            <Route
+              exact path={`${rootUrlWithLang}/`}
+              render={() =>
+                <Grid container spacing={1} className={classes.mainContainer}>
+                  <Main
+                    perspectives={perspectiveConfig}
                     screenSize={screenSize}
-                    showError={props.showError}
+                    rootUrl={rootUrlWithLang}
                   />
-                </Grid>
-                <Grid item sm={12} md={8} lg={9} className={classes.resultsContainerClientFS}>
-                  {noResults && <Main />}
-                  {!noResults &&
-                    <Places
-                      routeProps={routeProps}
-                      perspective={perspectiveConfig[0]}
-                      screenSize={screenSize}
+                  <Footer />
+                </Grid>}
+            />
+            {/* https://stackoverflow.com/a/41024944 */}
+            <Route
+              path={`${rootUrlWithLang}/`} render={({ location }) => {
+                if (typeof window.ga === 'function') {
+                  window.ga('set', 'page', location.pathname + location.search)
+                  window.ga('send', 'pageview')
+                }
+                return null
+              }}
+            />
+            <Route
+              path={`${rootUrlWithLang}/clientFSPlaces/federated-search`}
+              render={routeProps =>
+                <Grid container className={classes.mainContainerClientFS}>
+                  <Grid item sm={12} md={4} lg={3} className={classes.facetBarContainerClientFS}>
+                    <FacetBar
+                      facetedSearchMode='clientFS'
+                      facetClass='clientFSPlaces'
+                      resultClass='clientFSPlaces'
+                      facetData={props.clientFS}
+                      clientFSFacetValues={props.clientFSFacetValues}
+                      fetchingResultCount={props.clientFS.textResultsFetching}
+                      resultCount={noResults ? 0 : props.clientFS.results.length}
                       clientFS={props.clientFS}
-                      clientFSResults={props.clientFSResults}
-                      clientFSSortResults={props.clientFSSortResults}
+                      clientFSToggleDataset={props.clientFSToggleDataset}
+                      clientFSFetchResults={props.clientFSFetchResults}
+                      clientFSClearResults={props.clientFSClearResults}
+                      clientFSUpdateQuery={props.clientFSUpdateQuery}
+                      clientFSUpdateFacet={props.clientFSUpdateFacet}
+                      defaultActiveFacets={perspectiveConfig[3].defaultActiveFacets}
                       leafletMap={props.leafletMap}
-                      fetchGeoJSONLayersBackend={props.fetchGeoJSONLayersBackend}
-                      rootUrl={rootUrl}
-                    />}
-                </Grid>
-              </Grid>}
-          />
-          <Route
-            path={`${rootUrl}/feedback`}
-            render={() =>
-              <div className={classNames(classes.mainContainer, classes.textPageContainer)}>
-                <FeedbackPage />
-              </div>}
-          />
-          <Footer />
+                      updateMapBounds={props.updateMapBounds}
+                      screenSize={screenSize}
+                      showError={props.showError}
+                    />
+                  </Grid>
+                  <Grid item sm={12} md={8} lg={9} className={classes.resultsContainerClientFS}>
+                    {noResults && <Main />}
+                    {!noResults &&
+                      <Places
+                        routeProps={routeProps}
+                        perspective={perspectiveConfig[3]}
+                        screenSize={screenSize}
+                        clientFS={props.clientFS}
+                        clientFSResults={props.clientFSResults}
+                        clientFSSortResults={props.clientFSSortResults}
+                        leafletMap={props.leafletMap}
+                        fetchGeoJSONLayersBackend={props.fetchGeoJSONLayersBackend}
+                        rootUrl={rootUrlWithLang}
+                      />}
+                  </Grid>
+                </Grid>}
+            />
+            <Route
+              path={`${rootUrlWithLang}/feedback`}
+              render={() =>
+                <div className={classNames(classes.mainContainer, classes.textPageContainer)}>
+                  <FeedbackPage />
+                </div>}
+            />
+          </>
         </div>
       </div>
     </MuiPickersUtilsProvider>

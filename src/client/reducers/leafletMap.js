@@ -16,7 +16,7 @@ export const INITIAL_STATE = {
   zoomLevel: 4
 }
 
-const leafletMapLayers = (state = INITIAL_STATE, action) => {
+const leafletMap = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case FETCH_GEOJSON_LAYERS:
     case FETCH_GEOJSON_LAYERS_BACKEND:
@@ -45,4 +45,4 @@ const leafletMapLayers = (state = INITIAL_STATE, action) => {
   }
 }
 
-export default leafletMapLayers
+export default leafletMap

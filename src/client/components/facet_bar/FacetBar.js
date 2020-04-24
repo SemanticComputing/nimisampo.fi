@@ -99,7 +99,6 @@ class FacetBar extends React.Component {
         facet.values = this.props.clientFSFacetValues[facetID]
       }
     }
-    // console.log(facet.filterType)
     switch (facet.filterType) {
       case 'uriFilter':
       case 'spatialFilter':
@@ -211,7 +210,7 @@ class FacetBar extends React.Component {
           <DatasetSelector
             datasets={this.props.facetData.datasets}
             clientFSToggleDataset={this.props.clientFSToggleDataset}
-            language='fi'
+            perspectiveID={this.props.facetClass}
           />
         )
         break
@@ -274,7 +273,7 @@ class FacetBar extends React.Component {
     const { facets } = facetData
     let someFacetIsFetching = false
     if (facetedSearchMode === 'serverFS') {
-      Object.values(facetData).forEach(facet => {
+      Object.values(facets).forEach(facet => {
         if (facet.isFetching) {
           someFacetIsFetching = true
         }
@@ -291,6 +290,7 @@ class FacetBar extends React.Component {
             clearResults={this.props.clientFSClearResults}
             updateQuery={this.props.clientFSUpdateQuery}
             datasets={this.props.facetData.datasets}
+            perspectiveID={facetClass}
           />}
         {facetedSearchMode === 'clientFS' &&
           <LeafletMapDialog
@@ -300,6 +300,7 @@ class FacetBar extends React.Component {
             updateMapBounds={this.props.updateMapBounds}
             fetching={this.props.clientFS.spatialResultsFetching}
             showError={this.props.showError}
+            perspectiveID={facetClass}
           />}
         {(facetedSearchMode === 'serverFS' || facetData.results !== null) &&
           <Paper className={classes.facetInfoContainer}>
@@ -315,6 +316,7 @@ class FacetBar extends React.Component {
               fetchResultCount={this.props.fetchResultCount}
               someFacetIsFetching={someFacetIsFetching}
               fetchFacet={this.props.fetchFacet}
+              perspectiveID={facetClass}
             />
           </Paper>}
         {facets && Object.keys(facets).map(facetID => {

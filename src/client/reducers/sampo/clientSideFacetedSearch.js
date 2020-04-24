@@ -7,7 +7,7 @@ import {
   CLIENT_FS_CLEAR_RESULTS,
   CLIENT_FS_UPDATE_FACET,
   CLIENT_FS_SORT_RESULTS
-} from '../actions'
+} from '../../actions'
 
 export const INITIAL_STATE = {
   query: '',

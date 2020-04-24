@@ -1,6 +1,5 @@
 import { runSelectQuery } from './SparqlApi'
-// import { flatten } from 'lodash'
-import datasetConfig from './namesampo/SparqlQueries'
+import datasetConfig from './namesampo/SparqlQueriesFederatedSearch'
 import {
   mapNameSampoResults
 } from './Mappers'
@@ -45,21 +44,3 @@ export const getFederatedResults = async ({
 
   return results
 }
-
-// export const getWFSLayers = async layerIDs => {
-//   const data = await Promise.all(layerIDs.map((layerID) => getWFSLayer(layerID)))
-//   return data
-// }
-
-// export const getSimpleSuggestions = async (queryTerm, datasetId) => {
-//     const { endpoint, simpleSuggestionQuery } = datasetConfig[datasetId];
-//     const query = simpleSuggestionQuery.replace(/<QUERYTERM>/g, queryTerm.toLowerCase());
-//
-//     return this.doSearch(query, sparqlApi, null)
-//       .then((results) => results.map(res => (res.label.value)));
-//   }
-
-// export const getFederatedSuggestions(queryTerm, datasets) {
-//     return Promise.all(datasets.map((datasetId) =>
-//       this.getSimpleSuggestions(queryTerm, datasetId))).then(mergeSimpleSuggestions);
-//   }

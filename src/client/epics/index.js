@@ -169,7 +169,6 @@ const clientFSFetchResultsEpic = (action$, state$) => action$.pipe(
     )
   })
 )
-
 const fetchResultCountEpic = (action$, state$) => action$.pipe(
   ofType(FETCH_RESULT_COUNT),
   withLatestFrom(state$),
