@@ -257,6 +257,9 @@ const SemanticPortal = props => {
               xsScreen={xsScreen}
               location={props.location}
             />
+            <Route exact path={`${rootUrlWithLang}/`}>
+              <Redirect to={`${rootUrlWithLang}/app`} />
+            </Route>
             <Route exact path={`${rootUrl}/`}>
               <Redirect to={`${rootUrlWithLang}/app`} />
             </Route>
