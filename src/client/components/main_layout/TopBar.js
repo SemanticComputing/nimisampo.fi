@@ -45,7 +45,14 @@ const styles = theme => ({
       display: 'none'
     }
   },
+  homeButtonText: {
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1rem'
+    }
+  },
   appBarButton: {
+    whiteSpace: 'nowrap',
     color: 'white !important',
     border: `1px solid ${theme.palette.primary.main}`
   },
