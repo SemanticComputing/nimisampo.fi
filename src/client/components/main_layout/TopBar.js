@@ -212,11 +212,11 @@ class TopBar extends React.Component {
     </Menu>
 
   handleLogoButtonOnClick = () => {
-    this.props.clientFSClearResults()
+    this.props.clearResults()
   }
 
   render () {
-    const { classes, perspectives, currentLocale, availableLocales, rootUrl } = this.props
+    const { classes, perspectives, currentLocale, availableLocales } = this.props
     return (
       <div className={classes.root}>
         {/* Add an empty Typography element to ensure that that the MuiTypography class is loaded for
