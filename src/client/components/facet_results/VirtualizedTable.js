@@ -132,7 +132,7 @@ class VirtualizedTable extends React.PureComponent {
 
     const sourceRenderer = ({ cellData, rowData }) => {
       if (cellData == null) return ''
-      if (has(rowData, 'namesArchiveLink')) {
+      if (has(rowData, 'namesArchiveLink') && rowData.namesArchiveLink !== '-') {
         return (
           <div key={rowData.s}>
             <a target='_blank' rel='noopener noreferrer' href={rowData.namesArchiveLink}>{cellData}</a>
