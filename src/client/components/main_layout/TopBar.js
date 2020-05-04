@@ -216,7 +216,7 @@ class TopBar extends React.Component {
   }
 
   render () {
-    const { classes, perspectives, currentLocale, availableLocales } = this.props
+    const { classes, perspectives, currentLocale, availableLocales, rootUrl } = this.props
     return (
       <div className={classes.root}>
         {/* Add an empty Typography element to ensure that that the MuiTypography class is loaded for
@@ -298,15 +298,15 @@ class TopBar extends React.Component {
 
 TopBar.propTypes = {
   classes: PropTypes.object.isRequired,
-  fetchResultsClientSide: PropTypes.func,
-  clearResults: PropTypes.func,
-  clientFSClearResults: PropTypes.func,
+  fetchFullTextResults: PropTypes.func.isRequired,
+  clearResults: PropTypes.func.isRequired,
   loadLocales: PropTypes.func.isRequired,
   perspectives: PropTypes.array,
   currentLocale: PropTypes.string.isRequired,
   availableLocales: PropTypes.array.isRequired,
   xsScreen: PropTypes.bool.isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  rootUrl: PropTypes.string.isRequired
 }
 
 export default withStyles(styles)(TopBar)

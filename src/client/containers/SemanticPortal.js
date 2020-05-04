@@ -29,7 +29,7 @@ import Places from '../components/perspectives/namesampo/Places'
 import Footer from '../components/perspectives/namesampo/Footer'
 import FeedbackPage from '../components/main_layout/FeedbackPage'
 import { perspectiveConfig } from '../configs/namesampo/PerspectiveConfig'
-// import { perspectiveConfigOnlyInfoPages } from '../configs/sampo/PerspectiveConfigOnlyInfoPages'
+// import { perspectiveConfigOnlyInfoPages } from '../configs/sampo/PerspectiveConfigOnlyInfoPages''
 import { rootUrl } from '../configs/sampo/GeneralConfig'
 // ** Portal specific components and configs end **
 
@@ -37,7 +37,7 @@ import {
   fetchResultCount,
   fetchPaginatedResults,
   fetchResults,
-  fetchResultsClientSide,
+  fetchFullTextResults,
   clearResults,
   fetchByURI,
   fetchFacet,
@@ -265,9 +265,8 @@ const SemanticPortal = props => {
           <>
             <TopBar
               rootUrl={rootUrlWithLang}
-              search={props.clientSideFacetedSearch}
-              fetchResultsClientSide={props.fetchResultsClientSide}
-              clientFSClearResults={props.clientFSClearResults}
+              search={props.fullTextSearch}
+              fetchFullTextResults={props.fetchFullTextResults}
               clearResults={props.clearResults}
               perspectives={[]}
               currentLocale={props.options.currentLocale}
@@ -316,6 +315,7 @@ const SemanticPortal = props => {
                       updateMapBounds={props.updateMapBounds}
                       screenSize={screenSize}
                       showError={props.showError}
+                      rootUrl={rootUrlWithLang}
                     />
                   </Grid>
                   <Grid item sm={12} md={8} lg={9} className={classes.resultsContainerClientFS}>
@@ -354,6 +354,7 @@ const mapStateToProps = state => {
   const { clientFSResults, clientFSFacetValues } = filterResults(state.clientSideFacetedSearch)
   return {
     leafletMap: state.leafletMap,
+    fullTextSearch: state.fullTextSearch,
     clientFS: state.clientSideFacetedSearch,
     clientFSResults,
     clientFSFacetValues,
@@ -367,7 +368,7 @@ const mapDispatchToProps = ({
   fetchResultCount,
   fetchPaginatedResults,
   fetchResults,
-  fetchResultsClientSide,
+  fetchFullTextResults,
   fetchByURI,
   fetchFacet,
   fetchFacetConstrainSelf,
@@ -398,7 +399,7 @@ SemanticPortal.propTypes = {
   animationValue: PropTypes.array.isRequired,
   fetchResults: PropTypes.func.isRequired,
   fetchResultCount: PropTypes.func.isRequired,
-  fetchResultsClientSide: PropTypes.func.isRequired,
+  fetchFullTextResults: PropTypes.func.isRequired,
   fetchPaginatedResults: PropTypes.func.isRequired,
   fetchByURI: PropTypes.func.isRequired,
   fetchGeoJSONLayers: PropTypes.func.isRequired,
