@@ -30,7 +30,7 @@ import Footer from '../components/perspectives/namesampo/Footer'
 import FeedbackPage from '../components/main_layout/FeedbackPage'
 import { perspectiveConfig } from '../configs/namesampo/PerspectiveConfig'
 // import { perspectiveConfigOnlyInfoPages } from '../configs/sampo/PerspectiveConfigOnlyInfoPages''
-import { rootUrl } from '../configs/sampo/GeneralConfig'
+import { rootUrl } from '../configs/namesampo/GeneralConfig'
 // ** Portal specific components and configs end **
 
 import {
