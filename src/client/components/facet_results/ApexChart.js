@@ -17,16 +17,6 @@ const styles = () => ({
   root: {
     width: '100%',
     height: '100%'
-    // width: 'calc(100% - 16px)',
-    // height: 'auto',
-    // padding: theme.spacing(1),
-    // [theme.breakpoints.up('md')]: {
-    //   height: 'calc(100% - 152px)',
-    //   width: 'calc(100% - 80px)',
-    //   padding: theme.spacing(5),
-    // },
-    // display: 'flex',
-    // alignItems: 'center',
   },
   spinnerContainer: {
     display: 'flex',
@@ -35,16 +25,10 @@ const styles = () => ({
     alignItems: 'center',
     justifyContent: 'center'
   }
-  // chart: {
-  //   width: '100%',
-  //   [theme.breakpoints.down('md')]: {
-  //     height: 400
-  //   },
-  //   //border: '1px solid rgba(224, 224, 224, 1);',
-  // }
-
 })
-
+/**
+ * A component for rendering charts, based on ApexCharts.
+ */
 class ApexChart extends React.Component {
   constructor (props) {
     super(props)
@@ -52,6 +36,9 @@ class ApexChart extends React.Component {
   }
 
   componentDidMount () {
+    if (this.props.data.length > 0) {
+      this.renderChart()
+    }
     this.props.fetchFacetConstrainSelf({
       facetClass: this.props.facetClass,
       facetID: this.props.facetID
@@ -61,54 +48,60 @@ class ApexChart extends React.Component {
   componentDidUpdate (prevProps) {
     // Render the chart when data changes
     if (prevProps.data !== this.props.data) {
-      const labels = []
-      const series = []
-      let otherCount = 0
-      const totalLength = this.props.data.length
-      const threshold = 0.15
-      this.props.data.map(item => {
-        const portion = parseInt(item.instanceCount) / totalLength
-        if (portion < threshold) {
-          otherCount += parseInt(item.instanceCount)
-        } else {
-          labels.push(item.prefLabel)
-          series.push(parseInt(item.instanceCount))
-        }
-      })
-      if (otherCount !== 0) {
-        labels.push('Other')
-        series.push(otherCount)
-      }
-      let chartColors = []
-      if (series.length > colors.length) {
-        const quotient = Math.ceil(series.length / colors.length)
-        for (let i = 0; i < quotient; i++) {
-          chartColors = chartColors.concat(colors)
-        }
-      } else {
-        chartColors = colors
-      }
-      chartColors = chartColors.slice(0, series.length)
-      const options = {
-        ...this.props.options,
-        series,
-        labels,
-        colors: chartColors
-      }
-      // Destroy the previous chart
-      if (this.chart) {
-        this.chart.destroy()
-      }
-      this.chart = new ApexCharts(
-        this.chartRef.current,
-        options
-      )
-      this.chart.render()
+      this.renderChart()
     }
   }
 
   componentWillUnmount () {
-    this.chart.destroy()
+    if (!this.chart == null) {
+      this.chart.destroy()
+    }
+  }
+
+  renderChart = () => {
+    const labels = []
+    const series = []
+    let otherCount = 0
+    const totalLength = this.props.data.length
+    const threshold = 0.15
+    this.props.data.map(item => {
+      const portion = parseInt(item.instanceCount) / totalLength
+      if (portion < threshold) {
+        otherCount += parseInt(item.instanceCount)
+      } else {
+        labels.push(item.prefLabel)
+        series.push(parseInt(item.instanceCount))
+      }
+    })
+    if (otherCount !== 0) {
+      labels.push('Other')
+      series.push(otherCount)
+    }
+    let chartColors = []
+    if (series.length > colors.length) {
+      const quotient = Math.ceil(series.length / colors.length)
+      for (let i = 0; i < quotient; i++) {
+        chartColors = chartColors.concat(colors)
+      }
+    } else {
+      chartColors = colors
+    }
+    chartColors = chartColors.slice(0, series.length)
+    const options = {
+      ...this.props.options,
+      series,
+      labels,
+      colors: chartColors
+    }
+    // Destroy the previous chart
+    if (!this.chart == null) {
+      this.chart.destroy()
+    }
+    this.chart = new ApexCharts(
+      this.chartRef.current,
+      options
+    )
+    this.chart.render()
   }
 
   render () {
@@ -137,5 +130,7 @@ ApexChart.propTypes = {
   facetClass: PropTypes.string,
   facetID: PropTypes.string
 }
+
+export const ApexChartComponent = ApexChart
 
 export default withStyles(styles)(ApexChart)

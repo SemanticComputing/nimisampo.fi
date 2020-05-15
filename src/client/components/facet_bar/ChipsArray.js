@@ -16,6 +16,10 @@ const styles = theme => ({
   }
 })
 
+/**
+ * A component for displaying the active facet selections an array of Material-UI's Chips.
+ * Redux is used for keeping track of the selections.
+ */
 const ChipsArray = props => {
   const handleDelete = item => () => {
     if (!props.someFacetIsFetching) {
@@ -114,5 +118,7 @@ ChipsArray.propTypes = {
   someFacetIsFetching: PropTypes.bool.isRequired,
   fetchFacet: PropTypes.func.isRequired
 }
+
+export const ChipsArrayComponent = ChipsArray
 
 export default withStyles(styles)(ChipsArray)

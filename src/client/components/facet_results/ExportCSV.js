@@ -26,6 +26,9 @@ const styles = theme => ({
   }
 })
 
+/**
+ * A component for creating a link for downloading raw facet results in CSV format.
+ */
 class ExportCSV extends React.Component {
   constructor (props) {
     super(props)
@@ -48,10 +51,10 @@ class ExportCSV extends React.Component {
   createDownloadLink = () => {
     const params = stateToUrl({
       facetClass: this.props.facetClass,
-      facets: this.props.facets,
-      resultFormat: 'csv'
+      facets: this.props.facets
     })
-    return `${apiUrl}${this.props.resultClass}/all?${params}`
+    const constraints = params.constraints ? `&constraints=${encodeURIComponent(JSON.stringify(params.constraints))}` : ''
+    return `${apiUrl}/faceted-search/${this.props.resultClass}/all?facetClass=${this.props.facetClass}&resultFormat=csv${constraints}`
   }
 
   render = () => {
@@ -80,5 +83,7 @@ ExportCSV.propTypes = {
   facets: PropTypes.object.isRequired,
   facetUpdateID: PropTypes.number.isRequired
 }
+
+export const ExportCSVComponent = ExportCSV
 
 export default withStyles(styles)(ExportCSV)

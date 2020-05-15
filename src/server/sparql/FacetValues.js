@@ -5,8 +5,6 @@ import {
   facetValuesQueryTimespan,
   facetValuesRange
 } from './SparqlQueriesGeneral'
-import { prefixes } from './sampo/SparqlQueriesPrefixes'
-import { facetConfigs, endpoint } from './sampo/FacetConfigsSampo'
 import {
   hasPreviousSelections,
   hasPreviousSelectionsFromOtherFacets,
@@ -21,6 +19,7 @@ import {
 } from './Mappers'
 
 export const getFacet = async ({
+  backendSearchConfig,
   facetClass,
   facetID,
   sortBy,
@@ -29,7 +28,8 @@ export const getFacet = async ({
   resultFormat,
   constrainSelf
 }) => {
-  const facetConfig = facetConfigs[facetClass][facetID]
+  const facetConfig = backendSearchConfig[facetClass].facets[facetID]
+  const endpoint = backendSearchConfig[facetClass].endpoint
   // choose query template and result mapper:
   let q = ''
   let mapper = null
@@ -62,6 +62,7 @@ export const getFacet = async ({
   let parentsForFacetValues = '# no parents for facet values'
   if (constraints !== null) {
     filterBlock = generateConstraintsBlock({
+      backendSearchConfig,
       facetClass: facetClass,
       constraints: constraints,
       filterTarget: 'instance',
@@ -115,17 +116,17 @@ export const getFacet = async ({
   } else {
     q = q.replace('<ORDER_BY>', '# no need for ordering')
   }
-  q = q.replace(/<FACET_CLASS>/g, facetConfigs[facetClass].facetClass)
+  q = q.replace(/<FACET_CLASS>/g, backendSearchConfig[facetClass].facetClass)
   q = q.replace(/<FILTER>/g, filterBlock)
   q = q.replace(/<PREDICATE>/g, facetConfig.predicate)
   if (facetConfig.type === 'timespan') {
     q = q.replace('<START_PROPERTY>', facetConfig.startProperty)
     q = q.replace('<END_PROPERTY>', facetConfig.endProperty)
   }
-  // console.log(prefixes + q)
   const response = await runSelectQuery({
-    query: prefixes + q,
-    endpoint,
+    query: endpoint.prefixes + q,
+    endpoint: endpoint.url,
+    useAuth: endpoint.useAuth,
     resultMapper: mapper,
     previousSelections,
     resultFormat
@@ -149,10 +150,12 @@ export const getFacet = async ({
 }
 
 const generateSelectedBlock = ({
+  backendSearchConfig,
   facetID,
   constraints
 }) => {
   const selectedFilter = generateSelectedFilter({
+    backendSearchConfig,
     facetID,
     constraints,
     inverse: false
@@ -166,11 +169,13 @@ const generateSelectedBlock = ({
 }
 
 const generateSelectedNoHitsBlock = ({
+  backendSearchConfig,
   facetClass,
   facetID,
   constraints
 }) => {
   const noHitsFilter = generateConstraintsBlock({
+    backendSearchConfig,
     facetClass: facetClass,
     constraints: constraints,
     filterTarget: 'instance',
@@ -189,6 +194,7 @@ const generateSelectedNoHitsBlock = ({
 }
 
 const generateParentBlock = ({
+  backendSearchConfig,
   facetClass,
   facetID,
   constraints,
@@ -198,6 +204,7 @@ const generateParentBlock = ({
   let ignoreSelectedValues = '# no selected values'
   if (constraints !== null) {
     parentFilterStr = generateConstraintsBlock({
+      backendSearchConfig,
       facetClass: facetClass,
       constraints: constraints,
       filterTarget: 'instance2',
@@ -206,6 +213,7 @@ const generateParentBlock = ({
     })
     if (hasPreviousSelections) {
       ignoreSelectedValues = generateSelectedFilter({
+        backendSearchConfig,
         facetID: facetID,
         constraints: constraints,
         inverse: true

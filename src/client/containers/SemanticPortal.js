@@ -240,6 +240,11 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+/**
+ * A top-level container component, which connects all Sampo-UI components to the Redux store. Also
+ * the main routes of the portal are defined here using React Router. Currently it is not possible to
+ * render this component in Storybook.
+ */
 const SemanticPortal = props => {
   const { error } = props
   const classes = useStyles(props)
@@ -393,36 +398,126 @@ const mapDispatchToProps = ({
 })
 
 SemanticPortal.propTypes = {
+  /**
+   * General options considering the whole semantic portal, e.g. language.
+   */
   options: PropTypes.object.isRequired,
+  /**
+   * Errors shown with react-redux-toastr.
+   */
   error: PropTypes.object.isRequired,
+  /**
+   * Faceted search configs and results of 'Perspective 1'.
+   */
   leafletMap: PropTypes.object.isRequired,
+  /**
+   * State of the animation, used by TemporalMap.
+   */
   animationValue: PropTypes.array.isRequired,
+  /**
+   * Redux action for fetching all faceted search results.
+   */
   fetchResults: PropTypes.func.isRequired,
+  /**
+   * Redux action for fetching the total count faceted search results.
+   */
   fetchResultCount: PropTypes.func.isRequired,
+  /**
+   * Redux action for full text search results.
+   */
   fetchFullTextResults: PropTypes.func.isRequired,
+  /**
+   * Redux action for fetching paginated faceted search results.
+   */
   fetchPaginatedResults: PropTypes.func.isRequired,
+  /**
+   * Redux action for fetching information about a single entity.
+   */
   fetchByURI: PropTypes.func.isRequired,
+  /**
+   * Redux action for loading external GeoJSON layers.
+   */
   fetchGeoJSONLayers: PropTypes.func.isRequired,
+  /**
+   * Redux action for loading external GeoJSON layers via the backend.
+   * Useful when the API or similar needs to be hidden.
+   */
   fetchGeoJSONLayersBackend: PropTypes.func.isRequired,
+  /**
+   * Redux action for sorting the paginated results.
+   */
   sortResults: PropTypes.func.isRequired,
+  /**
+   * Redux action for clearing the full text results.
+   */
   clearResults: PropTypes.func.isRequired,
+  /**
+   * Redux action for updating the page of paginated faceted search results.
+   */
   updatePage: PropTypes.func.isRequired,
+  /**
+   * Redux action for updating the rows per page of paginated faceted search results.
+   */
   updateRowsPerPage: PropTypes.func.isRequired,
+  /**
+   * Redux action for updating the active selection or config of a facet.
+   */
   updateFacetOption: PropTypes.func.isRequired,
+  /**
+   * Redux action for fetching the values of a facet.
+   */
   fetchFacet: PropTypes.func.isRequired,
+  /**
+   * Redux action for displaying an error message.
+   */
   showError: PropTypes.func.isRequired,
+  /**
+   * Redux action expanding and collapsing the header of perspective.
+   */
   updatePerspectiveHeaderExpanded: PropTypes.func.isRequired,
+  /**
+   * Redux action for updating the bounds of a Leaflet map.
+   */
   updateMapBounds: PropTypes.func.isRequired,
+  /**
+   * Redux action for loading translations from JavaScript objects.
+   */
   loadLocales: PropTypes.func.isRequired,
+  /**
+   * Redux action for animating TemporalMap.
+   */
   animateMap: PropTypes.func.isRequired,
+  /**
+   * State for client-side faceted search.
+   */
   clientFS: PropTypes.object,
+  /**
+   * Redux action for updating the dataset selections in client-side faceted search.
+   */
   clientFSToggleDataset: PropTypes.func.isRequired,
+  /**
+   * Redux action for the fetching the initial result set in client-side faceted search.
+   */
   clientFSFetchResults: PropTypes.func.isRequired,
+  /**
+   * Redux action for the clearing the initial result set in client-side faceted search.
+   */
   clientFSClearResults: PropTypes.func.isRequired,
+  /**
+   * Redux action for sorting results in client-side faceted search.
+   */
   clientFSSortResults: PropTypes.func.isRequired,
+  /**
+   * Redux action for updating the initial query in client-side faceted search.
+   */
   clientFSUpdateQuery: PropTypes.func.isRequired,
+  /**
+   * Redux action for updating a facet in client-side faceted search.
+   */
   clientFSUpdateFacet: PropTypes.func.isRequired
 }
+
+export const SemanticPortalComponent = SemanticPortal
 
 export default compose(
   withRouter,

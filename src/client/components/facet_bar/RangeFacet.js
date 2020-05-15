@@ -34,6 +34,9 @@ const styles = theme => ({
   }
 })
 
+/**
+ * A component for a integer range facet.
+ */
 class RangeFacet extends Component {
   constructor (props) {
     super(props)
@@ -167,5 +170,7 @@ RangeFacet.propTypes = {
   updatedFilter: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   updatedFacet: PropTypes.string
 }
+
+export const RangeFacetComponent = RangeFacet
 
 export default withStyles(styles)(RangeFacet)
