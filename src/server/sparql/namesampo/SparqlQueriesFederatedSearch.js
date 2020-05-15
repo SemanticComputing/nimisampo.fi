@@ -35,7 +35,7 @@ module.exports = {
         `
   },
   pnr: {
-    endpoint: 'http://ldf.fi/pnr-keyword-index/sparql',
+    endpoint: 'http://ldf.fi/copla/sparql',
     resultQuery: `
         PREFIX text: <http://jena.apache.org/text#>
         PREFIX spatial: <http://jena.apache.org/spatial#>
@@ -58,7 +58,8 @@ module.exports = {
             ?id crm:P89_falls_within ?municipality .
             ?municipality a ?munType .
             ?municipality sf:preferredLanguageLiteral (skos:prefLabel 'fi' '' ?broaderAreaLabel_) .
-            FILTER (?munType != <http://ldf.fi/pnr-schema#SubRegion>)
+            # FILTER (?munType != <http://ldf.fi/pnr-schema#SubRegion>) # there may be multiple values for crm:P89_falls_within
+            FILTER (?munType != <http://ldf.fi/schema/copla/SubRegion>) # there may be multiple values for crm:P89_falls_within
           }
           BIND(COALESCE(?broaderAreaLabel_, ?missingValue) as ?broaderAreaLabel)
           BIND("PNR" AS ?source)
