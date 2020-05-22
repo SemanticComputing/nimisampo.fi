@@ -53,12 +53,14 @@ const Perspective3 = props => {
             showMapModeControl={false}
             instance={props.placesResults.instance}
             fetchResults={props.fetchResults}
-            fetchGeoJSONLayers={props.fetchGeoJSONLayers}
+            clearGeoJSONLayers={props.clearGeoJSONLayers}
+            fetchGeoJSONLayers={props.fetchGeoJSONLayersBackend}
             fetchByURI={props.fetchByURI}
             fetching={props.placesResults.fetching}
             showInstanceCountInClusters
             updateFacetOption={props.updateFacetOption}
             showExternalLayers
+            showError={props.showError}
           />}
       />
       <Route
@@ -80,6 +82,8 @@ Perspective3.propTypes = {
   facetData: PropTypes.object.isRequired,
   fetchResults: PropTypes.func.isRequired,
   fetchGeoJSONLayers: PropTypes.func.isRequired,
+  fetchGeoJSONLayersBackend: PropTypes.func.isRequired,
+  clearGeoJSONLayers: PropTypes.func.isRequired,
   fetchPaginatedResults: PropTypes.func.isRequired,
   fetchByURI: PropTypes.func.isRequired,
   updatePage: PropTypes.func.isRequired,
@@ -91,7 +95,8 @@ Perspective3.propTypes = {
   animationValue: PropTypes.array.isRequired,
   animateMap: PropTypes.func.isRequired,
   screenSize: PropTypes.string.isRequired,
-  rootUrl: PropTypes.string.isRequired
+  rootUrl: PropTypes.string.isRequired,
+  showError: PropTypes.func.isRequired
 }
 
 export default Perspective3

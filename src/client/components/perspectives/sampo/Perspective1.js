@@ -44,6 +44,8 @@ const Perspective1 = props => {
           <LeafletMap
             center={[22.43, 10.37]}
             zoom={2}
+            // center={[60.17, 24.81]}
+            // zoom={14}
             results={props.placesResults.results}
             layers={props.leafletMapLayers}
             pageType='facetResults'
@@ -56,12 +58,14 @@ const Perspective1 = props => {
             showMapModeControl={false}
             instance={props.placesResults.instance}
             fetchResults={props.fetchResults}
-            fetchGeoJSONLayers={props.fetchGeoJSONLayers}
+            fetchGeoJSONLayers={props.fetchGeoJSONLayersBackend}
+            clearGeoJSONLayers={props.clearGeoJSONLayers}
             fetchByURI={props.fetchByURI}
             fetching={props.placesResults.fetching}
             showInstanceCountInClusters
             updateFacetOption={props.updateFacetOption}
             showExternalLayers
+            showError={props.showError}
           />}
       />
       <Route
@@ -98,12 +102,14 @@ const Perspective1 = props => {
             showMapModeControl={false}
             instance={props.placesResults.instance}
             fetchResults={props.fetchResults}
-            fetchGeoJSONLayers={props.fetchGeoJSONLayers}
+            fetchGeoJSONLayers={props.fetchGeoJSONLayersBackend}
+            clearGeoJSONLayers={props.clearGeoJSONLayers}
             fetchByURI={props.fetchByURI}
             fetching={props.placesResults.fetching}
             showInstanceCountInClusters
             updateFacetOption={props.updateFacetOption}
             showExternalLayers
+            showError={props.showError}
           />}
       />
       <Route
@@ -140,7 +146,9 @@ Perspective1.propTypes = {
   leafletMapLayers: PropTypes.object.isRequired,
   facetData: PropTypes.object.isRequired,
   fetchResults: PropTypes.func.isRequired,
+  clearGeoJSONLayers: PropTypes.func.isRequired,
   fetchGeoJSONLayers: PropTypes.func.isRequired,
+  fetchGeoJSONLayersBackend: PropTypes.func.isRequired,
   fetchPaginatedResults: PropTypes.func.isRequired,
   fetchByURI: PropTypes.func.isRequired,
   updatePage: PropTypes.func.isRequired,
@@ -152,7 +160,8 @@ Perspective1.propTypes = {
   animationValue: PropTypes.array.isRequired,
   animateMap: PropTypes.func.isRequired,
   screenSize: PropTypes.string.isRequired,
-  rootUrl: PropTypes.string.isRequired
+  rootUrl: PropTypes.string.isRequired,
+  showError: PropTypes.func.isRequired
 }
 
 export default Perspective1

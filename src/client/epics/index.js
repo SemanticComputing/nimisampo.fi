@@ -14,7 +14,7 @@ import intl from 'react-intl-universal'
 import localeEN from '../translations/namesampo/localeEN'
 import localeFI from '../translations/namesampo/localeFI'
 // import localeSV from '../translations/namesampo/localeSV'
-import { stateToUrl, handleAxiosError, pickSelectedDatasets, boundsToValues } from '../helpers/helpers'
+import { stateToUrl, handleAxiosError, pickSelectedDatasets /* boundsToValues */ } from '../helpers/helpers'
 import querystring from 'querystring'
 import {
   FETCH_RESULT_COUNT,
@@ -411,16 +411,16 @@ const fetchGeoJSONLayersBackendEpic = (action$, state$) => action$.pipe(
   ofType(FETCH_GEOJSON_LAYERS_BACKEND),
   withLatestFrom(state$),
   mergeMap(([action]) => {
-    const { layerIDs, bounds } = action
-    const { latMin, longMin, latMax, longMax } = boundsToValues(bounds)
+    const { layerIDs /* bounds */ } = action
+    // const { latMin, longMin, latMax, longMax } = boundsToValues(bounds)
     const params = {
-      layerID: layerIDs,
-      latMin,
-      longMin,
-      latMax,
-      longMax
+      layerID: layerIDs
+      // latMin,
+      // longMin,
+      // latMax,
+      // longMax
     }
-    const requestUrl = `${apiUrl}wfs?${querystring.stringify(params)}`
+    const requestUrl = `${apiUrl}/wfs?${querystring.stringify(params)}`
     return ajax.getJSON(requestUrl).pipe(
       map(res => updateGeoJSONLayers({
         payload: res
@@ -447,20 +447,20 @@ const fetchGeoJSONLayersEpic = action$ => action$.pipe(
 )
 
 const fetchGeoJSONLayer = async (layerID, bounds) => {
-  // const baseUrl = 'http://kartta.nba.fi/arcgis/services/WFS/MV_Kulttuuriymparisto/MapServer/WFSServer'
+  const baseUrl = 'https://kartta.nba.fi/arcgis/services/WFS/MV_Kulttuuriymparisto/MapServer/WFSServer'
   // const baseUrl = 'http://avaa.tdata.fi/geoserver/kotus/ows'
-  const baseUrl = 'http://avaa.tdata.fi/geoserver/paituli/wfs'
-  // const boundsStr =
-  //   `${bounds._southWest.lng},${bounds._southWest.lat},${bounds._northEast.lng},${bounds._northEast.lat}`
+  // const baseUrl = 'http://avaa.tdata.fi/geoserver/paituli/wfs'
+  const boundsStr =
+    `${bounds._southWest.lng},${bounds._southWest.lat},${bounds._northEast.lng},${bounds._northEast.lat}`
   const mapServerParams = {
     request: 'GetFeature',
     service: 'WFS',
     version: '2.0.0',
     typeName: layerID,
     srsName: 'EPSG:4326',
-    // outputFormat: 'geojson'
-    outputFormat: 'application/json'
-    // bbox: boundsStr
+    outputFormat: 'geojson',
+    bbox: boundsStr
+    // outputFormat: 'application/json' for kotus layers
   }
   const url = `${baseUrl}?${querystring.stringify(mapServerParams)}`
   console.log(url)

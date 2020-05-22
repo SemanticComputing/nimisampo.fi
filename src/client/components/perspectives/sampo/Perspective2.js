@@ -53,6 +53,7 @@ Perspective2.propTypes = {
   facetData: PropTypes.object.isRequired,
   fetchResults: PropTypes.func.isRequired,
   fetchGeoJSONLayers: PropTypes.func.isRequired,
+  fetchGeoJSONLayersBackend: PropTypes.func.isRequired,
   fetchPaginatedResults: PropTypes.func.isRequired,
   fetchByURI: PropTypes.func.isRequired,
   updatePage: PropTypes.func.isRequired,
@@ -64,7 +65,8 @@ Perspective2.propTypes = {
   animationValue: PropTypes.array.isRequired,
   animateMap: PropTypes.func.isRequired,
   screenSize: PropTypes.string.isRequired,
-  rootUrl: PropTypes.string.isRequired
+  rootUrl: PropTypes.string.isRequired,
+  showError: PropTypes.func.isRequired
 }
 
 export default Perspective2
