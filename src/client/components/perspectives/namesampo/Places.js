@@ -47,6 +47,7 @@ const Places = props => {
             facetUpdateID={props.clientFS.facetUpdateID}
             showMapModeControl={false}
             fetchGeoJSONLayers={props.fetchGeoJSONLayersBackend}
+            clearGeoJSONLayers={props.clearGeoJSONLayers}
             fetchByURI={props.fetchByURI}
             fetching={false}
             showInstanceCountInClusters={false}
@@ -73,6 +74,7 @@ const Places = props => {
                 facetUpdateID={props.clientFS.facetUpdateID}
                 showMapModeControl={false}
                 fetchGeoJSONLayers={props.fetchGeoJSONLayersBackend}
+                clearGeoJSONLayers={props.clearGeoJSONLayers}
                 fetchByURI={props.fetchByURI}
                 fetching={false}
                 showInstanceCountInClusters={false}
@@ -118,6 +120,7 @@ Places.propTypes = {
   clientFSSortResults: PropTypes.func.isRequired,
   leafletMap: PropTypes.object.isRequired,
   fetchGeoJSONLayersBackend: PropTypes.func.isRequired,
+  clearGeoJSONLayers: PropTypes.func.isRequired,
   rootUrl: PropTypes.string.isRequired
 }
 

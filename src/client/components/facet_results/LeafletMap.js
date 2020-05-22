@@ -316,6 +316,7 @@ class LeafletMap extends React.Component {
           }
         })
         if (this.isSafeToLoadLargeLayers()) {
+          this.props.clearGeoJSONLayers()
           this.props.fetchGeoJSONLayers({
             layerIDs: this.state.activeOverlays,
             bounds: this.leafletMap.getBounds()
@@ -344,23 +345,23 @@ class LeafletMap extends React.Component {
       this.setState({ prevZoomLevel: this.leafletMap.getZoom() })
     })
     // Fired when zooming ends
-    this.leafletMap.on('zoomend', () => {
-      if (this.state.activeOverlays.length > 0 && this.isSafeToLoadLargeLayersAfterZooming()) {
-        this.props.fetchGeoJSONLayers({
-          layerIDs: this.state.activeOverlays,
-          bounds: this.leafletMap.getBounds()
-        })
-      }
-    })
+    // this.leafletMap.on('zoomend', () => {
+    //   if (this.state.activeOverlays.length > 0 && this.isSafeToLoadLargeLayersAfterZooming()) {
+    //     this.props.fetchGeoJSONLayers({
+    //       layerIDs: this.state.activeOverlays,
+    //       bounds: this.leafletMap.getBounds()
+    //     })
+    //   }
+    // })
     // Fired when dragging ends
-    this.leafletMap.on('dragend', () => {
-      if (this.state.activeOverlays.length > 0 && this.isSafeToLoadLargeLayers()) {
-        this.props.fetchGeoJSONLayers({
-          layerIDs: this.state.activeOverlays,
-          bounds: this.leafletMap.getBounds()
-        })
-      }
-    })
+    // this.leafletMap.on('dragend', () => {
+    //   if (this.state.activeOverlays.length > 0 && this.isSafeToLoadLargeLayers()) {
+    //     this.props.fetchGeoJSONLayers({
+    //       layerIDs: this.state.activeOverlays,
+    //       bounds: this.leafletMap.getBounds()
+    //     })
+    //   }
+    // })
   }
 
   isSafeToLoadLargeLayersAfterZooming = () => true
