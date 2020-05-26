@@ -108,7 +108,9 @@ class HierarchicalFacet extends Component {
                 return {
                   ...oldNode,
                   selected: treeObj.added ? 'true' : 'false',
-                  children: this.recursiveSelect(oldNode.children, treeObj.added)
+                  // select also children by default if 'selectAlsoSubconcepts' is not defined
+                  ...((!Object.prototype.hasOwnProperty.call(this.props.facet, 'selectAlsoSubconcepts') || this.props.facet.selectAlsoSubconcepts) &&
+                  { children: this.recursiveSelect(oldNode.children, treeObj.added) })
                 }
               } else {
                 return {
@@ -137,7 +139,7 @@ class HierarchicalFacet extends Component {
         facetID: this.props.facetID
       })
     }
-    if (prevProps.facet.sortBy !== this.props.facet.sortBy) {
+    if (prevProps.facet.sortBy !== this.props.facet.sortBy || prevProps.facet.sortDirection !== this.props.facet.sortDirection) {
       this.props.fetchFacet({
         facetClass: this.props.facetClass,
         facetID: this.props.facetID
