@@ -7,7 +7,11 @@ import {
   migrationsQuery,
   manuscriptPropertiesInstancePage,
   expressionProperties,
-  collectionProperties
+  collectionProperties,
+  productionsByDecadeQuery,
+  eventsByDecadeQuery,
+  manuscriptNetworkLinksQuery,
+  manuscriptNetworkNodesQuery
 } from './sparql_queries/SparqlQueriesPerspective1'
 import {
   workProperties
@@ -28,7 +32,11 @@ import {
 import { federatedSearchDatasets } from './sparql_queries/SparqlQueriesFederatedSearch'
 import { fullTextSearchProperties } from './sparql_queries/SparqlQueriesFullText'
 import { makeObjectList } from '../SparqlObjectMapper'
-import { mapPlaces } from '../Mappers'
+import {
+  mapPlaces,
+  mapLineChart,
+  mapMultipleLineChart
+} from '../Mappers'
 
 export const backendSearchConfig = {
   perspective1: perspective1Config,
@@ -118,6 +126,24 @@ export const backendSearchConfig = {
       properties: placePropertiesInfoWindow,
       relatedInstances: ''
     }
+  },
+  productionLineChart: {
+    perspectiveID: 'perspective1',
+    q: productionsByDecadeQuery,
+    filterTarget: 'instance',
+    resultMapper: mapLineChart
+  },
+  eventLineChart: {
+    perspectiveID: 'perspective1',
+    q: eventsByDecadeQuery,
+    filterTarget: 'manuscript',
+    resultMapper: mapMultipleLineChart
+  },
+  manuscriptInstancePageNetwork: {
+    perspectiveID: 'perspective1',
+    links: manuscriptNetworkLinksQuery,
+    nodes: manuscriptNetworkNodesQuery,
+    useNetworkAPI: true
   },
   jenaText: {
     perspectiveID: 'perspective1',

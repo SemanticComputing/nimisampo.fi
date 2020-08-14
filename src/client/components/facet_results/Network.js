@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { withStyles } from '@material-ui/core/styles'
+import history from '../../History'
 import cytoscape from 'cytoscape'
 
 const styles = theme => ({
   root: {
     height: 400,
     [theme.breakpoints.up('md')]: {
-      height: 'calc(100% - 72px)'
+      height: 'calc(100% - 21px)'
     }
   },
   cyContainer: {
@@ -15,26 +16,6 @@ const styles = theme => ({
     height: '100%'
   }
 })
-
-const layout = {
-  name: 'cose',
-  idealEdgeLength: 100,
-  nodeOverlap: 20,
-  refresh: 20,
-  fit: true,
-  padding: 30,
-  randomize: false,
-  componentSpacing: 100,
-  nodeRepulsion: 400000,
-  edgeElasticity: 100,
-  nestingFactor: 5,
-  gravity: 80,
-  numIter: 1000,
-  initialTemp: 200,
-  coolingFactor: 0.95,
-  minTemp: 1.0
-}
-
 class Network extends React.Component {
   constructor (props) {
     super(props)
@@ -42,50 +23,61 @@ class Network extends React.Component {
   }
 
   componentDidMount = () => {
-    this.props.fetchResults({
-      resultClass: this.props.resultClass,
-      facetClass: this.props.facetClass
-    })
+    if (this.props.pageType === 'instancePage') {
+      this.props.fetchNetworkById({
+        resultClass: this.props.resultClass,
+        id: this.props.id,
+        limit: this.props.limit,
+        optimize: this.props.optimize
+      })
+    } else {
+      this.props.fetchResults({
+        resultClass: this.props.resultClass,
+        facetClass: this.props.facetClass,
+        limit: this.props.limit,
+        optimize: this.props.optimize
+      })
+    }
+
     this.cy = cytoscape({
       container: this.cyRef.current,
+      style: this.props.style
+    })
 
-      style: [ // the stylesheet for the graph
-        {
-          selector: 'node',
-          style: {
-            'background-color': ele => ele.data('class') === 'http://erlangen-crm.org/efrbroo/F4_Manifestation_Singleton'
-              ? '#666' : '#000',
-            label: 'data(prefLabel)'
-          }
-        },
-        {
-          selector: 'edge',
-          style: {
-            // 'width': 'data(weight)',
-            'line-color': '#999',
-            'curve-style': 'bezier',
-            content: 'data(prefLabel)',
-            'target-arrow-shape': 'triangle',
-            'target-arrow-color': '#999',
-            color: '#555',
-            'font-size': '9',
-            'text-valign': 'top',
-            'text-halign': 'center',
-            'edge-text-rotation': 'autorotate',
-            'text-background-opacity': 1,
-            'text-background-color': '#FFF',
-            'text-background-shape': 'roundrectangle'
-          }
+    this.cy.on('tap', 'node', function () {
+      try {
+        if (this.data('href')) {
+          history.push(this.data('href'))
         }
-      ]
+      } catch (e) { // fall back on url change
+        console.log('Fail', e)
+        console.log(this.data())
+      }
+    })
+
+    this.cy.on('mouseover', 'node', function (event) {
+      const node = event.target
+      if (node.data('href')) {
+        document.body.style.cursor = 'pointer'
+      }
+      /** // possibility to change node appearance
+      node.style({
+        'background-color': '#F00'}
+        )
+      */
+    })
+
+    this.cy.on('mouseout', 'node', function (event) {
+      document.body.style.cursor = 'default'
     })
   }
 
   componentDidUpdate = prevProps => {
     if (prevProps.resultUpdateID !== this.props.resultUpdateID) {
-      // console.log(this.props.results.elements);
+      // console.log(this.props.results.elements)
+      this.cy.elements().remove()
       this.cy.add(this.props.results.elements)
-      this.cy.layout(layout).run()
+      this.cy.layout(this.props.layout).run()
     }
     // check if filters have changed
     if (prevProps.facetUpdateID !== this.props.facetUpdateID) {
@@ -108,11 +100,16 @@ class Network extends React.Component {
 Network.propTypes = {
   classes: PropTypes.object.isRequired,
   results: PropTypes.object,
-  fetchResults: PropTypes.func.isRequired,
+  fetchResults: PropTypes.func,
+  fetchNetworkById: PropTypes.func,
   resultClass: PropTypes.string.isRequired,
-  facetClass: PropTypes.string.isRequired,
-  facetUpdateID: PropTypes.number.isRequired,
-  resultUpdateID: PropTypes.number.isRequired
+  facetClass: PropTypes.string,
+  facetUpdateID: PropTypes.number,
+  resultUpdateID: PropTypes.number.isRequired,
+  limit: PropTypes.number.isRequired,
+  optimize: PropTypes.number.isRequired,
+  style: PropTypes.array.isRequired,
+  layout: PropTypes.object.isRequired
 }
 
 export default withStyles(styles)(Network)

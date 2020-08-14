@@ -5,10 +5,12 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import purple from '@material-ui/core/colors/purple'
-import PerspectiveTabs from './PerspectiveTabs'
-import InstanceHomePageTable from './InstanceHomePageTable'
-import LeafletMap from '../facet_results/LeafletMap'
-import Export from '../facet_results/Export'
+import PerspectiveTabs from '../../main_layout/PerspectiveTabs'
+import InstanceHomePageTable from '../../main_layout/InstanceHomePageTable'
+import Network from '../../facet_results/Network'
+import LeafletMap from '../../facet_results/LeafletMap'
+import Export from '../../facet_results/Export'
+import { coseLayout, cytoscapeStyle } from '../../../configs/sampo/Cytoscape.js/NetworkConfig'
 import { Route, Redirect } from 'react-router-dom'
 import { has } from 'lodash'
 
@@ -33,6 +35,7 @@ const styles = () => ({
 
 /**
  * A component for generating a landing page for a single entity.
+ * Customized for MMM data
  */
 class InstanceHomePage extends React.Component {
   constructor (props) {
@@ -178,6 +181,22 @@ class InstanceHomePage extends React.Component {
                   />}
               />
               <Route
+                path={`${rootUrl}/${resultClass}/page/${this.state.localID}/network`}
+                render={() =>
+                  <Network
+                    pageType='instancePage'
+                    results={this.props.networkData}
+                    resultUpdateID={this.props.resultUpdateID}
+                    fetchNetworkById={this.props.fetchNetworkById}
+                    resultClass='manuscriptInstancePageNetwork'
+                    id={data.id}
+                    limit={200}
+                    optimize={1.2}
+                    style={cytoscapeStyle}
+                    layout={coseLayout}
+                  />}
+              />
+              <Route
                 path={`${rootUrl}/${resultClass}/page/${this.state.localID}/map`}
                 render={() =>
                   <LeafletMap
@@ -212,6 +231,7 @@ InstanceHomePage.propTypes = {
   fetchByURI: PropTypes.func.isRequired,
   resultClass: PropTypes.string.isRequired,
   data: PropTypes.object,
+  networkData: PropTypes.object,
   sparqlQuery: PropTypes.string,
   properties: PropTypes.array.isRequired,
   tabs: PropTypes.array.isRequired,

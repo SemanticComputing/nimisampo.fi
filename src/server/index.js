@@ -119,7 +119,7 @@ new OpenApiValidator({
           backendSearchConfig,
           resultClass: req.params.resultClass,
           facetClass: req.query.facetClass || null,
-          constraints: req.query.constraints == null ? null : JSON.parse(req.query.constraints),
+          constraints: req.query.constraints == null ? null : req.query.constraints,
           resultFormat: resultFormat
         })
         if (resultFormat === 'csv') {
@@ -160,6 +160,24 @@ new OpenApiValidator({
           uri: params.uri,
           facetClass: body.facetClass,
           constraints: body.constraints,
+          resultFormat: 'json'
+        })
+        res.json(data)
+      } catch (error) {
+        next(error)
+      }
+    })
+
+    app.get(`${apiPath}/:resultClass/network/:id`, async (req, res, next) => {
+      const { params, query } = req
+      try {
+        const data = await getByURI({
+          backendSearchConfig,
+          resultClass: params.resultClass,
+          uri: params.id,
+          limit: query.limit,
+          optimize: query.optimize,
+          constraints: null,
           resultFormat: 'json'
         })
         res.json(data)
@@ -242,6 +260,16 @@ new OpenApiValidator({
         next(error)
       }
     })
+
+    /* Some example paths for serving individual files: */
+
+    // app.get('/robots.txt', (request, response) => {
+    //   response.sendFile(path.join(publicPath, 'robots.txt'))
+    // })
+
+    // app.get('/sitemap.xml', (request, response) => {
+    //   response.sendFile(path.join(publicPath, 'sitemap.xml'))
+    // })
 
     // Express server is used to serve the React app only in production
     if (!isDevelopment) {

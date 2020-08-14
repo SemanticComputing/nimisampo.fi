@@ -15,8 +15,6 @@ import 'moment/locale/fi'
 import Grid from '@material-ui/core/Grid'
 
 // ** General components **
-// import TopBar from '../components/main_layout/TopBar'
-// import InstanceHomePage from '../components/main_layout/InstanceHomePage'
 // import InfoHeader from '../components/main_layout/InfoHeader'
 // import TextPage from '../components/main_layout/TextPage'
 import Message from '../components/main_layout/Message'
@@ -41,8 +39,10 @@ import {
   fetchFullTextResults,
   clearResults,
   fetchByURI,
+  fetchNetworkById,
   fetchFacet,
   fetchFacetConstrainSelf,
+  clearFacet,
   fetchGeoJSONLayers,
   fetchGeoJSONLayersBackend,
   clearGeoJSONLayers,
@@ -382,7 +382,9 @@ const mapDispatchToProps = ({
   fetchByURI,
   fetchFacet,
   fetchFacetConstrainSelf,
+  clearFacet,
   fetchGeoJSONLayers,
+  fetchNetworkById,
   fetchGeoJSONLayersBackend,
   clearGeoJSONLayers,
   sortResults,
@@ -441,6 +443,10 @@ SemanticPortal.propTypes = {
    */
   fetchByURI: PropTypes.func.isRequired,
   /**
+   * Redux action for fetching network of a single entity.
+   */
+  fetchNetworkById: PropTypes.func.isRequired,
+  /**
    * Redux action for loading external GeoJSON layers.
    */
   fetchGeoJSONLayers: PropTypes.func.isRequired,
@@ -477,6 +483,10 @@ SemanticPortal.propTypes = {
    * Redux action for fetching the values of a facet.
    */
   fetchFacet: PropTypes.func.isRequired,
+  /**
+   * Redux action for resetting a facet.
+   */
+  clearFacet: PropTypes.func.isRequired,
   /**
    * Redux action for displaying an error message.
    */

@@ -426,21 +426,23 @@ export const collectionProperties =
      }
 `
 
-export const networkLinksQuery = `
-  SELECT DISTINCT ?source ?target ("author" as ?prefLabel)
+export const manuscriptNetworkLinksQuery = `
+  SELECT DISTINCT (?id as ?source) ?target
   WHERE {
-    <FILTER>
-    ?source ^mmm-schema:manuscript_author ?target .
-  }
+    VALUES ?id { <ID> }
+    # get links to other manuscripts with the same author
+    ?id mmm-schema:manuscript_author/^mmm-schema:manuscript_author ?target .
+  } 
 `
 
-export const networkNodesQuery = `
-  SELECT DISTINCT ?id ?prefLabel ?class
+export const manuscriptNetworkNodesQuery = `
+  SELECT DISTINCT ?id ?prefLabel ?class ?href
   WHERE {
-    VALUES ?class { frbroo:F4_Manifestation_Singleton crm:E21_Person }
+    VALUES ?class { frbroo:F4_Manifestation_Singleton }
     VALUES ?id { <ID_SET> }
     ?id a ?class ;
-        skos:prefLabel ?prefLabel .
+      skos:prefLabel ?prefLabel .
+    BIND(CONCAT("/perspective1/page/", REPLACE(STR(?id), "^.*\\\\/(.+)", "$1")) AS ?href)
   }
 `
 
@@ -499,4 +501,38 @@ export const migrationsQuery = `
     BIND(CONCAT("/places/page/", REPLACE(STR(?to__id), "^.*\\\\/(.+)", "$1")) AS ?to__dataProviderUrl)
     BIND(IRI(CONCAT(STR(?from__id), "-", REPLACE(STR(?to__id), "http://ldf.fi/mmm/place/", ""))) as ?id)
   }
+`
+
+export const productionsByDecadeQuery = `
+  SELECT ?category (COUNT (DISTINCT ?instance) as ?count) WHERE {
+    <FILTER>
+    ?instance ^crm:P108_has_produced/crm:P4_has_time-span/mmm-schema:decade ?category .
+  }
+  GROUP BY ?category
+  ORDER BY ?category
+`
+export const eventsByDecadeQuery = `
+  SELECT DISTINCT ?category 
+  (COUNT(?production) AS ?productionCount) 
+  (COUNT(?transfer) AS ?transferCount) 
+  (COUNT(?observation) AS ?observationCount) 
+  WHERE {
+    <FILTER>
+    { 
+      ?manuscript ^crm:P108_has_produced ?production .
+      ?production crm:P4_has_time-span/mmm-schema:decade ?category .
+    } 
+    UNION 
+    {
+      ?manuscript ^crm:P30_transferred_custody_of ?transfer .
+      ?transfer crm:P4_has_time-span/mmm-schema:decade ?category .
+    } 
+    UNION 
+    {
+      ?manuscript ^mmm-schema:observed_manuscript ?observation .
+      ?observation crm:P4_has_time-span/mmm-schema:decade ?category .
+    }
+  } 
+  GROUP BY ?category 
+  ORDER BY ?category
 `

@@ -1,16 +1,13 @@
 import {
-  FETCH_FACET,
-  FETCH_FACET_FAILED,
-  UPDATE_FACET_VALUES,
-  UPDATE_FACET_OPTION,
-  CLEAR_FACET
+  FETCH_FACET_CONSTRAIN_SELF,
+  FETCH_FACET_CONSTRAIN_SELF_FAILED,
+  UPDATE_FACET_VALUES_CONSTRAIN_SELF
 } from '../../actions'
 import {
   fetchFacet,
   fetchFacetFailed,
-  updateFacetValues,
-  updateFacetOption,
-  clearFacet
+  updateFacetValues
+  // updateFacetOption,
 } from '../helpers'
 
 export const INITIAL_STATE = {
@@ -133,23 +130,19 @@ export const INITIAL_STATE = {
   }
 }
 
-const eventsFacets = (state = INITIAL_STATE, action) => {
+const perspective3FacetsConstainself = (state = INITIAL_STATE, action) => {
   if (action.facetClass === 'perspective3') {
     switch (action.type) {
-      case FETCH_FACET:
+      case FETCH_FACET_CONSTRAIN_SELF:
         return fetchFacet(state, action)
-      case FETCH_FACET_FAILED:
+      case FETCH_FACET_CONSTRAIN_SELF_FAILED:
         return fetchFacetFailed(state, action)
-      case UPDATE_FACET_VALUES:
+      case UPDATE_FACET_VALUES_CONSTRAIN_SELF:
         return updateFacetValues(state, action)
-      case UPDATE_FACET_OPTION:
-        return updateFacetOption(state, action)
-      case CLEAR_FACET:
-        return clearFacet(state, action)
       default:
         return state
     }
   } else return state
 }
 
-export default eventsFacets
+export default perspective3FacetsConstainself

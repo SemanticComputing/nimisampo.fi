@@ -1,16 +1,13 @@
 import {
-  FETCH_FACET,
-  FETCH_FACET_FAILED,
-  UPDATE_FACET_VALUES,
-  UPDATE_FACET_OPTION,
-  CLEAR_FACET
+  FETCH_FACET_CONSTRAIN_SELF,
+  FETCH_FACET_CONSTRAIN_SELF_FAILED,
+  UPDATE_FACET_VALUES_CONSTRAIN_SELF
 } from '../../actions'
 import {
   fetchFacet,
   fetchFacetFailed,
-  updateFacetValues,
-  updateFacetOption,
-  clearFacet
+  updateFacetValues
+  // updateFacetOption,
 } from '../helpers'
 
 export const INITIAL_STATE = {
@@ -18,32 +15,12 @@ export const INITIAL_STATE = {
   facetUpdateID: 0,
   updatedFilter: null,
   facets: {
-    type: {
-      id: 'type',
+    prefLabel: {
+      id: 'prefLabel',
       // predicate: defined in backend
       distinctValueCount: 0,
       values: [],
       flatValues: [],
-      sortBy: 'prefLabel',
-      sortDirection: 'asc',
-      sortButton: false,
-      spatialFilterButton: false,
-      isFetching: false,
-      searchField: false,
-      containerClass: 'three',
-      filterType: 'uriFilter',
-      uriFilter: null,
-      spatialFilter: null,
-      priority: 4
-    },
-    manuscript: {
-      id: 'manuscript',
-      // predicate: defined in backend
-      distinctValueCount: 0,
-      values: [],
-      flatValues: [],
-      sortBy: null,
-      sortDirection: null,
       sortButton: false,
       spatialFilterButton: false,
       isFetching: false,
@@ -51,10 +28,44 @@ export const INITIAL_STATE = {
       containerClass: 'one',
       filterType: 'textFilter',
       textFilter: null,
+      priority: 1
+    },
+    author: {
+      id: 'author',
+      // predicate: defined in backend
+      distinctValueCount: 0,
+      values: [],
+      flatValues: [],
+      sortBy: 'prefLabel',
+      sortDirection: 'asc',
+      sortButton: true,
+      spatialFilterButton: false,
+      isFetching: false,
+      searchField: true,
+      containerClass: 'ten',
+      filterType: 'uriFilter',
+      uriFilter: null,
       priority: 2
     },
-    eventTimespan: {
-      id: 'eventTimespan',
+    language: {
+      id: 'language',
+      // predicate: defined in backend
+      distinctValueCount: 0,
+      values: [],
+      flatValues: [],
+      sortBy: 'instanceCount',
+      sortDirection: 'desc',
+      sortButton: true,
+      spatialFilterButton: false,
+      isFetching: false,
+      searchField: true,
+      containerClass: 'ten',
+      filterType: 'uriFilter',
+      uriFilter: null,
+      priority: 3
+    },
+    productionTimespan: {
+      id: 'productionTimespan',
       // predicate: defined in backend
       distinctValueCount: 0,
       values: [],
@@ -71,47 +82,24 @@ export const INITIAL_STATE = {
       max: null,
       timespanFilter: null,
       type: 'timespan',
-      priority: 3
-    },
-    place: {
-      id: 'place',
-      // predicate: defined in backend
-      distinctValueCount: 0,
-      values: [],
-      flatValues: [],
-      sortBy: 'prefLabel',
-      sortDirection: 'asc',
-      sortButton: false,
-      spatialFilterButton: true,
-      isFetching: false,
-      searchField: true,
-      containerClass: 'ten',
-      filterType: 'uriFilter',
-      uriFilter: null,
-      spatialFilter: null,
-      type: 'hierarchical',
-      selectAlsoSubconceptsButton: true,
-      selectAlsoSubconcepts: true,
       priority: 6
     },
-    placeType: {
-      id: 'placeType',
+    collection: {
+      id: 'collection',
       // predicate: defined in backend
       distinctValueCount: 0,
       values: [],
       flatValues: [],
       sortBy: 'instanceCount',
       sortDirection: 'desc',
-      sortButton: false,
-      spatialFilterButton: true,
+      sortButton: true,
+      spatialFilterButton: false,
       isFetching: false,
       searchField: true,
       containerClass: 'ten',
       filterType: 'uriFilter',
       uriFilter: null,
-      spatialFilter: null,
-      type: 'list',
-      priority: 1
+      priority: 5
     },
     source: {
       id: 'source',
@@ -125,31 +113,27 @@ export const INITIAL_STATE = {
       spatialFilterButton: false,
       isFetching: false,
       searchField: false,
-      containerClass: 'three',
+      containerClass: 'five',
       filterType: 'uriFilter',
       uriFilter: null,
-      priority: 5
+      priority: 7
     }
   }
 }
 
-const eventsFacets = (state = INITIAL_STATE, action) => {
-  if (action.facetClass === 'perspective3') {
+const perspective2FacetsConstrainSelf = (state = INITIAL_STATE, action) => {
+  if (action.facetClass === 'perspective2') {
     switch (action.type) {
-      case FETCH_FACET:
+      case FETCH_FACET_CONSTRAIN_SELF:
         return fetchFacet(state, action)
-      case FETCH_FACET_FAILED:
+      case FETCH_FACET_CONSTRAIN_SELF_FAILED:
         return fetchFacetFailed(state, action)
-      case UPDATE_FACET_VALUES:
+      case UPDATE_FACET_VALUES_CONSTRAIN_SELF:
         return updateFacetValues(state, action)
-      case UPDATE_FACET_OPTION:
-        return updateFacetOption(state, action)
-      case CLEAR_FACET:
-        return clearFacet(state, action)
       default:
         return state
     }
   } else return state
 }
 
-export default eventsFacets
+export default perspective2FacetsConstrainSelf

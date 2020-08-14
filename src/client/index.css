@@ -38,7 +38,8 @@ a, a:visited, a:hover, a:active {
     outline: none;
 }
 
-.apexcharts-legend {
+/* .apexcharts-legend {
+    height: calc(100% - 30px);
     box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
     transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
@@ -47,7 +48,6 @@ a, a:visited, a:hover, a:active {
     top: 3px !important;
 }
 
-/* TODO: breaks layout   
-.ReactVirtualized__Table__headerRow {
-    border-bottom: 1px solid rgb(224, 224, 224); 
+.apexcharts-custom-tooltip {
+    padding: 8px
 } */

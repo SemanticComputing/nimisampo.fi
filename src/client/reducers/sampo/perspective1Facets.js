@@ -2,13 +2,15 @@ import {
   FETCH_FACET,
   FETCH_FACET_FAILED,
   UPDATE_FACET_VALUES,
-  UPDATE_FACET_OPTION
+  UPDATE_FACET_OPTION,
+  CLEAR_FACET
 } from '../../actions'
 import {
   fetchFacet,
   fetchFacetFailed,
   updateFacetValues,
-  updateFacetOption
+  updateFacetOption,
+  clearFacet
 } from '../helpers'
 
 export const INITIAL_STATE = {
@@ -43,7 +45,7 @@ export const INITIAL_STATE = {
       sortDirection: 'desc',
       sortButton: true,
       spatialFilterButton: false,
-      chartButton: false,
+      pieChartButton: false,
       isFetching: false,
       searchField: true,
       containerClass: 'ten',
@@ -86,6 +88,7 @@ export const INITIAL_STATE = {
       uriFilter: null,
       spatialFilter: null,
       type: 'hierarchical',
+      selectAlsoSubconceptsButton: true,
       selectAlsoSubconcepts: true,
       priority: 5
     },
@@ -99,6 +102,7 @@ export const INITIAL_STATE = {
       sortDirection: null,
       sortButton: false,
       spatialFilterButton: false,
+      lineChartButton: true,
       isFetching: false,
       searchField: false,
       containerClass: 'three',
@@ -136,7 +140,7 @@ export const INITIAL_STATE = {
       sortDirection: 'desc',
       sortButton: true,
       spatialFilterButton: false,
-      chartButton: true,
+      pieChartButton: true,
       isFetching: false,
       searchField: true,
       containerClass: 'ten',
@@ -155,7 +159,7 @@ export const INITIAL_STATE = {
       sortDirection: 'desc',
       sortButton: true,
       spatialFilterButton: false,
-      chartButton: false,
+      pieChartButton: true,
       isFetching: false,
       searchField: true,
       containerClass: 'ten',
@@ -173,7 +177,7 @@ export const INITIAL_STATE = {
       sortDirection: 'desc',
       sortButton: true,
       spatialFilterButton: false,
-      chartButton: false,
+      pieChartButton: true,
       isFetching: false,
       searchField: true,
       containerClass: 'ten',
@@ -198,6 +202,8 @@ export const INITIAL_STATE = {
       uriFilter: null,
       spatialFilter: null,
       type: 'hierarchical',
+      selectAlsoSubconceptsButton: true,
+      selectAlsoSubconcepts: true,
       priority: 6
     },
     transferOfCustodyTimespan: {
@@ -238,6 +244,8 @@ export const INITIAL_STATE = {
       uriFilter: null,
       spatialFilter: null,
       type: 'hierarchical',
+      selectAlsoSubconceptsButton: true,
+      selectAlsoSubconcepts: true,
       priority: 22
     },
     material: {
@@ -250,7 +258,7 @@ export const INITIAL_STATE = {
       sortDirection: 'desc',
       sortButton: true,
       spatialFilterButton: false,
-      chartButton: false,
+      pieChartButton: false,
       isFetching: false,
       searchField: true,
       containerClass: 'ten',
@@ -266,7 +274,7 @@ export const INITIAL_STATE = {
       isFetching: false,
       containerClass: 'five',
       type: 'integer',
-      filterType: 'integerFilterRange',
+      filterType: 'integerFilter',
       integerFilter: null,
       unit: 'mm',
       priority: 11
@@ -372,7 +380,7 @@ export const INITIAL_STATE = {
       sortDirection: 'desc',
       sortButton: false,
       spatialFilterButton: false,
-      chartButton: false,
+      piepieChartButton: true,
       isFetching: false,
       searchField: false,
       containerClass: 'three',
@@ -394,6 +402,8 @@ const perspective1Facets = (state = INITIAL_STATE, action) => {
         return updateFacetValues(state, action)
       case UPDATE_FACET_OPTION:
         return updateFacetOption(state, action)
+      case CLEAR_FACET:
+        return clearFacet(state, action)
       default:
         return state
     }
