@@ -108,7 +108,7 @@ const useStyles = makeStyles(theme => ({
       height: 'calc(100% - 144px)' // 100% - app bar - padding * 2
     },
     [theme.breakpoints.down('sm')]: {
-      marginTop: 56 // app bar
+      marginTop: 64 // app bar
     },
     [theme.breakpoints.up('sm')]: {
       marginTop: 72 // app bar + padding
@@ -174,9 +174,9 @@ const useStyles = makeStyles(theme => ({
   facetBarContainerClientFS: {
     height: 'auto',
     [theme.breakpoints.up('md')]: {
-      height: '100%'
+      height: '100%',
+      overflow: 'auto'
     },
-    overflow: 'auto',
     // paddingTop: theme.spacing(1),
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(0.5),
@@ -194,17 +194,21 @@ const useStyles = makeStyles(theme => ({
     }
   },
   resultsContainerClientFS: {
-    height: 'auto',
+    height: 800,
+    [theme.breakpoints.down('md')]: {
+      marginBottom: 8,
+      width: 'calc(100% - 2px)'
+    },
     [theme.breakpoints.up('md')]: {
       height: '100%'
     },
     paddingTop: '0px !important',
     paddingBottom: '0px !important',
-    paddingRight: theme.spacing(1),
-    paddingLeft: theme.spacing(0.5),
-    [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(1)
-    }
+    paddingRight: theme.spacing(0.5),
+    paddingLeft: theme.spacing(0.5)
+    // [theme.breakpoints.down('sm')]: {
+    //   marginTop: theme.spacing(1)
+    // }
   },
   instancePageContainer: {
     height: 'auto',

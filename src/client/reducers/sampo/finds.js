@@ -31,89 +31,118 @@ export const INITIAL_STATE = {
       onlyOnInstancePage: true
     },
     {
+      id: 'image',
+      valueType: 'image',
+      previewImageHeight: 200,
+      makeLink: true,
+      externalLink: true,
+      sortValues: true,
+      numberedList: false,
+      minWidth: 180,
+      hideHeader: true
+    },
+    {
       id: 'prefLabel',
       valueType: 'object',
       makeLink: true,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 250
+      minWidth: 180
     },
     {
-      id: 'author',
-      valueType: 'object',
+      id: 'specification',
+      valueType: 'string',
       makeLink: true,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 250
+      minWidth: 180
     },
     {
-      id: 'language',
-      valueType: 'object',
-      makeLink: true,
-      externalLink: true,
-      sortValues: true,
-      numberedList: false,
-      minWidth: 150
-    },
-    {
-      id: 'expression',
-      valueType: 'object',
-      makeLink: true,
+      id: 'type',
+      valueType: 'string',
+      makeLink: false,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 150,
-      onlyOnInstancePage: true
+      minWidth: 180
     },
     {
-      id: 'manuscript',
-      valueType: 'object',
-      makeLink: true,
+      id: 'subCategory',
+      valueType: 'string',
+      makeLink: false,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 250
+      minWidth: 180
     },
     {
-      id: 'productionTimespan',
+      id: 'material',
       valueType: 'object',
       makeLink: false,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 250
+      minWidth: 180
     },
     {
-      id: 'collection',
-      valueType: 'object',
-      makeLink: true,
+      id: 'period',
+      valueType: 'string',
+      makeLink: false,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 200
-    },
-    {
-      id: 'source',
-      valueType: 'object',
-      makeLink: true,
-      externalLink: true,
-      sortValues: true,
-      numberedList: false,
-      minWidth: 200
+      minWidth: 180
     }
+    // {
+    //   id: 'startYear',
+    //   valueType: 'string',
+    //   makeLink: false,
+    //   externalLink: false,
+    //   sortValues: true,
+    //   numberedList: false,
+    //   minWidth: 180
+    // },
+    // {
+    //   id: 'endYear',
+    //   valueType: 'string',
+    //   makeLink: false,
+    //   externalLink: false,
+    //   sortValues: true,
+    //   numberedList: false,
+    //   minWidth: 180
+    // },
+    // {
+    //   id: 'earliestStart',
+    //   valueType: 'string',
+    //   makeLink: false,
+    //   externalLink: false,
+    //   sortValues: true,
+    //   numberedList: false,
+    //   minWidth: 180
+    // },
+    // {
+    //   id: 'latestEnd',
+    //   valueType: 'string',
+    //   makeLink: false,
+    //   externalLink: false,
+    //   sortValues: true,
+    //   numberedList: false,
+    //   minWidth: 180
+    // }
   ]
 }
 
 const resultClasses = new Set([
-  'perspective2'
+  'finds',
+  'findsTimeline'
 ])
 
-const perspective2 = (state = INITIAL_STATE, action) => {
+const finds = (state = INITIAL_STATE, action) => {
   if (resultClasses.has(action.resultClass)) {
     return handleDataFetchingAction(state, action)
   } else return state
 }
 
-export default perspective2
+export default finds

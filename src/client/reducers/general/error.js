@@ -5,7 +5,7 @@ import {
   CLIENT_FS_FETCH_RESULTS_FAILED,
   FETCH_FACET_FAILED,
   FETCH_BY_URI_FAILED
-} from '../actions'
+} from '../../actions'
 
 export const INITIAL_STATE = {
   id: 0,

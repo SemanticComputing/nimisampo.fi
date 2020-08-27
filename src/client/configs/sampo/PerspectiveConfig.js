@@ -3,7 +3,7 @@ import CalendarViewDayIcon from '@material-ui/icons/CalendarViewDay'
 import TripOriginIcon from '@material-ui/icons/TripOrigin'
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 import AddLocationIcon from '@material-ui/icons/AddLocation'
-import SettingsBrightnessIcon from '@material-ui/icons/SettingsBrightness'
+// import SettingsBrightnessIcon from '@material-ui/icons/SettingsBrightness'
 import RedoIcon from '@material-ui/icons/Redo'
 import PieChartIcon from '@material-ui/icons/PieChart'
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
@@ -148,9 +148,47 @@ export const perspectiveConfig = [
     ]
   },
   {
+    id: 'finds',
+    isHidden: true,
+    frontPageImage: null,
+    perspectiveDescHeight: 160,
+    defaultActiveFacets: new Set(['prefLabel']),
+    tabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
+      {
+        id: 'map',
+        value: 1,
+        icon: <AddLocationIcon />
+      },
+
+      {
+        id: 'export',
+        value: 2,
+        icon: <CloudDownloadIcon />
+      }
+    ],
+    instancePageTabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
+
+      {
+        id: 'export',
+        value: 1,
+        icon: <CloudDownloadIcon />
+      }
+    ]
+  },
+  {
     id: 'clientFSPlaces',
     frontPageImage: placesImage,
-    defaultActiveFacets: new Set(['datasetSelector', 'prefLabel']),
+    defaultActiveFacets: new Set(['prefLabel']),
     tabs: [
       {
         id: 'table',
@@ -167,19 +205,19 @@ export const perspectiveConfig = [
         value: 2,
         icon: <LocationOnIcon />
       },
-      {
-        id: 'heatmap',
-        value: 3,
-        icon: <SettingsBrightnessIcon />
-      },
+      // {
+      //   id: 'heatmap',
+      //   value: 3,
+      //   icon: <SettingsBrightnessIcon />
+      // },
       {
         id: 'statistics',
-        value: 4,
+        value: 3,
         icon: <PieChartIcon />
       },
       {
         id: 'download',
-        value: 5,
+        value: 4,
         icon: <CloudDownloadIcon />
       }
     ]
