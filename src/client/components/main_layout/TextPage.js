@@ -34,6 +34,7 @@ const useStyles = makeStyles(theme => ({
  */
 const TextPage = props => {
   const classes = useStyles()
+
   return (
     <div className={classes.root}>
       <Paper className={classes.layout}>

@@ -31,119 +31,120 @@ export const INITIAL_STATE = {
       onlyOnInstancePage: true
     },
     {
-      id: 'image',
-      valueType: 'image',
-      previewImageHeight: 200,
-      makeLink: true,
-      externalLink: true,
-      sortValues: true,
-      numberedList: false,
-      minWidth: 180,
-      hideHeader: true
-    },
-    {
       id: 'prefLabel',
       valueType: 'object',
       makeLink: true,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 180
+      minWidth: 250
     },
     {
-      id: 'specification',
-      valueType: 'string',
-      makeLink: true,
-      externalLink: false,
-      sortValues: true,
-      numberedList: false,
-      minWidth: 180
-    },
-    {
-      id: 'type',
-      valueType: 'string',
-      makeLink: false,
-      externalLink: false,
-      sortValues: true,
-      numberedList: false,
-      minWidth: 180
-    },
-    {
-      id: 'subCategory',
-      valueType: 'string',
-      makeLink: false,
-      externalLink: false,
-      sortValues: true,
-      numberedList: false,
-      minWidth: 180
-    },
-    {
-      id: 'material',
+      id: 'gender',
       valueType: 'object',
       makeLink: false,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 180
+      minWidth: 90,
+      priority: 5
     },
     {
-      id: 'period',
-      valueType: 'string',
+      id: 'type',
+      valueType: 'object',
+      makeLink: true,
+      externalLink: false,
+      sortValues: true,
+      numberedList: false,
+      minWidth: 90,
+      priority: 5
+    },
+    {
+      id: 'related',
+      valueType: 'object',
+      makeLink: true,
+      externalLink: true,
+      sortValues: true,
+      numberedList: false,
+      minWidth: 250,
+      priority: 8,
+      onlyOnInstancePage: true
+    },
+    {
+      id: 'birthDateTimespan',
+      valueType: 'object',
       makeLink: false,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 180
+      showSource: true,
+      sourceExternalLink: true,
+      minWidth: 250
     },
     {
-      id: 'startYear',
-      valueType: 'string',
+      id: 'deathDateTimespan',
+      valueType: 'object',
       makeLink: false,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 180
+      showSource: true,
+      sourceExternalLink: true,
+      minWidth: 250
     },
     {
-      id: 'endYear',
+      id: 'altLabel',
       valueType: 'string',
+      renderAsHTML: false,
       makeLink: false,
+      externalLink: false,
+      sortValues: false,
+      numberedList: false,
+      minWidth: 150,
+      collapsedMaxWords: 12,
+      onlyOnInstancePage: true
+    },
+    {
+      id: 'rel',
+      valueType: 'object',
+      makeLink: true,
+      externalLink: false,
+      sortValues: false,
+      numberedList: false,
+      minWidth: 220,
+      onlyOnInstancePage: true
+    },
+    {
+      id: 'cor',
+      valueType: 'object',
+      makeLink: true,
+      externalLink: false,
+      sortValues: false,
+      numberedList: false,
+      minWidth: 220,
+      onlyOnInstancePage: true
+    },
+    {
+      id: 'knownLocation',
+      valueType: 'object',
+      makeLink: true,
       externalLink: false,
       sortValues: true,
       numberedList: false,
-      minWidth: 180
-    },
-    {
-      id: 'earliestStart',
-      valueType: 'string',
-      makeLink: false,
-      externalLink: false,
-      sortValues: true,
-      numberedList: false,
-      minWidth: 180
-    },
-    {
-      id: 'latestEnd',
-      valueType: 'string',
-      makeLink: false,
-      externalLink: false,
-      sortValues: true,
-      numberedList: false,
-      minWidth: 180
+      minWidth: 220,
+      onlyOnInstancePage: true
     }
   ]
 }
 
 const resultClasses = new Set([
-  'finds',
-  'findsTimeline',
-  'nearbyFinds'
+  'emloActors', 'emloLetterNetwork', 'emloSentReceived'
 ])
 
-const finds = (state = INITIAL_STATE, action) => {
+const emloActors = (state = INITIAL_STATE, action) => {
   if (resultClasses.has(action.resultClass)) {
     return handleDataFetchingAction(state, action)
   } else return state
 }
 
-export default finds
+export default emloActors

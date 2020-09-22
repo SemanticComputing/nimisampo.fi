@@ -134,6 +134,27 @@ class FacetHeader extends React.Component {
     })
   };
 
+  handleConjuctionOnClick = buttonID => () => {
+    this.setState({ anchorEl: null })
+    let useConjuction
+    if (buttonID === 'useConjuction') {
+      useConjuction = true
+    }
+    if (buttonID === 'useDisjunction') {
+      useConjuction = false
+    }
+    this.props.clearFacet({
+      facetClass: this.props.facetClass,
+      facetID: this.props.facetID
+    })
+    this.props.updateFacetOption({
+      facetClass: this.props.facetClass,
+      facetID: this.props.facetID,
+      option: 'useConjuction',
+      value: useConjuction
+    })
+  };
+
   handleMenuClose = () => {
     this.setState({ anchorEl: null })
   }
@@ -149,7 +170,10 @@ class FacetHeader extends React.Component {
       pieChartButton = false,
       lineChartButton = false,
       selectAlsoSubconceptsButton = false,
-      selectAlsoSubconcepts
+      intersectionBarChartButton = false,
+      selectAlsoSubconcepts,
+      useConjuctionButton = false,
+      useConjuction
     } = this.props.facet
     const open = Boolean(anchorEl)
     const menuButtons = []
@@ -204,30 +228,52 @@ class FacetHeader extends React.Component {
         </MenuItem>
       )
     }
-    if (type === 'hierarchical' && selectAlsoSubconceptsButton) {
+    if (useConjuctionButton || selectAlsoSubconceptsButton) {
       menuButtons.push(
         <ListSubheader component='div' key='selectionOptionsSubheader'>
           {intl.get('facetBar.selectionOptions')}
         </ListSubheader>
       )
-      menuButtons.push(
-        <MenuItem
-          key='selectAlsoSubconcepts'
-          selected={selectAlsoSubconcepts}
-          onClick={this.handleSubconceptsOnClick('selectAlsoSubconcepts')}
-        >
-          {intl.get('facetBar.selectAlsoSubconcepts')}
-        </MenuItem>
-      )
-      menuButtons.push(
-        <MenuItem
-          key='doNotSelectSubconcepts'
-          selected={!selectAlsoSubconcepts}
-          onClick={this.handleSubconceptsOnClick('doNotSelectSubconcepts')}
-        >
-          {intl.get('facetBar.doNotSelectSubconcepts')}
-        </MenuItem>
-      )
+      if (type === 'hierarchical' && selectAlsoSubconceptsButton) {
+        menuButtons.push(
+          <MenuItem
+            key='selectAlsoSubconcepts'
+            selected={selectAlsoSubconcepts}
+            onClick={this.handleSubconceptsOnClick('selectAlsoSubconcepts')}
+          >
+            {intl.get('facetBar.selectAlsoSubconcepts')}
+          </MenuItem>
+        )
+        menuButtons.push(
+          <MenuItem
+            key='doNotSelectSubconcepts'
+            selected={!selectAlsoSubconcepts}
+            onClick={this.handleSubconceptsOnClick('doNotSelectSubconcepts')}
+          >
+            {intl.get('facetBar.doNotSelectSubconcepts')}
+          </MenuItem>
+        )
+      }
+      if (useConjuctionButton) {
+        menuButtons.push(
+          <MenuItem
+            key='useConjuction'
+            selected={useConjuction}
+            onClick={this.handleConjuctionOnClick('useConjuction')}
+          >
+            {intl.get('facetBar.useConjuction')}
+          </MenuItem>
+        )
+        menuButtons.push(
+          <MenuItem
+            key='useDisjunction'
+            selected={!useConjuction}
+            onClick={this.handleConjuctionOnClick('useDisjunction')}
+          >
+            {intl.get('facetBar.useDisjunction')}
+          </MenuItem>
+        )
+      }
     }
     return (
       <>
@@ -250,6 +296,17 @@ class FacetHeader extends React.Component {
             fetchData={this.props.fetchResults}
             createChartData={createSingleLineChartData}
             resultClass={`${this.props.facetID}LineChart`}
+            facetClass={this.props.facetClass}
+            icon={<LineChartIcon />}
+          />}
+        {intersectionBarChartButton &&
+          <ChartDialog
+            rawData={this.props.facetResults.results}
+            rawDataUpdateID={this.props.facetResults.resultUpdateID}
+            fetching={this.props.facetResults.fetching}
+            fetchData={this.props.fetchResults}
+            createChartData={createSingleLineChartData}
+            resultClass={`${this.props.facetID}IntersectionBarChart`}
             facetClass={this.props.facetClass}
             icon={<LineChartIcon />}
           />}

@@ -32,9 +32,9 @@ import {
   FETCH_SIMILAR_DOCUMENTS_BY_ID_FAILED,
   FETCH_FACET_FAILED,
   FETCH_GEOJSON_LAYERS,
-  FETCH_NETWORK_BY_ID,
-  FETCH_NETWORK_BY_ID_FAILED,
   FETCH_GEOJSON_LAYERS_BACKEND,
+  FETCH_KNOWLEDGE_GRAPH_METADATA,
+  FETCH_KNOWLEDGE_GRAPH_METADATA_FAILED,
   CLIENT_FS_FETCH_RESULTS,
   CLIENT_FS_FETCH_RESULTS_FAILED,
   LOAD_LOCALES,
@@ -44,11 +44,11 @@ import {
   clientFSUpdateResults,
   updateInstanceTable,
   updateInstanceTableExternal,
-  updateInstanceAnalysis,
   updateFacetValues,
   updateFacetValuesConstrainSelf,
   updateLocale,
   updateGeoJSONLayers,
+  updateKnowledgeGraphMetadata,
   SHOW_ERROR
 } from '../actions'
 import {
@@ -125,8 +125,9 @@ const fetchResultsEpic = (action$, state$) => action$.pipe(
   mergeMap(([action, state]) => {
     const { resultClass, facetClass, limit, optimize } = action
     const params = stateToUrl({
-      facets: state[`${facetClass}Facets`].facets,
+      facets: facetClass ? state[`${facetClass}Facets`].facets : null,
       facetClass,
+      uri: action.uri ? action.uri : null,
       limit,
       optimize
     })
@@ -260,14 +261,15 @@ const fetchFacetEpic = (action$, state$) => action$.pipe(
   ofType(FETCH_FACET),
   withLatestFrom(state$),
   mergeMap(([action, state]) => {
-    const { facetClass, facetID } = action
+    const { facetClass, facetID, constrainSelf } = action
     const facets = state[`${facetClass}Facets`].facets
     const facet = facets[facetID]
-    const { sortBy, sortDirection } = facet
+    const { sortBy, sortDirection = false } = facet
     const params = stateToUrl({
-      facets: facets,
-      sortBy: sortBy,
-      sortDirection: sortDirection
+      facets,
+      sortBy,
+      sortDirection,
+      constrainSelf
     })
     const requestUrl = `${apiUrl}/faceted-search/${action.facetClass}/facet/${facetID}`
     return ajax({
@@ -412,32 +414,6 @@ const fetchSimilarDocumentsEpic = (action$, state$) => action$.pipe(
   })
 )
 
-const fetchNetworkByURIEpic = (action$, state$) => action$.pipe(
-  ofType(FETCH_NETWORK_BY_ID),
-  withLatestFrom(state$),
-  mergeMap(([action]) => {
-    const { resultClass, id, limit, optimize } = action
-    const params = { limit, optimize }
-    const requestUrl = `${apiUrl}/${resultClass}/network/${encodeURIComponent(id)}?${querystring.stringify(params)}`
-    return ajax.getJSON(requestUrl).pipe(
-      map(response => updateInstanceAnalysis({
-        resultClass: resultClass,
-        data: response.data,
-        sparqlQuery: response.sparqlQuery
-      })),
-      catchError(error => of({
-        type: FETCH_NETWORK_BY_ID_FAILED,
-        resultClass: resultClass,
-        error: error,
-        message: {
-          text: backendErrorText,
-          title: 'Error'
-        }
-      }))
-    )
-  })
-)
-
 const fetchGeoJSONLayersBackendEpic = (action$, state$) => action$.pipe(
   ofType(FETCH_GEOJSON_LAYERS_BACKEND),
   withLatestFrom(state$),
@@ -506,6 +482,33 @@ const fetchGeoJSONLayer = async (layerID, bounds) => {
   }
 }
 
+const fetchKnowledgeGraphMetadataEpic = (action$, state$) => action$.pipe(
+  ofType(FETCH_KNOWLEDGE_GRAPH_METADATA),
+  withLatestFrom(state$),
+  mergeMap(([action]) => {
+    const requestUrl = `${apiUrl}/void/${action.resultClass}`
+    return ajax({
+      url: requestUrl,
+      method: 'GET'
+    }).pipe(
+      map(ajaxResponse => updateKnowledgeGraphMetadata({
+        resultClass: action.resultClass,
+        data: ajaxResponse.response.data[0],
+        sparqlQuery: ajaxResponse.response.sparqlQuery
+      })),
+      catchError(error => of({
+        type: FETCH_KNOWLEDGE_GRAPH_METADATA_FAILED,
+        perspectiveID: action.resultClass,
+        error: error,
+        message: {
+          text: backendErrorText,
+          title: 'Error'
+        }
+      }))
+    )
+  })
+)
+
 const rootEpic = combineEpics(
   fetchPaginatedResultsEpic,
   fetchResultsEpic,
@@ -513,13 +516,13 @@ const rootEpic = combineEpics(
   fetchByURIEpic,
   fetchFacetEpic,
   fetchFacetConstrainSelfEpic,
-  fetchNetworkByURIEpic,
   fullTextSearchEpic,
   clientFSFetchResultsEpic,
   loadLocalesEpic,
   fetchSimilarDocumentsEpic,
   fetchGeoJSONLayersEpic,
-  fetchGeoJSONLayersBackendEpic
+  fetchGeoJSONLayersBackendEpic,
+  fetchKnowledgeGraphMetadataEpic
 )
 
 export default rootEpic

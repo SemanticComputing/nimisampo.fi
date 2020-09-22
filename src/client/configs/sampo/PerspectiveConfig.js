@@ -4,6 +4,7 @@ import TripOriginIcon from '@material-ui/icons/TripOrigin'
 import LocationOnIcon from '@material-ui/icons/LocationOn'
 import AddLocationIcon from '@material-ui/icons/AddLocation'
 // import SettingsBrightnessIcon from '@material-ui/icons/SettingsBrightness'
+import StarIcon from '@material-ui/icons/Star'
 import RedoIcon from '@material-ui/icons/Redo'
 import PieChartIcon from '@material-ui/icons/PieChart'
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload'
@@ -19,7 +20,7 @@ export const perspectiveConfig = [
     id: 'perspective1',
     frontPageImage: manuscriptsImage,
     perspectiveDescHeight: 160,
-    defaultActiveFacets: new Set(['prefLabel', 'productionTimespan']),
+    defaultActiveFacets: new Set([]),
     tabs: [
       {
         id: 'table',
@@ -164,7 +165,6 @@ export const perspectiveConfig = [
         value: 1,
         icon: <AddLocationIcon />
       },
-
       {
         id: 'export',
         value: 2,
@@ -177,7 +177,165 @@ export const perspectiveConfig = [
         value: 0,
         icon: <CalendarViewDayIcon />
       },
-
+      {
+        id: 'recommendations',
+        value: 1,
+        icon: <StarIcon />
+      },
+      {
+        id: 'export',
+        value: 2,
+        icon: <CloudDownloadIcon />
+      }
+    ]
+  },
+  {
+    id: 'emloActors',
+    isHidden: true,
+    frontPageImage: null,
+    perspectiveDescHeight: 160,
+    defaultActiveFacets: new Set(['prefLabel']),
+    tabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
+      {
+        id: 'map',
+        value: 1,
+        icon: <AddLocationIcon />
+      },
+      {
+        id: 'export',
+        value: 2,
+        icon: <CloudDownloadIcon />
+      }
+    ],
+    instancePageTabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
+      {
+        id: 'emloLetterNetwork',
+        value: 1,
+        icon: <BubbleChartIcon />
+      },
+      {
+        id: 'emloSentReceived',
+        value: 2,
+        icon: <LineChartIcon />
+      },
+      {
+        id: 'export',
+        value: 3,
+        icon: <CloudDownloadIcon />
+      }
+    ]
+  },
+  {
+    id: 'emloLetters',
+    isHidden: true,
+    frontPageImage: null,
+    perspectiveDescHeight: 160,
+    defaultActiveFacets: new Set(['prefLabel']),
+    tabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
+      {
+        id: 'migrations',
+        value: 1,
+        icon: <RedoIcon />
+      },
+      {
+        id: 'by_year',
+        value: 2,
+        icon: <LineChartIcon />
+      },
+      {
+        id: 'export',
+        value: 3,
+        icon: <CloudDownloadIcon />
+      }
+    ],
+    instancePageTabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
+      {
+        id: 'export',
+        value: 1,
+        icon: <CloudDownloadIcon />
+      }
+    ]
+  },
+  {
+    id: 'emloPlaces',
+    isHidden: true,
+    frontPageImage: null,
+    perspectiveDescHeight: 160,
+    defaultActiveFacets: new Set(['prefLabel']),
+    tabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
+      {
+        id: 'export',
+        value: 1,
+        icon: <CloudDownloadIcon />
+      }
+    ],
+    instancePageTabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
+      {
+        id: 'export',
+        value: 1,
+        icon: <CloudDownloadIcon />
+      }
+    ]
+  },
+  {
+    id: 'hellerau',
+    isHidden: true,
+    frontPageImage: null,
+    perspectiveDescHeight: 160,
+    defaultActiveFacets: new Set(['prefLabel']),
+    tabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
+      {
+        id: 'migrations',
+        value: 1,
+        icon: <RedoIcon />
+      },
+      {
+        id: 'export',
+        value: 2,
+        icon: <CloudDownloadIcon />
+      }
+    ],
+    instancePageTabs: [
+      {
+        id: 'table',
+        value: 0,
+        icon: <CalendarViewDayIcon />
+      },
       {
         id: 'export',
         value: 1,

@@ -17,7 +17,7 @@ export const cytoscapeStyle = [
       width: ele => constrainWidth(ele.data('weight')),
       'line-color': ele => ele.data('color') || '#BBB',
       'curve-style': 'bezier',
-      content: ' data(prefLabel) ',
+      // content: ' data(prefLabel) ',
       'target-arrow-shape': 'triangle',
       'target-arrow-color': '#999',
       color: '#555',
@@ -50,6 +50,17 @@ export const coseLayout = {
   initialTemp: 200,
   coolingFactor: 0.95,
   minTemp: 1.0
+}
+
+export const preprocess = elements => {
+  const vals = elements.edges.map(ele => ele.data.weight)
+  const valmax = Math.max(...vals)
+  const valmin = Math.min(...vals)
+  const wmax = 6.0
+  const wmin = 1.0
+  const a = (wmax - wmin) / (valmax - valmin)
+  const b = wmin - valmin * (wmax - wmin) / (valmax - valmin)
+  elements.edges.forEach((ele, i) => { ele.data.weight = vals[i] * a + b })
 }
 
 const maxEdgeWidth = 8

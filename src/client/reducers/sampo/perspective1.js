@@ -17,8 +17,6 @@ export const INITIAL_STATE = {
   instancePageHeaderExpanded: false,
   instanceTableData: null,
   instanceTableExternalData: null,
-  instanceAnalysisData: null,
-  instanceAnalysisDataUpdateID: 0,
   instanceSparqlQuery: null,
   properties: [
     {
@@ -261,7 +259,8 @@ const resultClasses = new Set([
   'perspective1',
   'productionTimespanLineChart',
   'eventLineChart',
-  'manuscriptInstancePageNetwork'
+  'manuscriptInstancePageNetwork',
+  'perspective1KnowledgeGraphMetadata'
 ])
 
 const perspective1 = (state = INITIAL_STATE, action) => {

@@ -1,7 +1,7 @@
 {
   "name": "namesampo",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev": "concurrently --prefix none \"npm run server\" \"npm run client\"",
     "build": "npm run build-client && npm run build-server",
     "client": "webpack-dev-server --config webpack.client.dev.js",
     "server": "cross-env NODE_ENV=development nodemon -r dotenv/config src/server/index.js --exec babel-node",
@@ -33,7 +33,7 @@
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.0.4",
     "clean-webpack-plugin": "^0.1.19",
-    "concurrently": "^3.6.1",
+    "concurrently": "^5.3.0",
     "copy-webpack-plugin": "^6.0.3",
     "cross-env": "^7.0.0",
     "css-loader": "^2.1.1",

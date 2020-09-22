@@ -39,7 +39,6 @@ import {
   fetchFullTextResults,
   clearResults,
   fetchByURI,
-  fetchNetworkById,
   fetchFacet,
   fetchFacetConstrainSelf,
   clearFacet,
@@ -60,7 +59,8 @@ import {
   clientFSSortResults,
   clientFSClearResults,
   clientFSUpdateQuery,
-  clientFSUpdateFacet
+  clientFSUpdateFacet,
+  fetchKnowledgeGraphMetadata
 } from '../actions'
 import { filterResults } from '../selectors'
 
@@ -390,7 +390,6 @@ const mapDispatchToProps = ({
   fetchFacetConstrainSelf,
   clearFacet,
   fetchGeoJSONLayers,
-  fetchNetworkById,
   fetchGeoJSONLayersBackend,
   clearGeoJSONLayers,
   sortResults,
@@ -408,7 +407,8 @@ const mapDispatchToProps = ({
   clientFSClearResults,
   clientFSSortResults,
   clientFSUpdateQuery,
-  clientFSUpdateFacet
+  clientFSUpdateFacet,
+  fetchKnowledgeGraphMetadata
 })
 
 SemanticPortal.propTypes = {
@@ -448,10 +448,6 @@ SemanticPortal.propTypes = {
    * Redux action for fetching information about a single entity.
    */
   fetchByURI: PropTypes.func.isRequired,
-  /**
-   * Redux action for fetching network of a single entity.
-   */
-  fetchNetworkById: PropTypes.func.isRequired,
   /**
    * Redux action for loading external GeoJSON layers.
    */

@@ -4,7 +4,7 @@ import {
 } from '../sparql_queries/SparqlQueriesFinds'
 import { prefixes } from '../sparql_queries/SparqlQueriesPrefixesFindSampo'
 
-export const findsPerspectiveConfig = {
+export const findsConfig = {
   endpoint: {
     url: 'https://ldf.fi/sualt-fha-finds/sparql',
     // url: 'http://localhost:3039/ds/sparql',
@@ -116,6 +116,25 @@ export const findsPerspectiveConfig = {
       predicate: ':municipality',
       labelPath: ':municipality/skos:prefLabel',
       type: 'list'
+    },
+    place: {
+      id: 'place',
+      facetValueFilter: '',
+      predicate: ':municipality/skos:related',
+      labelPath: ':municipalityskos:related//skos:prefLabel',
+      type: 'hierarchical',
+      parentPredicate: ':municipality/skos:related/skos:broader+',
+      parentProperty: 'skos:broader',
+      facetLabelFilter: 'FILTER(LANG(?prefLabel_) = \'fi\')'
+    },
+    objectType: {
+      id: 'objectType',
+      facetValueFilter: '',
+      predicate: ':object_type',
+      labelPath: ':object_type/skos:prefLabel',
+      type: 'hierarchical',
+      parentPredicate: ':object_type/skos:broader+',
+      parentProperty: 'skos:broader'
     }
   }
 }

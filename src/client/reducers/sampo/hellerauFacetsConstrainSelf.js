@@ -211,10 +211,10 @@ export const INITIAL_STATE = {
   }
 }
 
-const findsFacetsConstrainSelf = (state = INITIAL_STATE, action) => {
-  if (action.facetClass === 'finds') {
+const hellerauFacetsConstrainSelf = (state = INITIAL_STATE, action) => {
+  if (action.facetClass === 'hellerau') {
     return handleFacetConstrainSelfAction(state, action)
   } else return state
 }
 
-export default findsFacetsConstrainSelf
+export default hellerauFacetsConstrainSelf

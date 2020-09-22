@@ -47,9 +47,11 @@ export const getAllResults = ({
   backendSearchConfig,
   resultClass,
   facetClass,
+  uri,
   constraints,
   resultFormat,
-  groupBy
+  optimize,
+  limit
 }) => {
   const config = backendSearchConfig[resultClass]
   let endpoint
@@ -72,14 +74,22 @@ export const getAllResults = ({
       facetID: null
     }))
   }
+  q = q.replace(/<FACET_CLASS>/g, backendSearchConfig[config.perspectiveID].facetClass)
   if (has(config, 'useNetworkAPI') && config.useNetworkAPI) {
     return runNetworkQuery({
       endpoint: endpoint.url,
       prefixes: endpoint.prefixes,
+      id: uri,
       links: q,
-      nodes: config.nodes
+      nodes: config.nodes,
+      optimize,
+      limit
     })
   } else {
+    if (uri !== null) {
+      q = q.replace('<ID>', `<${uri}>`)
+    }
+    // console.log(endpoint.prefixes + q)
     return runSelectQuery({
       query: endpoint.prefixes + q,
       endpoint: endpoint.url,
@@ -104,7 +114,6 @@ export const getResultCount = async ({
   } else {
     endpoint = backendSearchConfig[config.perspectiveID].endpoint
   }
-  q = q.replace('<FACET_CLASS>', config.facetClass)
   if (constraints == null) {
     q = q.replace('<FILTER>', '# no filters')
   } else {
@@ -114,9 +123,12 @@ export const getResultCount = async ({
       facetClass: resultClass,
       constraints: constraints,
       filterTarget: 'id',
-      facetID: null
+      facetID: null,
+      filterTripleFirst: true
     }))
   }
+  q = q.replace(/<FACET_CLASS>/g, config.facetClass)
+  // console.log(endpoint.prefixes + q)
   const response = await runSelectQuery({
     query: endpoint.prefixes + q,
     endpoint: endpoint.url,
@@ -161,7 +173,6 @@ const getPaginatedData = ({
       facetID: null
     }))
   }
-  q = q.replace('<FACET_CLASS>', config.facetClass)
   if (sortBy == null) {
     q = q.replace('<ORDER_BY_TRIPLE>', '')
     q = q.replace('<ORDER_BY>', '# no sorting')
@@ -171,16 +182,20 @@ const getPaginatedData = ({
       sortByPredicate = sortDirection === 'asc'
         ? config.facets[sortBy].sortByAscPredicate
         : config.facets[sortBy].sortByDescPredicate
+    } else if (has(config.facets[sortBy], 'orderByPattern')) {
+      q = q.replace('<ORDER_BY_TRIPLE>', config.facets[sortBy].orderByPattern)
     } else {
       sortByPredicate = config.facets[sortBy].labelPath
-    }
-    q = q.replace('<ORDER_BY_TRIPLE>',
+      q = q.replace('<ORDER_BY_TRIPLE>',
       `OPTIONAL { ?id ${sortByPredicate} ?orderBy }`)
+    }
     q = q.replace('<ORDER_BY>',
       `ORDER BY (!BOUND(?orderBy)) ${sortDirection}(?orderBy)`)
   }
+  q = q.replace(/<FACET_CLASS>/g, config.facetClass)
   q = q.replace('<PAGE>', `LIMIT ${pagesize} OFFSET ${page * pagesize}`)
   q = q.replace('<RESULT_SET_PROPERTIES>', config.paginatedResults.properties)
+  // console.log(endpoint.prefixes + q)
   return runSelectQuery({
     query: endpoint.prefixes + q,
     endpoint: endpoint.url,
@@ -196,8 +211,6 @@ export const getByURI = ({
   facetClass,
   constraints,
   uri,
-  limit, // only used with NetworkAPI
-  optimize, // only used with NetworkAPI
   resultFormat
 }) => {
   const config = backendSearchConfig[resultClass]
@@ -206,17 +219,6 @@ export const getByURI = ({
     endpoint = config.endpoint
   } else {
     endpoint = backendSearchConfig[config.perspectiveID].endpoint
-  }
-  if (has(config, 'useNetworkAPI') && config.useNetworkAPI) {
-    return runNetworkQuery({
-      endpoint: endpoint.url,
-      prefixes: endpoint.prefixes,
-      id: uri,
-      links: config.links,
-      nodes: config.nodes,
-      limit,
-      optimize
-    })
   }
   const { properties, relatedInstances } = config.instance
   let q = instanceQuery

@@ -12,6 +12,7 @@ export const fetchResults = state => {
 export const fetchResultCount = state => {
   return {
     ...state,
+    resultCount: null,
     fetchingResultCount: true
   }
 }
@@ -303,5 +304,13 @@ export const updateHeaderExpanded = (state, action) => {
       ...state,
       facetedSearchHeaderExpanded: !state.facetedSearchHeaderExpanded
     }
+  }
+}
+
+export const updateKnowledgeGraphMetadata = (state, action) => {
+  return {
+    ...state,
+    knowledgeGraphMetadata: action.data,
+    fetching: false
   }
 }

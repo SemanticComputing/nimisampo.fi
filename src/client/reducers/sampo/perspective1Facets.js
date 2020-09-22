@@ -152,6 +152,8 @@ export const INITIAL_STATE = {
       containerClass: 'ten',
       filterType: 'uriFilter',
       uriFilter: null,
+      useConjuctionButton: true, // experimental, does not work well with hierarchical facets
+      useConjuction: false,
       priority: 3
     },
     collection: {
@@ -367,7 +369,7 @@ export const INITIAL_STATE = {
       sortDirection: 'desc',
       sortButton: false,
       spatialFilterButton: false,
-      piepieChartButton: true,
+      pieChartButton: true,
       isFetching: false,
       searchField: false,
       containerClass: 'three',
