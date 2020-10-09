@@ -11,7 +11,7 @@ import Network from '../../facet_results/Network'
 import ApexChart from '../../facet_results/ApexChart'
 import Export from '../../facet_results/Export'
 import Recommendations from './Recommendations'
-import { coseLayout, cytoscapeStyle } from '../../../configs/sampo/Cytoscape.js/NetworkConfig'
+import { coseLayout, cytoscapeStyle, preprocess } from '../../../configs/sampo/Cytoscape.js/NetworkConfig'
 import { createMultipleLineChartData } from '../../../configs/sampo/ApexCharts/LineChartConfig'
 import { Route, Redirect } from 'react-router-dom'
 import { has } from 'lodash'
@@ -46,15 +46,18 @@ class InstanceHomePage extends React.Component {
     }
   }
 
-  componentDidMount = () => this.fetchData()
+  componentDidMount = () => this.fetchTableData()
 
   componentDidUpdate = prevProps => {
-    if (prevProps.routeProps.location !== this.props.routeProps.location) {
-      this.fetchData()
+    // handle the case when the TABLE tab was not originally active
+    const prevPathname = prevProps.routeProps.location.pathname
+    const currentPathname = this.props.routeProps.location.pathname
+    if (prevPathname !== currentPathname && currentPathname.endsWith('table')) {
+      this.fetchTableData()
     }
   }
 
-  fetchData = () => {
+  fetchTableData = () => {
     let uri = ''
     const base = 'http://ldf.fi/mmm'
     const locationArr = this.props.routeProps.location.pathname.split('/')
@@ -131,7 +134,7 @@ class InstanceHomePage extends React.Component {
 
   render = () => {
     const { classes, tableData, isLoading, resultClass, rootUrl } = this.props
-    const hasData = tableData !== null && Object.values(tableData).length >= 1
+    const hasTableData = tableData !== null && Object.values(tableData).length >= 1
     return (
       <div className={classes.root}>
         <PerspectiveTabs
@@ -144,13 +147,14 @@ class InstanceHomePage extends React.Component {
             <div className={classes.spinnerContainer}>
               <CircularProgress style={{ color: purple[500] }} thickness={5} />
             </div>}
-          {!hasData &&
+          {!hasTableData &&
             <>
               <Typography variant='h6'>
                 No data found for id: <span style={{ fontStyle: 'italic' }}>{this.state.localID}</span>
               </Typography>
             </>}
-          {hasData &&
+          {/* make sure that tableData exists before rendering any components */}
+          {hasTableData &&
             <>
               <Route
                 exact path={`${rootUrl}/${resultClass}/page/${this.state.localID}`}
@@ -195,6 +199,7 @@ class InstanceHomePage extends React.Component {
                     optimize={5.0}
                     style={cytoscapeStyle}
                     layout={coseLayout}
+                    preprocess={preprocess}
                   />}
               />
               <Route
