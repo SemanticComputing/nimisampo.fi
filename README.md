@@ -8,8 +8,6 @@ master branch visible at https://nimisampo.fi
 
 dev branch visible at http://dev.nimisampo.fi
 
-test branch visible at http://test.nimisampo.fi
-
 The Sampo-UI framework is being developed by the [Semantic Computing Research Group (SeCo)](https://seco.cs.aalto.fi) 
 at the Aalto University, Finland. See the [research page](https://seco.cs.aalto.fi/tools/sampo-ui) for 
 more information. 
