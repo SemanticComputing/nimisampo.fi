@@ -205,7 +205,7 @@ const TopBar = props => {
       <Typography />
       <AppBar position='absolute'>
         <Toolbar className={classes.toolbar}>
-          <Button component={AdapterLink} to='/'>
+          <Button component={AdapterLink} to='/' onClick={() => props.clearResults()}>
             {/* <Typography className={classes.homeButtonText} variant='h6'>{intl.get('appTitle.short')}</Typography> */}
             <img className={classes.mainLogoImg} src={props.currentLocale === 'fi' ? nameSampoLogoFi : nameSampoLogoFi} />
           </Button>
