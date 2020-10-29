@@ -5,7 +5,7 @@ export default {
     long: 'NameSampo: A Workbench for Toponomastic Research'
   },
   appDescription1: `
-    NameSampo is a web service for searching and studying place names. The search results
+    NameSampo is a semantic portal for searching and studying place names. The search results
     can be viewed as a table, on maps, and as statistical distributions. 
     Historical and current background maps are provided.
   `,

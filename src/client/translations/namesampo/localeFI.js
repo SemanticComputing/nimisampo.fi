@@ -5,7 +5,7 @@ export default {
     long: 'Nimisampo: nimistöntutkijan työpöytä'
   },
   appDescription1: `
-    Nimisampo on kaikille avoin verkkopalvelu
+    Nimisampo on avoin semanttinen portaali
     suomalaisesta paikannimistöstä kiinnostuneiden tutkijoiden ja
     suuren yleisön käytettäväksi. Nimistöä voi tarkastella kartoilla,
     datana ja tilastollisesti. Nykyisten karttapohjien ohella voi käyttää
