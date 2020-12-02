@@ -97,6 +97,43 @@ export const mapLineChart = sparqlBindings => {
   }
 }
 
+export const mapLineChartFillEmptyValues = sparqlBindings => {
+  const seriesData = []
+  const categoriesData = []
+  const sparqlBindingsLength = sparqlBindings.length
+  sparqlBindings.map((b, index, bindings) => {
+    const currentCategory = parseInt(b.category.value)
+    const currentValue = parseInt(b.count.value)
+    seriesData.push(currentValue)
+    categoriesData.push(currentCategory)
+    if (index + 1 < sparqlBindingsLength) {
+      let categoryIter = currentCategory
+      const nextNonZeroCategory = parseInt(bindings[index + 1].category.value)
+      // add zeros until we reach the next category with a non zero value
+      while (categoryIter < nextNonZeroCategory - 1) {
+        categoryIter += 1
+        seriesData.push(0)
+        categoriesData.push(categoryIter)
+      }
+    }
+  })
+  return {
+    seriesData,
+    categoriesData
+  }
+}
+
+export const mapPieChart = sparqlBindings => {
+  const results = sparqlBindings.map(b => {
+    return {
+      category: b.category.value,
+      prefLabel: b.prefLabel.value,
+      instanceCount: b.instanceCount.value
+    }
+  })
+  return results
+}
+
 export const mapMultipleLineChart = sparqlBindings => {
   const res = {}
   sparqlBindings.forEach(b => {
@@ -141,7 +178,9 @@ const mapFacetValues = sparqlBindings => {
     try {
       return {
         id: b.id.value,
-        prefLabel: b.prefLabel.value,
+        prefLabel: b.prefLabel
+          ? b.prefLabel.value
+          : '0', // temporary prefLabel for <http://ldf.fi/MISSING_VALUE> to support sorting
         selected: b.selected.value,
         parent: b.parent ? b.parent.value : null,
         instanceCount: b.instanceCount.value

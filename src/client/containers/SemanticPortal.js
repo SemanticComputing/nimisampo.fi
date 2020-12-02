@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
-// import intl from 'react-intl-universal'
+import intl from 'react-intl-universal'
 // import { has } from 'lodash'
 import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
@@ -42,6 +42,7 @@ import {
   fetchFacet,
   fetchFacetConstrainSelf,
   clearFacet,
+  clearAllFacets,
   fetchGeoJSONLayers,
   fetchGeoJSONLayersBackend,
   clearGeoJSONLayers,
@@ -270,6 +271,10 @@ const SemanticPortal = props => {
   const noResults = props.clientFS.results == null
   const rootUrlWithLang = `${rootUrl}/${props.options.currentLocale}`
 
+  useEffect(() => {
+    document.title = intl.get('appTitle.short')
+  }, [props.options.currentLocale])
+
   return (
     <MuiPickersUtilsProvider libInstance={moment} utils={MomentUtils} locale={props.options.currentLocale}>
       <div className={classes.root}>
@@ -389,6 +394,7 @@ const mapDispatchToProps = ({
   fetchFacet,
   fetchFacetConstrainSelf,
   clearFacet,
+  clearAllFacets,
   fetchGeoJSONLayers,
   fetchGeoJSONLayersBackend,
   clearGeoJSONLayers,

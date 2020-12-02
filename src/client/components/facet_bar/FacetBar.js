@@ -154,13 +154,16 @@ class FacetBar extends React.Component {
           <SliderFacet
             facetID={facetID}
             facet={facet}
+            facetFilter={facet.timespanFilter}
+            facetLabel={label}
             facetClass={this.props.facetClass}
-            resultClass={this.props.resultClass}
-            facetUpdateID={facetUpdateID}
             fetchFacet={this.props.fetchFacet}
             someFacetIsFetching={someFacetIsFetching}
             updateFacetOption={this.props.updateFacetOption}
+            showError={this.props.showError}
             dataType='ISOString'
+            minLabel={intl.get('facetBar.minYear')}
+            maxLabel={intl.get('facetBar.maxYear')}
           />
         )
         break
@@ -183,13 +186,16 @@ class FacetBar extends React.Component {
           <SliderFacet
             facetID={facetID}
             facet={facet}
+            facetFilter={facet.integerFilter}
+            facetLabel={label}
             facetClass={this.props.facetClass}
-            resultClass={this.props.resultClass}
-            facetUpdateID={facetUpdateID}
             fetchFacet={this.props.fetchFacet}
             someFacetIsFetching={someFacetIsFetching}
             updateFacetOption={this.props.updateFacetOption}
+            showError={this.props.showError}
             dataType='integer'
+            minLabel={intl.get('facetBar.min')}
+            maxLabel={intl.get('facetBar.max')}
           />
         )
         break
@@ -326,6 +332,7 @@ class FacetBar extends React.Component {
               someFacetIsFetching={someFacetIsFetching}
               fetchFacet={this.props.fetchFacet}
               perspectiveID={facetClass}
+              clearAllFacets={this.props.clearAllFacets}
             />
           </Paper>}
         {facets && Object.keys(facets).map(facetID => {
@@ -352,6 +359,7 @@ FacetBar.propTypes = {
   fetchFacetConstrainSelf: PropTypes.func,
   fetchResults: PropTypes.func,
   clearFacet: PropTypes.func,
+  clearAllFacets: PropTypes.func,
   fetchResultCount: PropTypes.func,
   updateFacetOption: PropTypes.func,
   updateMapBounds: PropTypes.func,
@@ -364,7 +372,7 @@ FacetBar.propTypes = {
   clientFSUpdateFacet: PropTypes.func,
   defaultActiveFacets: PropTypes.instanceOf(Set).isRequired,
   leafletMap: PropTypes.object,
-  showError: PropTypes.func,
+  showError: PropTypes.func.isRequired,
   rootUrl: PropTypes.string.isRequired
 }
 

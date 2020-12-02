@@ -66,7 +66,7 @@ export const INITIAL_STATE = {
       spatialFilterButton: false,
       isFetching: false,
       searchField: false,
-      containerClass: 'three',
+      containerClass: 'four',
       filterType: 'timespanFilter',
       min: null,
       max: null,
@@ -113,7 +113,7 @@ export const INITIAL_STATE = {
 
 const perspective2Facets = (state = INITIAL_STATE, action) => {
   if (action.facetClass === 'perspective2') {
-    return handleFacetAction(state, action)
+    return handleFacetAction(state, action, INITIAL_STATE)
   } else return state
 }
 

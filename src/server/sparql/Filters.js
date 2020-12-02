@@ -1,35 +1,5 @@
 import { has } from 'lodash'
 
-export const hasPreviousSelections = (constraints, facetID) => {
-  let hasPreviousSelections = false
-  constraints.map(facet => {
-    if (facet.facetID === facetID && facet.filterType === 'uriFilter') {
-      hasPreviousSelections = true
-    }
-  })
-  return hasPreviousSelections
-}
-
-export const hasPreviousSelectionsFromOtherFacets = (constraints, facetID) => {
-  let hasPreviousSelectionsFromOtherFacets = false
-  constraints.map(facet => {
-    if (facet.facetID !== facetID && facet.filterType === 'uriFilter') {
-      hasPreviousSelectionsFromOtherFacets = true
-    }
-  })
-  return hasPreviousSelectionsFromOtherFacets
-}
-
-export const getUriFilters = (constraints, facetID) => {
-  let filters = []
-  constraints.map(facet => {
-    if (facet.facetID === facetID && facet.filterType === 'uriFilter') {
-      filters = facet.values
-    }
-  })
-  return filters
-}
-
 export const generateConstraintsBlock = ({
   backendSearchConfig,
   facetClass,
@@ -38,72 +8,79 @@ export const generateConstraintsBlock = ({
   facetID,
   inverse,
   constrainSelf = false,
-  filterTripleFirst = false
+  filterTripleFirst = false,
+  defaultConstraint = null
 }) => {
   let filterStr = ''
-  const skipFacetID = constrainSelf ? '' : facetID
-  const modifiedConstraints = constraints.filter(facet => facet.facetID !== skipFacetID)
-  modifiedConstraints.sort((a, b) => a.priority - b.priority)
-  modifiedConstraints.map(c => {
-    switch (c.filterType) {
-      case 'textFilter':
-        filterStr += generateTextFilter({
-          backendSearchConfig,
-          facetClass: facetClass,
-          facetID: c.facetID,
-          filterTarget: filterTarget,
-          queryString: c.values,
-          inverse: inverse
-        })
-        break
-      case 'uriFilter':
-        filterStr += generateUriFilter({
-          backendSearchConfig,
-          facetClass: facetClass,
-          facetID: c.facetID,
-          filterTarget: filterTarget,
-          values: c.values,
-          inverse: inverse,
-          filterTripleFirst,
-          selectAlsoSubconcepts: Object.prototype.hasOwnProperty.call(c, 'selectAlsoSubconcepts')
-            ? c.selectAlsoSubconcepts : true, // default behaviour for hierarchical facets, can be controlled via reducers
-          useConjuction: c.useConjuction
-        })
-        break
-      case 'spatialFilter':
-        filterStr += generateSpatialFilter({
-          backendSearchConfig,
-          facetClass: facetClass,
-          facetID: c.facetID,
-          filterTarget: filterTarget,
-          values: c.values,
-          inverse: inverse
-        })
-        break
-      case 'timespanFilter':
-      case 'dateFilter':
-        filterStr += generateTimespanFilter({
-          backendSearchConfig,
-          facetClass: facetClass,
-          facetID: c.facetID,
-          filterTarget: filterTarget,
-          values: c.values,
-          inverse: inverse
-        })
-        break
-      case 'integerFilter':
-      case 'integerFilterRange':
-        filterStr += generateIntegerFilter({
-          backendSearchConfig,
-          facetClass: facetClass,
-          facetID: c.facetID,
-          filterTarget: filterTarget,
-          values: c.values,
-          inverse: inverse
-        })
-        break
-    }
-  })
+  if (constraints !== null) {
+    const skipFacetID = constrainSelf ? '' : facetID
+    const modifiedConstraints = constraints.filter(facet => facet.facetID !== skipFacetID)
+    modifiedConstraints.sort((a, b) => a.priority - b.priority)
+    modifiedConstraints.map(c => {
+      switch (c.filterType) {
+        case 'textFilter':
+          filterStr += generateTextFilter({
+            backendSearchConfig,
+            facetClass: facetClass,
+            facetID: c.facetID,
+            filterTarget: filterTarget,
+            queryString: c.values,
+            inverse: inverse
+          })
+          break
+        case 'uriFilter':
+          filterStr += generateUriFilter({
+            backendSearchConfig,
+            facetClass: facetClass,
+            facetID: c.facetID,
+            filterTarget: filterTarget,
+            values: c.values,
+            inverse: inverse,
+            filterTripleFirst,
+            selectAlsoSubconcepts: Object.prototype.hasOwnProperty.call(c, 'selectAlsoSubconcepts')
+              ? c.selectAlsoSubconcepts : true, // default behaviour for hierarchical facets, can be controlled via reducers
+            useConjuction: c.useConjuction
+          })
+          break
+        case 'spatialFilter':
+          filterStr += generateSpatialFilter({
+            backendSearchConfig,
+            facetClass: facetClass,
+            facetID: c.facetID,
+            filterTarget: filterTarget,
+            values: c.values,
+            inverse: inverse
+          })
+          break
+        case 'timespanFilter':
+        case 'dateFilter':
+          filterStr += generateTimespanFilter({
+            backendSearchConfig,
+            facetClass: facetClass,
+            facetID: c.facetID,
+            filterTarget: filterTarget,
+            values: c.values,
+            inverse: inverse
+          })
+          break
+        case 'integerFilter':
+        case 'integerFilterRange':
+          filterStr += generateIntegerFilter({
+            backendSearchConfig,
+            facetClass: facetClass,
+            facetID: c.facetID,
+            filterTarget: filterTarget,
+            values: c.values,
+            inverse: inverse
+          })
+          break
+      }
+    })
+  }
+  if (defaultConstraint !== null) {
+    const defaultConstraintTriple = defaultConstraint.replace('<SUBJECT>', `?${filterTarget}`)
+    filterStr += defaultConstraintTriple
+  }
   return filterStr
 }
 
@@ -179,24 +156,23 @@ const generateTimespanFilter = ({
     selectionStart = `${selectionStart}T00:00:00Z`
     selectionEnd = `${selectionEnd}T00:00:00Z`
   }
-  // return `
-  //   ?${filterTarget} ${facetConfig.predicate} ?timespan .
-  //   ?timespan ${facetConfig.startProperty} ?start .
-  //   ?timespan ${facetConfig.endProperty} ?end .
-  //   # both start and end is in selected range
-  //   FILTER(?start >= "${start}"^^xsd:date)
-  //   FILTER(?end <= "${end}"^^xsd:date)
-  // `;
   const filterStr = `
-    ?${filterTarget} ${facetConfig.predicate} ?${facetID} .
-    ?${facetID} ${facetConfig.startProperty} ?${facetID}Start .
-    ?${facetID} ${facetConfig.endProperty} ?${facetID}End .
-    # either start or end is in selected range
+    ?${filterTarget} ${facetConfig.predicate} ?tspan .
+    ?tspan ${facetConfig.startProperty} ?startA ;
+           ${facetConfig.endProperty} ?endA .       
+    BIND("${selectionStart}"^^${dataType} as ?startB)
+    BIND("${selectionEnd}"^^${dataType} as ?endB)      
+    # Determine whether two date ranges overlap: https://stackoverflow.com/a/325964/6028835
+    # Also make sure that starts and ends are in right order in the RDF data.
     FILTER(
-      ?${facetID}Start >= "${selectionStart}"^^${dataType} && ?${facetID}Start <= "${selectionEnd}"^^${dataType}
-      ||
-      ?${facetID}End >= "${selectionStart}"^^${dataType} && ?${facetID}End <= "${selectionEnd}"^^${dataType}
+      (?startA <= ?endB) && (?endA >= ?startB) && (?startA <= ?endA)
     )
+    # Alternative, stricter implementation:
+    # Determine whether range B (facet selection) is entirely within range A (timespan in RDF data).
+    # Also make sure that starts and ends are in right order in the RDF data.
+    # FILTER(
+    #  (?startA >= ?startB) && (?endA <= ?endB) && (?startA <= ?endA)
+    # )
   `
   if (inverse) {
     return `
@@ -283,7 +259,8 @@ const generateUriFilter = ({
         valuesStr
       })
   }
-  if (modifiedValues.length > 0 && indexOfUnknown !== -1) {
+  // TODO: how to handle 'http://ldf.fi/MISSING_VALUE' in inverse setting?
+  if (!inverse && modifiedValues.length > 0 && indexOfUnknown !== -1) {
     s = `
     {
       ${s}
@@ -294,7 +271,7 @@ const generateUriFilter = ({
     }
     `
   }
-  if (modifiedValues.length === 0 && indexOfUnknown !== -1) {
+  if (!inverse && modifiedValues.length === 0 && indexOfUnknown !== -1) {
     s = `
       ${generateMissingValueBlock({ predicate, filterTarget })}
     `
@@ -405,13 +382,4 @@ const generateConjuctionForUriFilter = ({
   } else {
     return `?${filterTarget} ${predicateModified} ${valuesStr}`
   }
-}
-
-export const generateSelectedFilter = ({
-  currentSelectionsWithoutUnknown,
-  inverse
-}) => {
-  return (`
-          FILTER(?id ${inverse ? 'NOT' : ''} IN ( <${currentSelectionsWithoutUnknown.join('>, <')}> ))
-  `)
 }

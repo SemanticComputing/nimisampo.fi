@@ -207,9 +207,9 @@ class HierarchicalFacet extends Component {
   }
 
   generateNodeProps = treeObj => {
-    const { uriFilter } = this.props.facet
+    // const { uriFilter } = this.props.facet
     const { node } = treeObj
-    const selectedCount = uriFilter == null ? 0 : Object.keys(this.props.facet.uriFilter).length
+    // const selectedCount = uriFilter == null ? 0 : Object.keys(this.props.facet.uriFilter).length
     let isSelected
     if (this.props.facetedSearchMode === 'clientFS') {
       isSelected = this.props.facet.selectionsSet.has(node.id)
@@ -234,7 +234,7 @@ class HierarchicalFacet extends Component {
                 // prevent selecting when another facet is still updating:
                 this.props.someFacetIsFetching ||
                 // prevent selecting all facet values when there is a logical OR between the selections:
-                (!this.props.facet.useConjuction && !isSelected && selectedCount >= this.props.facet.distinctValueCount - 1) ||
+                // (!this.props.facet.useConjuction && !isSelected && selectedCount >= this.props.facet.distinctValueCount - 1) ||
                 // prevent selecting when parent has been selected
                 node.disabled === 'true'
               }
@@ -255,7 +255,11 @@ class HierarchicalFacet extends Component {
     if (this.state.matches.length > 0) {
       isSearchMatch = this.state.matches.some(match => match.node.id === node.id)
     }
-
+    if (node.id === 'http://ldf.fi/MISSING_VALUE') {
+      // Check if there is a translated label for missing value, or use defaults
+      node.prefLabel = intl.get(`perspectives.${this.props.facetClass}.properties.${this.props.facetID}.missingValueLabel`) ||
+        intl.get('facetBar.defaultMissingValueLabel') || 'Unknown'
+    }
     return (
       <>
         <Typography className={isSearchMatch ? this.props.classes.searchMatch : ''} variant='body2'>

@@ -1,24 +1,35 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import intl from 'react-intl-universal'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import purple from '@material-ui/core/colors/purple'
 import { withStyles } from '@material-ui/core/styles'
-import { Slider, Rail, Handles, Tracks, Ticks } from 'react-compound-slider'
-import { Handle, Track, Tick, TooltipRail } from './SliderComponents'
-import { YearToISOString, ISOStringToYear } from './FacetHelpers'
-
-const sliderRootStyle = {
-  position: 'relative',
-  width: '100%'
-}
+import Slider from '@material-ui/core/Slider'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import { yearToISOString, ISOStringToYear } from './FacetHelpers'
 
 const styles = theme => ({
   root: {
     height: '100%',
     display: 'flex',
-    alignItems: 'center',
-    paddingLeft: theme.spacing(4),
-    paddingRight: theme.spacing(2)
+    flexDirection: 'column',
+    padding: theme.spacing(3)
+  },
+  sliderContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  inputContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  button: {
+    height: 40
+  },
+  textField: {
+    width: 100
   },
   spinnerContainer: {
     display: 'flex',
@@ -33,118 +44,200 @@ const styles = theme => ({
 * A component for a slider range facet.
 */
 class SliderFacet extends Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      min: null,
+      max: null,
+      start: null,
+      end: null
+    }
+  }
+
   componentDidMount = () => {
-    const { isFetching, min, max } = this.props.facet
-    if (!isFetching && (min == null || max == null)) {
-      this.props.fetchFacet({
-        facetClass: this.props.facetClass,
-        facetID: this.props.facetID
+    this.props.fetchFacet({
+      facetClass: this.props.facetClass,
+      facetID: this.props.facetID
+    })
+  }
+
+  componentDidUpdate = prevProps => {
+    if (this.props.facet.min == null || this.props.facet.max == null) {
+      return
+    }
+    if (prevProps.facet.min !== this.props.facet.min ||
+      prevProps.facetFilter !== this.props.facetFilter ||
+      (prevProps.facet.isFetching && !this.props.facet.isFetching)) {
+      let newMin
+      let newMax
+      let newStart
+      let newEnd
+      const { min, max } = this.props.facet
+      if (this.props.dataType === 'ISOString') {
+        newMin = ISOStringToYear(min)
+        newMax = ISOStringToYear(max)
+        if (this.props.facetFilter == null) {
+          newStart = newMin
+          newEnd = newMax
+        } else {
+          const { start, end } = this.props.facetFilter
+          newStart = ISOStringToYear(start)
+          newEnd = ISOStringToYear(end)
+        }
+      } else if (this.props.dataType === 'integer') {
+        newMin = parseInt(min)
+        newMax = parseInt(max)
+        if (this.props.facetFilter == null) {
+          newStart = newMin
+          newEnd = newMax
+        } else {
+          const { start, end } = this.props.facetFilter
+          newStart = parseInt(start)
+          newEnd = parseInt(end)
+        }
+      }
+      this.setState({
+        min: newMin,
+        max: newMax,
+        start: newStart,
+        end: newEnd
       })
     }
   }
 
-  handleSliderOnChange = values => {
-    if (this.props.dataType === 'ISOString') {
-      values[0] = YearToISOString({ year: values[0], start: true })
-      values[1] = YearToISOString({ year: values[1], start: false })
-    }
-    this.props.updateFacetOption({
-      facetClass: this.props.facetClass,
-      facetID: this.props.facetID,
-      option: this.props.facet.filterType,
-      value: values
+  handleSliderOnChange = (event, newValues) => {
+    this.setState({
+      start: newValues[0],
+      end: newValues[1]
     })
   }
 
+  handleMinInputOnChange = event => {
+    const newStart = event.target.value === '' ? '' : Number(event.target.value)
+    this.setState({ start: newStart })
+  }
+
+  handleMaxInputOnChange = event => {
+    const newEnd = event.target.value === '' ? '' : Number(event.target.value)
+    this.setState({ end: newEnd })
+  }
+
+  handleApplyOnClick = () => this.updateFacetSelection()
+
+  handleOnKeyPress = event => {
+    if (event.key === 'Enter') {
+      this.updateFacetSelection()
+    }
+  }
+
+  updateFacetSelection = () => {
+    const { start, end, min, max } = this.state
+    if (this.isValidSelection({ start, end, min, max })) {
+      let facetValues = []
+      if (this.props.dataType === 'ISOString') {
+        facetValues[0] = yearToISOString({ year: start, start: true })
+        facetValues[1] = yearToISOString({ year: end, start: false })
+      } else {
+        facetValues = [start, end]
+      }
+      this.props.updateFacetOption({
+        facetClass: this.props.facetClass,
+        facetID: this.props.facetID,
+        option: this.props.facet.filterType,
+        value: facetValues
+      })
+    } else {
+      this.props.showError({
+        title: this.props.facetLabel,
+        text: intl.get('facets.sliderFacet.invalidStartOrEnd', { min, max })
+      })
+    }
+  }
+
+  isValidSelection = ({ start, end, min, max }) => {
+    if (start > end) { return false }
+    if (start < min || end < min) { return false }
+    if (start > max || end > max) { return false }
+    return true
+  }
+
   render () {
-    const { classes, someFacetIsFetching } = this.props
-    const { isFetching, min, max } = this.props.facet
-    let domain = null
-    let values = null
-    if (isFetching) {
+    const { min, max, start, end } = this.state
+    const { classes, someFacetIsFetching, minLabel, maxLabel } = this.props
+    const { isFetching } = this.props.facet
+    if (isFetching || start == null || end == null || min == null || max == null) {
       return (
         <div className={classes.spinnerContainer}>
           <CircularProgress style={{ color: purple[500] }} thickness={5} />
         </div>
       )
     }
-    if (min == null || max == null) {
-      return (
-        <div />
-      )
-    }
-    if (this.props.dataType === 'ISOString') {
-      const minYear = ISOStringToYear(min)
-      const maxYear = ISOStringToYear(max)
-      domain = [minYear, maxYear]
-      if (this.props.facet.timespanFilter == null) {
-        values = domain
-      } else {
-        const { start, end } = this.props.facet.timespanFilter
-        values = [ISOStringToYear(start), ISOStringToYear(end)]
-      }
-    } else if (this.props.dataType === 'integer') {
-      domain = [parseInt(min), parseInt(max)]
-      if (this.props.facet.integerFilter == null) {
-        values = domain
-      } else {
-        const { start, end } = this.props.facet.integerFilter
-        values = [start, end]
-      }
-    }
-    // Slider documentation: https://github.com/sghall/react-compound-slider
     return (
       <div className={classes.root}>
-        <Slider
-          mode={1}
-          step={1}
-          domain={domain}
-          disabled={someFacetIsFetching}
-          reversed={false}
-          rootStyle={sliderRootStyle}
-          onChange={this.handleSliderOnChange}
-          values={values}
-        >
-          <Rail>{railProps => <TooltipRail {...railProps} />}</Rail>
-          <Handles>
-            {({ handles, activeHandleID, getHandleProps }) => (
-              <div className='slider-handles'>
-                {handles.map(handle => (
-                  <Handle
-                    key={handle.id}
-                    handle={handle}
-                    domain={domain}
-                    isActive={handle.id === activeHandleID}
-                    getHandleProps={getHandleProps}
-                  />
-                ))}
-              </div>
-            )}
-          </Handles>
-          <Tracks left={false} right={false}>
-            {({ tracks, getTrackProps }) => (
-              <div className='slider-tracks'>
-                {tracks.map(({ id, source, target }) => (
-                  <Track
-                    key={id}
-                    source={source}
-                    target={target}
-                    getTrackProps={getTrackProps}
-                  />
-                ))}
-              </div>
-            )}
-          </Tracks>
-          <Ticks count={10}>
-            {({ ticks }) => (
-              <div className='slider-ticks'>
-                {ticks.map(tick => (
-                  <Tick key={tick.id} tick={tick} count={ticks.length} />
-                ))}
-              </div>
-            )}
-          </Ticks>
-        </Slider>
+        <div className={classes.sliderContainer}>
+          <Slider
+            min={min}
+            max={max}
+            value={[start, end]}
+            onChange={this.handleSliderOnChange}
+            valueLabelDisplay='on'
+            aria-labelledby='range-slider'
+            disabled={someFacetIsFetching || isFetching}
+          />
+        </div>
+        <div className={classes.inputContainer}>
+          <TextField
+            id='standard-number'
+            label={minLabel}
+            disabled={someFacetIsFetching}
+            value={start}
+            onChange={this.handleMinInputOnChange}
+            onKeyPress={this.handleOnKeyPress}
+            variant='outlined'
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true
+            }}
+            inputProps={{
+              step: 1,
+              min,
+              max,
+              type: 'number',
+              'aria-labelledby': 'input-slider'
+            }}
+            margin='normal'
+          />
+          <Button
+            variant='contained'
+            color='primary'
+            className={classes.button}
+            onClick={this.handleApplyOnClick}
+            disabled={someFacetIsFetching || isFetching}
+          >
+            {intl.get('facetBar.applyFacetSelection')}
+          </Button>
+          <TextField
+            id='standard-number'
+            label={maxLabel}
+            disabled={someFacetIsFetching}
+            value={end}
+            onChange={this.handleMaxInputOnChange}
+            onKeyPress={this.handleOnKeyPress}
+            variant='outlined'
+            className={classes.textField}
+            InputLabelProps={{
+              shrink: true
+            }}
+            inputProps={{
+              step: 1,
+              min,
+              max,
+              type: 'number',
+              'aria-labelledby': 'input-slider'
+            }}
+            margin='normal'
+          />
+        </div>
       </div>
     )
   }
@@ -154,15 +247,14 @@ SliderFacet.propTypes = {
   classes: PropTypes.object.isRequired,
   facetID: PropTypes.string.isRequired,
   facet: PropTypes.object.isRequired,
+  facetFilter: PropTypes.object,
+  facetLabel: PropTypes.string,
   facetClass: PropTypes.string,
-  resultClass: PropTypes.string,
   fetchFacet: PropTypes.func,
   someFacetIsFetching: PropTypes.bool.isRequired,
-  updateFacetOption: PropTypes.func,
-  facetUpdateID: PropTypes.number,
-  updatedFilter: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  updatedFacet: PropTypes.string,
-  dataType: PropTypes.string.isRequired
+  updateFacetOption: PropTypes.func.isRequired,
+  showError: PropTypes.func.isRequired,
+  dataType: PropTypes.oneOf(['ISOString', 'integer']).isRequired
 }
 
 export const SliderFacetComponent = SliderFacet

@@ -92,7 +92,7 @@ export const INITIAL_STATE = {
       lineChartButton: true,
       isFetching: false,
       searchField: false,
-      containerClass: 'three',
+      containerClass: 'four',
       filterType: 'timespanFilter',
       min: null,
       max: null,
@@ -127,6 +127,7 @@ export const INITIAL_STATE = {
       sortDirection: 'desc',
       sortButton: true,
       spatialFilterButton: false,
+      barChartButton: true,
       pieChartButton: true,
       isFetching: false,
       searchField: true,
@@ -207,7 +208,7 @@ export const INITIAL_STATE = {
       spatialFilterButton: false,
       isFetching: false,
       searchField: false,
-      containerClass: 'three',
+      containerClass: 'four',
       filterType: 'timespanFilter',
       min: null,
       max: null,
@@ -382,7 +383,7 @@ export const INITIAL_STATE = {
 
 const perspective1Facets = (state = INITIAL_STATE, action) => {
   if (action.facetClass === 'perspective1') {
-    return handleFacetAction(state, action)
+    return handleFacetAction(state, action, INITIAL_STATE)
   } else return state
 }
 
