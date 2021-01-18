@@ -93,34 +93,39 @@ class HierarchicalFacet extends Component {
   }
 
   serverFScomponentDidUpdate = prevProps => {
+    // update component state if the user modified this facet
     if (prevProps.facetUpdateID !== this.props.facetUpdateID) {
-      // update component state if the user modified this facet
       if (!this.props.facet.useConjuction && this.props.updatedFacet === this.props.facetID) {
         if (has(this.props.updatedFilter, 'path')) {
           const treeObj = this.props.updatedFilter
-          const newTreeData = changeNodeAtPath({
-            treeData: this.state.treeData,
-            getNodeKey: ({ treeIndex }) => treeIndex,
-            path: treeObj.path,
-            newNode: () => {
-              const oldNode = treeObj.node
-              if (has(oldNode, 'children')) {
-                return {
-                  ...oldNode,
-                  selected: treeObj.added ? 'true' : 'false',
-                  // select also children by default if 'selectAlsoSubconcepts' is not defined
-                  ...((!Object.prototype.hasOwnProperty.call(this.props.facet, 'selectAlsoSubconcepts') || this.props.facet.selectAlsoSubconcepts) &&
-                  { children: this.recursiveSelect(oldNode.children, treeObj.added) })
-                }
-              } else {
-                return {
-                  ...oldNode,
-                  selected: treeObj.added ? 'true' : 'false'
+          try {
+            const newTreeData = changeNodeAtPath({
+              treeData: this.state.treeData,
+              getNodeKey: ({ treeIndex }) => treeIndex,
+              path: treeObj.path,
+              newNode: () => {
+                const oldNode = treeObj.node
+                if (has(oldNode, 'children')) {
+                  return {
+                    ...oldNode,
+                    selected: treeObj.added ? 'true' : 'false',
+                    // select also children by default if 'selectAlsoSubconcepts' is not defined
+                    ...((!Object.prototype.hasOwnProperty.call(this.props.facet, 'selectAlsoSubconcepts') || this.props.facet.selectAlsoSubconcepts) &&
+                    { children: this.recursiveSelect(oldNode.children, treeObj.added) })
+                  }
+                } else {
+                  return {
+                    ...oldNode,
+                    selected: treeObj.added ? 'true' : 'false'
+                  }
                 }
               }
-            }
-          })
-          this.setState({ treeData: newTreeData })
+            })
+            this.setState({ treeData: newTreeData })
+          } catch (err) {
+            // console.log(err)
+            // Ignore the error -- the null return will be explanation enough
+          }
         }
       } else { // else fetch new values, because some other facet was updated
         // console.log(`fetching new values for ${this.props.facetID}`)
@@ -250,7 +255,7 @@ class HierarchicalFacet extends Component {
   };
 
   generateLabel = node => {
-    const count = node.totalInstanceCount == null || node.totalInstanceCount === 0 ? node.instanceCount : node.totalInstanceCount
+    const count = node.instanceCount
     let isSearchMatch = false
     if (this.state.matches.length > 0) {
       isSearchMatch = this.state.matches.some(match => match.node.id === node.id)
@@ -308,7 +313,7 @@ class HierarchicalFacet extends Component {
             {searchField && facet.filterType !== 'spatialFilter' &&
               <div className={classes.facetSearchContainer}>
                 <Input
-                  placeholder='Search...'
+                  placeholder={intl.get('facetBar.facetSearchFieldPlaceholder')}
                   onChange={this.handleSearchFieldOnChange}
                   value={this.state.searchString}
                 />
