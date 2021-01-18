@@ -11,6 +11,7 @@ export const perspective1Config = {
     useAuth: false
   },
   facetClass: 'frbroo:F4_Manifestation_Singleton',
+  includeInSitemap: true,
   // defaultConstraint: `
   //   <SUBJECT> dct:source mmm-schema:Bibale .
   // `,
@@ -53,7 +54,6 @@ export const perspective1Config = {
       labelPath: '^crm:P108_has_produced/crm:P7_took_place_at/skos:prefLabel',
       predicate: '^crm:P108_has_produced/crm:P7_took_place_at',
       parentProperty: 'gvp:broaderPreferred',
-      parentPredicate: '^crm:P108_has_produced/crm:P7_took_place_at/gvp:broaderPreferred+',
       type: 'hierarchical'
     },
     productionTimespan: {
@@ -82,7 +82,6 @@ export const perspective1Config = {
       labelPath: '^crm:P30_transferred_custody_of/crm:P7_took_place_at/skos:prefLabel',
       predicate: '^crm:P30_transferred_custody_of/crm:P7_took_place_at',
       parentProperty: 'gvp:broaderPreferred',
-      parentPredicate: '^crm:P30_transferred_custody_of/crm:P7_took_place_at/gvp:broaderPreferred+',
       type: 'hierarchical'
     },
 
@@ -105,7 +104,6 @@ export const perspective1Config = {
       labelPath: 'mmm-schema:last_known_location/skos:prefLabel',
       predicate: 'mmm-schema:last_known_location',
       parentProperty: 'gvp:broaderPreferred',
-      parentPredicate: 'mmm-schema:last_known_location/gvp:broaderPreferred+',
       type: 'hierarchical'
     },
     language: {
