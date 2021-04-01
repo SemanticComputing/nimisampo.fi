@@ -1,10 +1,11 @@
 import { has, isEmpty } from 'lodash'
 import { UPDATE_FACET_VALUES_CONSTRAIN_SELF } from '../../actions'
 
-export const fetchResults = state => {
+export const fetchResults = (state, action) => {
   return {
     ...state,
     instance: null,
+    instanceTableExternalData: null,
     fetching: true
   }
 }
@@ -14,6 +15,14 @@ export const fetchResultCount = state => {
     ...state,
     resultCount: null,
     fetchingResultCount: true
+  }
+}
+
+export const fetchInstanceAnalysisData = state => {
+  return {
+    ...state,
+    instanceAnalysisData: null,
+    fetchingInstanceAnalysisData: true
   }
 }
 
@@ -45,9 +54,9 @@ export const updateInstanceAnalysisData = (state, action) => {
   return {
     ...state,
     instanceAnalysisData: action.data,
-    instanceAnalysisDataUpdateID: ++state.instancePageAnalysisDataUpdateID,
+    instanceAnalysisDataUpdateID: ++state.instanceAnalysisDataUpdateID,
     instanceSparqlQuery: action.sparqlQuery,
-    fetching: false
+    fetchingInstanceAnalysisData: false
   }
 }
 

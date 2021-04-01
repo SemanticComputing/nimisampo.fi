@@ -5,6 +5,7 @@ import {
   FETCH_PAGINATED_RESULTS,
   FETCH_PAGINATED_RESULTS_FAILED,
   FETCH_BY_URI,
+  FETCH_INSTANCE_ANALYSIS,
   UPDATE_RESULT_COUNT,
   UPDATE_RESULTS,
   UPDATE_PAGINATED_RESULTS,
@@ -21,6 +22,7 @@ import {
   fetchResults,
   fetchResultsFailed,
   fetchResultCount,
+  fetchInstanceAnalysisData,
   updateSortBy,
   updateResultCount,
   updateResults,
@@ -39,9 +41,11 @@ export const handleDataFetchingAction = (state, action) => {
     case FETCH_RESULTS:
     case FETCH_PAGINATED_RESULTS:
     case FETCH_BY_URI:
-      return fetchResults(state)
+      return fetchResults(state, action)
     case FETCH_RESULT_COUNT:
       return fetchResultCount(state)
+    case FETCH_INSTANCE_ANALYSIS:
+      return fetchInstanceAnalysisData(state)
     case FETCH_RESULTS_FAILED:
     case FETCH_PAGINATED_RESULTS_FAILED:
       return fetchResultsFailed(state)

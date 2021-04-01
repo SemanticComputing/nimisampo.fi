@@ -1,5 +1,9 @@
 export default {
   languageLabel: 'Suomi',
+  html: {
+    title: 'Nimisampo: nimistöntutkijan työpöytä',
+    description: 'Nimisampo on kaikille avoin verkkopalvelu suomalaisesta paikannimistöstä kiinnostuneiden tutkijoiden ja suuren yleisön käytettäväksi. Nimistöä voi tarkastella kartoilla, datana ja tilastollisesti.'
+  },
   appTitle: {
     short: 'Nimisampo',
     long: 'Nimisampo: nimistöntutkijan työpöytä'
@@ -86,7 +90,7 @@ export default {
       heatmap: 'Heatmap'
     },
     wrongZoomLevel: 'Hakutuloksien suuren määrän johdosta kartan zoomaustason täytyy olla vähintään 11',
-    tooManyResults: 'Hakutuloksia on yli 3000, jolloin täytyy käyttää joko klusteroitua karttaa tai lämpökartta.'
+    tooManyResults: 'Hakutuloksia on yli 1500, jolloin täytyy käyttää joko klusteroitua karttaa tai lämpökartta.'
   },
   instancePageGeneral: {
     introduction: `

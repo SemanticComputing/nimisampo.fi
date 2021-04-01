@@ -1,5 +1,9 @@
 export default {
   languageLabel: 'English',
+  html: {
+    title: 'NameSampo: A Workbench for Toponomastic Research',
+    description: 'NameSampo is a semantic portal for searching and studying place names. The data can be viewed as a table, on maps, and as statistical distributions.'
+  },
   appTitle: {
     short: 'NameSampo',
     long: 'NameSampo: A Workbench for Toponomastic Research'
@@ -85,7 +89,7 @@ export default {
       heatmap: 'Heatmap'
     },
     wrongZoomLevel: 'The map zoom level has to at least 11',
-    tooManyResults: 'More than 3000 results, please use clustered map or heatmap'
+    tooManyResults: 'More than 1500 results, please use clustered map or heatmap'
   },
   instancePageGeneral: {
     introduction: `

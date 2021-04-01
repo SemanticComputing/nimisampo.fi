@@ -92,7 +92,9 @@ export const getAllResults = ({
   constraints,
   resultFormat,
   optimize,
-  limit
+  limit,
+  fromID = null,
+  toID = null
 }) => {
   const config = backendSearchConfig[resultClass]
   let endpoint
@@ -104,7 +106,7 @@ export const getAllResults = ({
   } else {
     ({ endpoint, defaultConstraint, langTag, langTagSecondary } = config)
   }
-  const { filterTarget, resultMapper } = config
+  const { filterTarget, resultMapper, resultMapperConfig, postprocess = null } = config
   let { q } = config
   if (constraints == null && defaultConstraint == null) {
     q = q.replace(/<FILTER>/g, '# no filters')
@@ -124,6 +126,12 @@ export const getAllResults = ({
   }
   if (langTagSecondary) {
     q = q.replace(/<LANG_SECONDARY>/g, langTagSecondary)
+  }
+  if (fromID) {
+    q = q.replace(/<FROM_ID>/g, `<${fromID}>`)
+  }
+  if (toID) {
+    q = q.replace(/<TO_ID>/g, `<${toID}>`)
   }
   if (has(config, 'useNetworkAPI') && config.useNetworkAPI) {
     return runNetworkQuery({
@@ -145,6 +153,8 @@ export const getAllResults = ({
       endpoint: endpoint.url,
       useAuth: endpoint.useAuth,
       resultMapper,
+      resultMapperConfig,
+      postprocess,
       resultFormat
     })
   }
@@ -206,11 +216,11 @@ export const getByURI = ({
   } else {
     ({ endpoint, langTag, langTagSecondary } = config)
   }
-  const { properties, relatedInstances } = config.instance
+  const { properties, relatedInstances, noFilterForRelatedInstances = false } = config.instance
   let q = instanceQuery
   q = q.replace('<PROPERTIES>', properties)
   q = q.replace('<RELATED_INSTANCES>', relatedInstances)
-  if (constraints == null) {
+  if (constraints == null || noFilterForRelatedInstances) {
     q = q.replace('<FILTER>', '# no filters')
   } else {
     q = q.replace('<FILTER>', generateConstraintsBlock({
@@ -222,7 +232,7 @@ export const getByURI = ({
       facetID: null
     }))
   }
-  q = q.replace('<ID>', `<${uri}>`)
+  q = q.replace(/<ID>/g, `<${uri}>`)
   if (langTag) {
     q = q.replace(/<LANG>/g, langTag)
   }

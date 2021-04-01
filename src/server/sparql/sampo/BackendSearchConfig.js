@@ -8,6 +8,7 @@ import {
   productionPlacesQuery,
   lastKnownLocationsQuery,
   migrationsQuery,
+  migrationsDialogQuery,
   manuscriptPropertiesInstancePage,
   expressionProperties,
   collectionProperties,
@@ -53,11 +54,13 @@ import {
 import { hellerauMigrationsQuery } from './sparql_queries/SparqlQueriesHellerau'
 import { federatedSearchDatasets } from './sparql_queries/SparqlQueriesFederatedSearch'
 import { fullTextSearchProperties } from './sparql_queries/SparqlQueriesFullText'
+import { sitemapInstancePageQuery } from '../SparqlQueriesGeneral'
 import { makeObjectList } from '../SparqlObjectMapper'
 import {
   mapPlaces,
   mapLineChart,
-  mapMultipleLineChart
+  mapMultipleLineChart,
+  linearScale
 } from '../Mappers'
 
 export const backendSearchConfig = {
@@ -76,6 +79,8 @@ export const backendSearchConfig = {
   },
   works: {
     perspectiveID: 'perspective1',
+    rdfType: 'frbroo:F1_Work',
+    includeInSitemap: true,
     instance: {
       properties: workProperties,
       relatedInstances: ''
@@ -139,7 +144,21 @@ export const backendSearchConfig = {
   placesMsMigrations: {
     perspectiveID: 'perspective1',
     q: migrationsQuery,
-    filterTarget: 'manuscript__id',
+    filterTarget: 'manuscript',
+    resultMapper: makeObjectList,
+    postprocess: {
+      func: linearScale,
+      config: {
+        variable: 'instanceCount',
+        minAllowed: 3,
+        maxAllowed: 30
+      }
+    }
+  },
+  placesMsMigrationsDialog: {
+    perspectiveID: 'perspective1',
+    q: migrationsDialogQuery,
+    filterTarget: 'id',
     resultMapper: makeObjectList
   },
   placesEvents: {
@@ -156,13 +175,19 @@ export const backendSearchConfig = {
     perspectiveID: 'perspective1',
     q: productionsByDecadeQuery,
     filterTarget: 'instance',
-    resultMapper: mapLineChart
+    resultMapper: mapLineChart,
+    resultMapperConfig: {
+      fillEmptyValues: false
+    }
   },
   eventLineChart: {
     perspectiveID: 'perspective1',
     q: eventsByDecadeQuery,
     filterTarget: 'manuscript',
-    resultMapper: mapMultipleLineChart
+    resultMapper: mapMultipleLineChart,
+    resultMapperConfig: {
+      fillEmptyValues: false
+    }
   },
   manuscriptInstancePageNetwork: {
     perspectiveID: 'perspective1',
@@ -196,7 +221,7 @@ export const backendSearchConfig = {
   nearbyFinds: {
     perspectiveID: 'finds', // use endpoint config from finds
     q: nearbyFindsQuery,
-    resultMapper: mapPlaces,
+    resultMapper: makeObjectList,
     instance: {
       properties: findPropertiesInstancePage,
       relatedInstances: ''
@@ -222,7 +247,10 @@ export const backendSearchConfig = {
     perspectiveID: 'emloActors',
     q: emloSentReceivedQuery,
     // filterTarget: 'id',
-    resultMapper: mapMultipleLineChart
+    resultMapper: mapMultipleLineChart,
+    resultMapperConfig: {
+      fillEmptyValues: false
+    }
   },
   hellerauMigrations: {
     perspectiveID: 'hellerau',
@@ -241,5 +269,13 @@ export const backendSearchConfig = {
   },
   federatedSearch: {
     datasets: federatedSearchDatasets
+  },
+  sitemapConfig: {
+    baseUrl: 'https://sampo-ui.demo.seco.cs.aalto.fi',
+    langPrimary: 'en',
+    langSecondary: 'fi',
+    outputDir: './src/server/sitemap_generator/sitemap_output',
+    sitemapUrl: 'https://sampo-ui.demo.seco.cs.aalto.fi/sitemap',
+    sitemapInstancePageQuery
   }
 }

@@ -10,8 +10,6 @@ export const MAPBOX_STYLE = 'light-v10' // https://docs.mapbox.com/api/maps/#sty
 
 export const documentFinderAPIUrl = 'https://data.finlex.fi/document-finder-backend'
 
-export const backendErrorText = 'The database is not available. Please try again later.'
-
 export const yasguiBaseUrl = 'https://yasgui.triply.cc'
 
 export const yasguiParams = {
@@ -27,3 +25,5 @@ export const SLIDER_DURATION = {
   normalSpeed: 600,
   doubleSpeed: 300
 }
+
+export const feedbackLink = 'https://link.webropolsurveys.com/'
