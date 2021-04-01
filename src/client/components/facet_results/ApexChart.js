@@ -90,7 +90,13 @@ class ApexChart extends React.Component {
         title: this.props.title,
         xaxisTitle: this.props.xaxisTitle || '',
         yaxisTitle: this.props.yaxisTitle || '',
-        seriesTitle: this.props.seriesTitle || ''
+        seriesTitle: this.props.seriesTitle || '',
+        xaxisType: this.props.xaxisType || null,
+        xaxisTickAmount: this.props.xaxisTickAmount || null,
+        xaxisLabels: this.props.xaxisLabels || null,
+        stroke: this.props.stroke || null,
+        fill: this.props.fill || null,
+        tooltip: this.props.tooltip || null
       })
     )
     this.chart.render()
@@ -133,7 +139,6 @@ class ApexChart extends React.Component {
       }
     }
     const spinnerContainerStyle = {
-      ...rootStyle,
       display: 'flex',
       width: '100%',
       height: '100%',
@@ -207,5 +212,7 @@ ApexChart.propTypes = {
   facetResultsType: PropTypes.string,
   resultClasses: PropTypes.array
 }
+
+export const ApexChartComponent = ApexChart
 
 export default withStyles(styles)(ApexChart)

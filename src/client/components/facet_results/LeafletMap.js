@@ -4,8 +4,10 @@ import { withStyles } from '@material-ui/core/styles'
 import intl from 'react-intl-universal'
 import L from 'leaflet'
 import { has, orderBy, isEqual } from 'lodash'
+import buffer from '@turf/buffer'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { purple } from '@material-ui/core/colors'
+import history from '../../History'
 // import { MAPBOX_ACCESS_TOKEN, MAPBOX_STYLE } from '../../configs/namesampo/GeneralConfig'
 // import { apiUrl } from '../../epics'
 import 'leaflet/dist/leaflet.css' // Official Leaflet styles
@@ -28,6 +30,8 @@ import 'leaflet-draw/dist/leaflet.draw.js'
 import 'leaflet-draw/dist/leaflet.draw.css'
 import 'leaflet.zoominfo/dist/L.Control.Zoominfo'
 import 'leaflet.zoominfo/dist/L.Control.Zoominfo.css'
+import 'leaflet-usermarker/src/leaflet.usermarker.js'
+import 'leaflet-usermarker/src/leaflet.usermarker.css'
 import 'leaflet.gridlayer.googlemutant/Leaflet.GoogleMutant.js'
 
 import markerShadowIcon from '../../img/markers/marker-shadow.png'
@@ -93,7 +97,7 @@ class LeafletMap extends React.Component {
   constructor (props) {
     super(props)
     this.state = {
-      activeOverlays: [],
+      activeLayers: props.activeLayers ? props.activeLayers : [],
       prevZoomLevel: null,
       mapMode: props.mapMode
     }
@@ -113,8 +117,8 @@ class LeafletMap extends React.Component {
     if (this.props.mapMode && this.props.pageType === 'clientFSResults') {
       this.drawPointData()
     }
-    if (this.props.showExternalLayers) {
-      this.props.clearGeoJSONLayers()
+    if (this.props.showExternalLayers && !this.props.locateUser) {
+      this.fetchDefaultGeoJSONLayers()
     }
   }
 
@@ -211,11 +215,11 @@ class LeafletMap extends React.Component {
       Password protected base layers from https://www.maanmittauslaitos.fi/karttakuvapalvelu/tekninen-kuvaus-wmts
       Routed via backend.
     */
-    // const backgroundMapNLS = L.tileLayer(`${apiUrl}/nls-wmts?z={z}&x={x}&y={y}&layerID=taustakartta`, {
+    // const backgroundMapNLS = L.tileLayer(`${process.env.API_URL}/nls-wmts?z={z}&x={x}&y={y}&layerID=taustakartta`, {
     //   attribution: 'National Land Survey of Finland',
     //   maxZoom: 18
     // })
-    // const topographicalMapNLS = L.tileLayer(`${apiUrl}/nls-wmts?z={z}&x={x}&y={y}&layerID=maastokartta`, {
+    // const topographicalMapNLS = L.tileLayer(`${process.env.API_URL}/nls-wmts?z={z}&x={x}&y={y}&layerID=maastokartta`, {
     //   attribution: 'National Land Survey of Finland',
     //   maxZoom: 18
     // })
@@ -229,8 +233,10 @@ class LeafletMap extends React.Component {
     const container = this.props.container ? this.props.container : 'map'
 
     this.leafletMap = L.map(container, {
-      center: this.props.center,
-      zoom: this.props.zoom,
+      ...(!this.props.locateUser && {
+        center: this.props.center,
+        zoom: this.props.zoom
+      }),
       zoomControl: false,
       zoominfoControl: true,
       layers: [
@@ -248,6 +254,9 @@ class LeafletMap extends React.Component {
         // [intl.get('leafletMap.basemaps.backgroundMapNLS')]: backgroundMapNLS
       }
       this.initOverLays(basemaps)
+      if (!this.props.locateUser) {
+        this.initMapEventListeners()
+      }
     }
 
     // Add scale
@@ -263,6 +272,44 @@ class LeafletMap extends React.Component {
       this.props.updateMapBounds(this.boundsToValues())
       this.leafletMap.on('moveend', () => {
         this.props.updateMapBounds(this.boundsToValues())
+      })
+    }
+
+    if (this.props.locateUser) {
+      this.leafletMap.on('locationfound', this.onLocationFound)
+      this.leafletMap.on('locationerror', this.onLocationError)
+      this.leafletMap.locate({ setView: true, enableHighAccuracy: true })
+    }
+  }
+
+  onLocationFound = e => {
+    L.userMarker(e.latlng, {
+      pulsing: true,
+      accuracy: e.accuracy,
+      smallIcon: true
+    })
+      .addTo(this.leafletMap)
+      .bindPopup('You are within ' + e.accuracy + ' meters from this point')
+      // .openPopup()
+    this.initMapEventListeners()
+    this.fetchDefaultGeoJSONLayers()
+  }
+
+  onLocationError = e => {
+    // this.props.showError({
+    //   title: '',
+    //   text: e.message
+    // })
+    this.initMapEventListeners()
+    this.fetchDefaultGeoJSONLayers()
+  }
+
+  fetchDefaultGeoJSONLayers = () => {
+    this.props.clearGeoJSONLayers()
+    if (this.state.activeLayers.length > 0 && this.isSafeToLoadLargeLayers()) {
+      this.props.fetchGeoJSONLayers({
+        layerIDs: this.state.activeLayers,
+        bounds: this.leafletMap.getBounds()
       })
     }
   }
@@ -316,18 +363,18 @@ class LeafletMap extends React.Component {
   initMapEventListeners = () => {
     // Fired when an overlay is selected using layer controls
     this.leafletMap.on('overlayadd', event => {
-      if (event.layer.options.type === 'geoJSON') {
-        const layerID = event.layer.options.id
-        // https://www.robinwieruch.de/react-state-array-add-update-remove
-        this.setState(state => {
-          return {
-            activeOverlays: [...state.activeOverlays, layerID]
-          }
-        })
+      if (event.layer.options.type === 'GeoJSON') {
+        this.props.clearGeoJSONLayers()
         if (this.isSafeToLoadLargeLayers()) {
-          this.props.clearGeoJSONLayers()
+          const layerID = event.layer.options.id
+          // https://www.robinwieruch.de/react-state-array-add-update-remove
+          this.setState(state => {
+            return {
+              activeLayers: [...state.activeLayers, layerID]
+            }
+          })
           this.props.fetchGeoJSONLayers({
-            layerIDs: this.state.activeOverlays,
+            layerIDs: this.state.activeLayers,
             bounds: this.leafletMap.getBounds()
           })
         } else {
@@ -340,12 +387,12 @@ class LeafletMap extends React.Component {
     })
     // Fired when an overlay is selected using layer controls
     this.leafletMap.on('overlayremove', event => {
-      if (event.layer.options.type === 'geoJSON') {
+      if (event.layer.options.type === 'GeoJSON') {
         const layerIDremoved = event.layer.options.id
         this.clearOverlay(layerIDremoved)
         this.setState(state => {
-          const activeOverlays = state.activeOverlays.filter(layerID => layerID !== layerIDremoved)
-          return { activeOverlays }
+          const activeLayers = state.activeLayers.filter(layerID => layerID !== layerIDremoved)
+          return { activeLayers }
         })
       }
     })
@@ -354,128 +401,78 @@ class LeafletMap extends React.Component {
       this.setState({ prevZoomLevel: this.leafletMap.getZoom() })
     })
     // Fired when zooming ends
-    // this.leafletMap.on('zoomend', () => {
-    //   if (this.state.activeOverlays.length > 0 && this.isSafeToLoadLargeLayersAfterZooming()) {
-    //     this.props.fetchGeoJSONLayers({
-    //       layerIDs: this.state.activeOverlays,
-    //       bounds: this.leafletMap.getBounds()
-    //     })
-    //   }
-    // })
+    this.leafletMap.on('zoomend', () => {
+      if (this.state.activeLayers.length > 0 && this.isSafeToLoadLargeLayersAfterZooming()) {
+        this.props.fetchGeoJSONLayers({
+          layerIDs: this.state.activeLayers,
+          bounds: this.leafletMap.getBounds()
+        })
+      }
+    })
     // Fired when dragging ends
-    // this.leafletMap.on('dragend', () => {
-    //   if (this.state.activeOverlays.length > 0 && this.isSafeToLoadLargeLayers()) {
-    //     this.props.fetchGeoJSONLayers({
-    //       layerIDs: this.state.activeOverlays,
-    //       bounds: this.leafletMap.getBounds()
-    //     })
-    //   }
-    // })
+    this.leafletMap.on('dragend', () => {
+      if (this.state.activeLayers.length > 0 && this.isSafeToLoadLargeLayers()) {
+        this.props.fetchGeoJSONLayers({
+          layerIDs: this.state.activeLayers,
+          bounds: this.leafletMap.getBounds()
+        })
+      }
+    })
   }
 
-  isSafeToLoadLargeLayersAfterZooming = () => true
-  // {
-  //   return (this.leafletMap.getZoom() === 13 ||
-  //     (this.leafletMap.getZoom() >= 13 && this.state.prevZoomLevel > this.leafletMap.getZoom()))
-  // }
+  isSafeToLoadLargeLayersAfterZooming = () => {
+    return (this.leafletMap.getZoom() === 13 ||
+      (this.leafletMap.getZoom() >= 13 && this.state.prevZoomLevel > this.leafletMap.getZoom()))
+  }
 
-  isSafeToLoadLargeLayers = () => true
-  // this.leafletMap.getZoom() >= 13
+  isSafeToLoadLargeLayers = () => this.leafletMap.getZoom() >= 13
 
   initOverLays = basemaps => {
-    // const fhaArchaeologicalSiteRegistryAreas = L.layerGroup([], {
-    //   id: 'arkeologiset_kohteet_alue',
-    //   type: 'geoJSON',
-    //   source: 'FHA',
-    //   // this layer includes only GeoJSON Polygons, define style for them
-    //   geojsonMPolygonOptions: {
-    //     color: '#dd2c00',
-    //     cursor: 'pointer',
-    //     dashArray: '3, 5'
-    //   }
-    // })
-    // const fhaArchaeologicalSiteRegistryPoints = L.layerGroup([], {
-    //   id: 'arkeologiset_kohteet_piste',
-    //   type: 'geoJSON',
-    //   source: 'FHA',
-    //   // this layer includes only GeoJSON points, define style for them
-    //   geojsonMarkerOptions: {
-    //     radius: 8,
-    //     fillColor: '#dd2c00',
-    //     weight: 1,
-    //     opacity: 1,
-    //     fillOpacity: 0.8
-    //   }
-    // })
-    // const kotusParishes1938 = L.layerGroup([], {
-    //   id: 'kotus:pitajat',
-    //   type: 'geoJSON',
-    //   source: 'kotus',
-    //   // this layer includes only GeoJSON Polygons, define style for them
-    //   geojsonMPolygonOptions: {
-    //     color: '#dd2c00',
-    //     cursor: 'pointer',
-    //     dashArray: '3, 5'
-    //   }
-    // })
-    // const kotusParishesDialecticalRegions = L.layerGroup([], {
-    //   id: 'kotus:rajat-sms-alueet',
-    //   type: 'geoJSON',
-    //   source: 'kotus',
-    //   // this layer includes only GeoJSON Polygons, define style for them
-    //   geojsonMPolygonOptions: {
-    //     color: '#fca903',
-    //     cursor: 'pointer',
-    //     dashArray: '3, 5'
-    //   }
-    // })
-    // const kotusParishesDialecticalSubRegions = L.layerGroup([], {
-    //   id: 'kotus:rajat-sms-alueosat',
-    //   type: 'geoJSON',
-    //   source: 'kotus',
-    //   // this layer includes only GeoJSON Polygons, define style for them
-    //   geojsonMPolygonOptions: {
-    //     color: '#119100',
-    //     cursor: 'pointer',
-    //     dashArray: '3, 5'
-    //   }
-    // })
-    // const kotusParishesDialecticalBorder = L.layerGroup([], {
-    //   id: 'kotus:rajat-lansi-ita',
-    //   type: 'geoJSON',
-    //   source: 'kotus',
-    //   // this layer includes only GeoJSON Polygons, define style for them
-    //   geojsonMPolygonOptions: {
-    //     color: '#2403fc',
-    //     cursor: 'pointer',
-    //     dashArray: '3, 5'
-    //   }
-    // })
-    const karelianMaps = L.tileLayer('https:///mapwarper.onki.fi/mosaics/tile/4/{z}/{x}/{y}.png', {
-      type: 'tile',
-      attribution: 'SeCo'
+    this.overlayLayers = {}
+    const opacityLayers = {}
+    let showOpacityController = false
+    this.props.layerConfigs.map(config => {
+      switch (config.type) {
+        case 'GeoJSON':
+          this.overlayLayers[intl.get(`leafletMap.externalLayers.${config.id}`)] =
+            L.layerGroup([], config)
+          break
+        case 'WMS':
+          this.overlayLayers[intl.get(`leafletMap.externalLayers.${config.id}`)] =
+            L.tileLayer.wms(config.url, {
+              layers: config.layers,
+              version: config.version,
+              minZoom: config.minZoom,
+              maxZoom: config.maxZoom,
+              attribution: config.attribution
+            })
+          break
+        case 'WMTS': {
+          const wmtsLayer = L.tileLayer(config.url, {
+            attribution: config.attribution
+          })
+          const translatedLayerID = intl.get(`leafletMap.externalLayers.${config.id}`)
+          this.overlayLayers[translatedLayerID] = wmtsLayer
+          if (config.opacityControl) {
+            opacityLayers[translatedLayerID] = wmtsLayer
+            showOpacityController = true
+          }
+          break
+        }
+      }
     })
-    const senateAtlas = L.tileLayer('https:///mapwarper.onki.fi/mosaics/tile/5/{z}/{x}/{y}.png', {
-      type: 'tile',
-      attribution: 'SeCo'
-    })
-    this.overlayLayers = {
-      // [intl.get('leafletMap.externalLayers.arkeologiset_kohteet_alue')]: fhaArchaeologicalSiteRegistryAreas,
-      // [intl.get('leafletMap.externalLayers.arkeologiset_kohteet_piste')]: fhaArchaeologicalSiteRegistryPoints,
-      [intl.get('leafletMap.externalLayers.karelianMaps')]: karelianMaps,
-      [intl.get('leafletMap.externalLayers.senateAtlas')]: senateAtlas
-      // [intl.get('leafletMap.externalLayers.kotus:pitajat')]: kotusParishes1938,
-      // [intl.get('leafletMap.externalLayers.kotus:rajat-sms-alueet')]: kotusParishesDialecticalRegions,
-      // [intl.get('leafletMap.externalLayers.kotus:rajat-sms-alueosat')]: kotusParishesDialecticalSubRegions,
-      // [intl.get('leafletMap.externalLayers.kotus:rajat-lansi-ita')]: kotusParishesDialecticalBorder
+
+    // Add default active overlays directly to the map
+    this.state.activeLayers.map(overlay =>
+      this.leafletMap.addLayer(this.overlayLayers[intl.get(`leafletMap.externalLayers.${overlay}`)]))
+
+    // Add all basemaps and all overlays via the control to the map
+    L.control.layers(basemaps, this.overlayLayers, { collapsed: !this.props.layerControlExpanded }).addTo(this.leafletMap)
+
+    // Create opacity controller if needed
+    if (showOpacityController) {
+      this.createOpacitySlider(opacityLayers)
     }
-    L.control.layers(basemaps, this.overlayLayers).addTo(this.leafletMap)
-    const opacityLayers = {
-      [intl.get('leafletMap.externalLayers.karelianMaps')]: karelianMaps,
-      [intl.get('leafletMap.externalLayers.senateAtlas')]: senateAtlas
-    }
-    this.createOpacitySlider(opacityLayers)
-    this.initMapEventListeners()
   }
 
   populateOverlay = layerObj => {
@@ -483,17 +480,32 @@ class LeafletMap extends React.Component {
       The baseLayers and overlays parameters are object literals with layer names as keys
       and Layer objects as values
     */
+
     const leafletOverlay = this.overlayLayers[intl.get(`leafletMap.externalLayers.${layerObj.layerID}`)]
+    leafletOverlay.clearLayers()
+
+    // Only the layer that is added last is clickable, so add buffer first
+    if (leafletOverlay.options.buffer) {
+      const { distance, units, style } = leafletOverlay.options.buffer
+      const bufferedGeoJSON = buffer(layerObj.geoJSON, distance, { units })
+      const leafletGeoJSONBufferLayer = L.geoJSON(bufferedGeoJSON, {
+        // style for GeoJSON Polygons
+        style
+      })
+      leafletGeoJSONBufferLayer.addTo(leafletOverlay).addTo(this.leafletMap)
+    }
+
+    const { geojsonMarkerOptions, geojsonPolygonOptions, createPopup } = leafletOverlay.options
     const leafletGeoJSONLayer = L.geoJSON(layerObj.geoJSON, {
       // style for GeoJSON Points
       pointToLayer: (feature, latlng) => {
-        return L.circleMarker(latlng, leafletOverlay.options.geojsonMarkerOptions)
+        return L.circleMarker(latlng, geojsonMarkerOptions)
       },
       // style for GeoJSON Polygons
-      style: leafletOverlay.options.geojsonMPolygonOptions,
+      style: geojsonPolygonOptions,
       // add popups
       onEachFeature: (feature, layer) => {
-        layer.bindPopup(this.createPopUpContentGeoJSON(layerObj.layerID, feature.properties))
+        layer.bindPopup(createPopup(feature.properties))
       }
     })
     leafletGeoJSONLayer.addTo(leafletOverlay).addTo(this.leafletMap)
@@ -729,17 +741,23 @@ class LeafletMap extends React.Component {
           events: result.events ? result.events : null
         })
       }
-      if (this.props.pageType === 'facetResults' || this.props.pageType === 'instancePage') {
+      if (this.props.pageType === 'facetResults') {
         marker.on('click', this.markerOnClickFacetResults)
       }
-      // if (this.props.pageType === 'instancePage') {
-      //   marker.bindPopup(this.createPopUpContent(marker.options))
-      // }
+      if (this.props.pageType === 'instancePage') {
+        marker.bindPopup(this.createPopUpContentFindSampo(result))
+      }
       if (this.props.pageType === 'clientFSResults') {
         marker.bindPopup(this.createPopUpContentNameSampo(result))
       }
       return marker
     }
+  }
+
+  createNavButton = ({ href, text }) => {
+    const el = document.createElement('button')
+    el.textContent = text
+    el.addEventListener('click', history.push(href))
   }
 
   markerOnClickFacetResults = event => {
@@ -750,39 +768,41 @@ class LeafletMap extends React.Component {
     })
   };
 
-  // TODO: add click events instead of a tags:
-  // https://stackoverflow.com/questions/54744762/click-event-on-leaflet-popup-content
-  createPopUpContent = result => {
-    let popUpTemplate = ''
-    if (Array.isArray(result.prefLabel)) {
-      result.prefLabel = result.prefLabel[0]
+  createPopUpContent = data => {
+    if (Array.isArray(data.prefLabel)) {
+      data.prefLabel = data.prefLabel[0]
     }
-    if (has(result.prefLabel, 'dataProviderUrl')) {
-      popUpTemplate += `<a href=${result.prefLabel.dataProviderUrl}><h3>${result.prefLabel.prefLabel}</h3></a>`
+    const container = document.createElement('div')
+    const h3 = document.createElement('h3')
+    if (has(data.prefLabel, 'dataProviderUrl')) {
+      const link = document.createElement('a')
+      link.addEventListener('click', () => history.push(data.prefLabel.dataProviderUrl))
+      link.textContent = data.prefLabel.prefLabel
+      link.style.cssText = 'cursor: pointer; text-decoration: underline'
+      h3.appendChild(link)
     } else {
-      popUpTemplate += `<h3>${result.prefLabel.prefLabel}</h3>`
+      h3.textContent = data.prefLabel.prefLabel
     }
-    if (has(result, 'sameAs')) {
-      popUpTemplate += `<p>Place authority: <a target="_blank" rel="noopener noreferrer" href=${result.sameAs}>${result.sameAs}</a></p>`
-    }
+    container.appendChild(h3)
     if (this.props.resultClass === 'placesMsProduced') {
-      popUpTemplate += '<p>Manuscripts produced here:</p>'
-      popUpTemplate += this.createInstanceListing(result.related)
+      const p = document.createElement('p')
+      p.textContent = 'Manuscripts produced here:'
+      container.appendChild(p)
+      container.appendChild(this.createInstanceListing(data.related))
     }
     if (this.props.resultClass === 'lastKnownLocations') {
-      popUpTemplate += '<p>Last known location of:</p>'
-      popUpTemplate += this.createInstanceListing(result.related)
+      const p = document.createElement('p')
+      p.textContent = 'Last known location of:'
+      container.appendChild(p)
+      container.appendChild(this.createInstanceListing(data.related))
     }
     if (this.props.resultClass === 'placesActors') {
-      popUpTemplate += '<p>Actors:</p>'
-      popUpTemplate += this.createInstanceListing(result.related)
+      const p = document.createElement('p')
+      p.textContent = 'Actors:'
+      container.appendChild(p)
+      container.appendChild(this.createInstanceListing(data.related))
     }
-    if (this.props.resultClass === 'instanceEvents') {
-      popUpTemplate += '<p>Events:</p>'
-      popUpTemplate += this.createInstanceListing(result.events)
-    }
-    // console.log(popUpTemplate)
-    return popUpTemplate
+    return container
   }
 
   createPopUpContentNameSampo = data => {
@@ -822,57 +842,88 @@ class LeafletMap extends React.Component {
     return popUpTemplate
   }
 
-  createPopUpContentGeoJSON = (layerID, properties) => {
-    if (layerID === 'arkeologiset_kohteet_alue' || layerID === 'arkeologiset_kohteet_piste') {
-      return this.createPopUpContentGeoJSONFHA(properties)
-    } else {
-      return this.createPopUpContentGeoJSONKotus(properties)
+  createPopUpContentFindSampo = data => {
+    const container = document.createElement('div')
+    const heading = document.createElement('h3')
+    const headingLink = document.createElement('a')
+    headingLink.style.cssText = 'cursor: pointer; text-decoration: underline'
+    headingLink.textContent = data.prefLabel.prefLabel
+    headingLink.addEventListener('click', () => history.push(data.dataProviderUrl))
+    heading.appendChild(headingLink)
+    container.appendChild(heading)
+    if (has(data, 'type')) {
+      container.appendChild(this.createPopUpElement({
+        label: intl.get('perspectives.finds.properties.type.label'),
+        value: data.type
+      }))
     }
+    if (has(data, 'subCategory')) {
+      container.appendChild(this.createPopUpElement({
+        label: intl.get('perspectives.finds.properties.subCategory.label'),
+        value: data.subCategory
+      }))
+    }
+    if (has(data, 'material')) {
+      container.appendChild(this.createPopUpElement({
+        label: intl.get('perspectives.finds.properties.material.label'),
+        value: data.material.prefLabel
+      }))
+    }
+    if (has(data, 'period')) {
+      container.appendChild(this.createPopUpElement({
+        label: intl.get('perspectives.finds.properties.period.label'),
+        value: data.period
+      }))
+    }
+    if (has(data, 'municipality')) {
+      container.appendChild(this.createPopUpElement({
+        label: intl.get('perspectives.finds.properties.municipality.label'),
+        value: data.municipality.prefLabel
+      }))
+    }
+    if (has(data, 'id')) {
+      container.appendChild(this.createPopUpElement({
+        label: intl.get('perspectives.finds.properties.uri.label'),
+        value: data.id
+      }))
+    }
+    return container
   }
 
-  createPopUpContentGeoJSONFHA = properties => {
-    let popupText = ''
-    const name = properties.kohdenimi
-      ? `<b>Kohteen nimi:</b> ${properties.kohdenimi}</p>` : ''
-    const type = properties.laji ? `<b>Kohteen tyyppi:</b> ${properties.laji}</p>` : ''
-    const municipality = properties.kunta ? `<b>Kunta:</b> ${properties.kunta}</p>` : ''
-    const link = properties.mjtunnus
-      ? `<a href="https://www.kyppi.fi/to.aspx?id=112.${properties.mjtunnus}" target="_blank">Avaa kohde Muinaisjäännösrekisterissä</a></p>` : ''
-    popupText += `
-      <div>
-        ${name}
-        ${type}
-        ${municipality}
-        ${link}
-      </div>
-      `
-    return popupText
-  }
-
-  createPopUpContentGeoJSONKotus = properties => {
-    let popupText = ''
-    const name = `<b>Pitäjän nimi:</b> ${properties.NIMI}</p>`
-    popupText += `
-      <div>
-        ${name}
-      </div>
-      `
-    return popupText
+  createPopUpElement = ({ label, value }) => {
+    const p = document.createElement('p')
+    const b = document.createElement('b')
+    const span = document.createElement('span')
+    b.textContent = (`${label}: `)
+    span.textContent = value
+    p.appendChild(b)
+    p.appendChild(span)
+    return p
   }
 
   createInstanceListing = instances => {
-    let html = ''
+    let root
     if (Array.isArray(instances)) {
+      root = document.createElement('ul')
       instances = orderBy(instances, 'prefLabel')
-      html += '<ul>'
       instances.forEach(i => {
-        html += '<li><a href=' + i.dataProviderUrl + '>' + i.prefLabel + '</a></li>'
+        const li = document.createElement('li')
+        const link = document.createElement('a')
+        link.addEventListener('click', () => history.push(i.dataProviderUrl))
+        link.textContent = i.prefLabel
+        link.style.cssText = 'cursor: pointer; text-decoration: underline'
+        li.appendChild(link)
+        root.appendChild(li)
       })
-      html += '</ul>'
     } else {
-      html += '<p><a href=' + instances.dataProviderUrl + '>' + instances.prefLabel + '</a></p>'
+      root = document.createElement('p')
+      const link = document.createElement('a')
+      link.addEventListener('click', () => history.push(instances.dataProviderUrl))
+      link.textContent = instances.prefLabel
+      link.style.cssText = 'cursor: pointer; text-decoration: underline'
+      root.appendChild(link)
     }
-    return html
+    return root
   }
 
   createOpacitySlider = overlayLayers => {

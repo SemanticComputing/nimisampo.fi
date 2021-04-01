@@ -81,20 +81,7 @@ export const mapNameSampoResults = sparqlBindings => {
   return results
 }
 
-export const mapLineChart = sparqlBindings => {
-  const seriesData = []
-  const categoriesData = []
-  sparqlBindings.map(b => {
-    seriesData.push(b.count.value)
-    categoriesData.push(b.category.value)
-  })
-  return {
-    seriesData,
-    categoriesData
-  }
-}
-
-export const mapLineChartFillEmptyValues = sparqlBindings => {
+export const mapLineChart = ({ sparqlBindings, config }) => {
   const seriesData = []
   const categoriesData = []
   const sparqlBindingsLength = sparqlBindings.length
@@ -102,15 +89,23 @@ export const mapLineChartFillEmptyValues = sparqlBindings => {
     const currentCategory = parseInt(b.category.value)
     const currentValue = parseInt(b.count.value)
     seriesData.push(currentValue)
-    categoriesData.push(currentCategory)
-    if (index + 1 < sparqlBindingsLength) {
+    categoriesData.push(
+      config && config.xAxisConverter
+        ? config.xAxisConverter(currentCategory)
+        : currentCategory
+    )
+    if (config && config.fillEmptyValues && index + 1 < sparqlBindingsLength) {
       let categoryIter = currentCategory
       const nextNonZeroCategory = parseInt(bindings[index + 1].category.value)
       // add zeros until we reach the next category with a non zero value
       while (categoryIter < nextNonZeroCategory - 1) {
         categoryIter += 1
         seriesData.push(0)
-        categoriesData.push(categoryIter)
+        categoriesData.push(
+          config && config.xAxisConverter
+            ? config.xAxisConverter(categoryIter)
+            : categoryIter
+        )
       }
     }
   })
@@ -118,6 +113,48 @@ export const mapLineChartFillEmptyValues = sparqlBindings => {
     seriesData,
     categoriesData
   }
+}
+
+export const mapMultipleLineChart = ({ sparqlBindings, config }) => {
+  const res = {}
+  sparqlBindings.forEach(b => {
+    for (const p in b) {
+      if (p !== 'category') {
+        res[p] = []
+      }
+    }
+  })
+  const category = sparqlBindings.map(p => parseFloat(p.category.value))
+
+  if (config && config.fillEmptyValues) {
+    //  fill the missing years with zeroes
+    const valmax = Math.max(...category)
+    for (var i = Math.min(...category); i <= valmax; i++) {
+      for (const p in res) {
+        if (p !== 'category') {
+          res[p][i] = 0
+        }
+      }
+    }
+  }
+
+  //  read the known years into the data object
+  sparqlBindings.forEach(b => {
+    for (const p in b) {
+      if (p !== 'category') {
+        res[p][parseFloat(b.category.value)] = parseFloat(b[p].value)
+      }
+    }
+  })
+
+  // sort by year and remove empty sequence at start and end
+  for (const p in res) {
+    var arr = Object.entries(res[p])
+      .map(p => [parseFloat(p[0]), p[1]])
+      .sort((a, b) => ((a[0] < b[0]) ? -1 : ((a[0] > b[0]) ? 1 : 0)))
+    res[p] = trimResult(arr)
+  }
+  return res
 }
 
 export const mapPieChart = sparqlBindings => {
@@ -131,27 +168,18 @@ export const mapPieChart = sparqlBindings => {
   return results
 }
 
-export const mapMultipleLineChart = sparqlBindings => {
-  const res = {}
-  sparqlBindings.forEach(b => {
-    for (const p in b) {
-      if (p !== 'category') {
-        res[p] = []
-      }
+export const linearScale = ({ data, config }) => {
+  const { variable, minAllowed, maxAllowed } = config
+  const length = data.length
+  const min = data[length - 1][variable]
+  const max = data[0].[variable]
+  data.forEach(item => {
+    if (item[variable]) {
+      const unscaledNum = item[variable]
+      // https://stackoverflow.com/a/31687097
+      item[`${variable}Scaled`] = (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed
     }
   })
-  const category = sparqlBindings.map(p => parseFloat(p.category.value))
-  sparqlBindings.forEach((b, i) => {
-    for (const p in b) {
-      if (p !== 'category') {
-        res[p].push([category[i], parseFloat(b[p].value)])
-      }
-    }
-  })
-  for (const p in res) {
-    res[p] = trimResult(res[p])
-  }
-  return res
 }
 
 /* Data processing as in:

@@ -5,11 +5,22 @@ export const createSingleLineChartData = ({
   rawData,
   title,
   xaxisTitle,
+  xaxisType,
+  xaxisTickAmount,
+  xaxisLabels,
   yaxisTitle,
-  seriesTitle
+  seriesTitle,
+  stroke,
+  fill,
+  tooltip
 }) => {
   const apexChartOptionsWithData = {
-    ...singleLineChartOptions,
+    chart: {
+      type: 'line',
+      width: '100%',
+      height: '100%',
+      fontFamily: 'Roboto'
+    },
     series: [
       {
         name: seriesTitle,
@@ -20,10 +31,10 @@ export const createSingleLineChartData = ({
       text: title
     },
     xaxis: {
+      ...(xaxisType) && { type: xaxisType }, // default is 'category'
+      ...(xaxisTickAmount) && { tickAmount: xaxisTickAmount },
+      ...(xaxisLabels) && { labels: xaxisLabels },
       categories: rawData.categoriesData,
-      labels: {
-        rotate: 0
-      },
       title: {
         text: xaxisTitle
       }
@@ -32,7 +43,10 @@ export const createSingleLineChartData = ({
       title: {
         text: yaxisTitle
       }
-    }
+    },
+    ...(stroke) && { stroke },
+    ...(fill) && { fill },
+    ...(tooltip) && { tooltip }
   }
   return apexChartOptionsWithData
 }
@@ -41,8 +55,14 @@ export const createMultipleLineChartData = ({
   rawData,
   title,
   xaxisTitle,
+  xaxisType,
+  xaxisTickAmount,
+  xaxisLabels,
   yaxisTitle,
-  seriesTitle
+  seriesTitle,
+  stroke,
+  fill,
+  tooltip
 }) => {
   const series = []
   for (const lineID in rawData) {
@@ -52,7 +72,12 @@ export const createMultipleLineChartData = ({
     })
   }
   const apexChartOptionsWithData = {
-    ...multipleLineChartOptions,
+    chart: {
+      type: 'area',
+      width: '100%',
+      height: '100%',
+      fontFamily: 'Roboto'
+    },
     series: series,
     title: {
       text: title
@@ -61,9 +86,9 @@ export const createMultipleLineChartData = ({
       enabled: false
     },
     xaxis: {
-      labels: {
-        rotate: 0
-      },
+      ...(xaxisType) && { type: xaxisType }, // default is 'category'
+      ...(xaxisTickAmount) && { tickAmount: xaxisTickAmount },
+      ...(xaxisLabels) && { labels: xaxisLabels },
       title: {
         text: xaxisTitle
       }
@@ -73,40 +98,9 @@ export const createMultipleLineChartData = ({
         text: yaxisTitle
       }
     },
-    stroke: {
-      curve: 'straight',
-      width: 2
-    },
-    fill: {
-      type: 'gradient',
-      gradient: {
-        shadeIntensity: 1,
-        inverseColors: false,
-        opacityFrom: 0.6,
-        opacityTo: 0.05,
-        stops: [20, 60, 100, 100]
-      }
-    }
+    ...(stroke) && { stroke },
+    ...(fill) && { fill },
+    ...(tooltip) && { tooltip }
   }
   return apexChartOptionsWithData
-}
-
-const singleLineChartOptions = {
-  // see https://apexcharts.com/docs --> Options
-  chart: {
-    type: 'line',
-    width: '100%',
-    height: '100%',
-    fontFamily: 'Roboto'
-  }
-}
-
-const multipleLineChartOptions = {
-  // see https://apexcharts.com/docs --> Options
-  chart: {
-    type: 'area',
-    width: '100%',
-    height: '100%',
-    fontFamily: 'Roboto'
-  }
 }

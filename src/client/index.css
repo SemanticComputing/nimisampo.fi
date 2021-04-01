@@ -51,3 +51,22 @@ a, a:visited, a:hover, a:active {
 .apexcharts-custom-tooltip {
     padding: 8px
 } 
+
+.leaflet-control-layers span {
+    font-family: "Roboto", "Helvetica", "Arial";
+}
+
+@media screen and (min-width: 1440px) {
+    .leaflet-control-layers span {
+        font-size: 14px;
+    }
+    .leaflet-control-layers-selector {
+        transform: scale(1.5);
+        margin: 6px;
+    }
+}
+
+.leaflet-usermarker-small i.pulse {
+    top: -12px !important;
+    left: -12px !important;
+}
