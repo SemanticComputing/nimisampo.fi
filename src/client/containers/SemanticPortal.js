@@ -521,7 +521,7 @@ const SemanticPortal = props => {
               </Switch>
             )} */}
             <Route
-              path={`${rootUrlWithLang}/clientFSPlaces/federated-search`}
+              path={`${rootUrlWithLang}/app`}
               render={routeProps =>
                 <Grid container className={classes.mainContainerClientFS}>
                   <Grid item sm={12} md={4} lg={3} className={classes.facetBarContainerClientFS}>
