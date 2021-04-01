@@ -1,5 +1,9 @@
 export default {
   languageLabel: 'Suomi',
+  html: {
+    title: 'Nimisampo: nimistöntutkijan työpöytä',
+    description: 'Nimisampo on kaikille avoin verkkopalvelu suomalaisesta paikannimistöstä kiinnostuneiden tutkijoiden ja suuren yleisön käytettäväksi. Nimistöä voi tarkastella kartoilla, datana ja tilastollisesti.'
+  },
   appTitle: {
     short: 'Nimisampo',
     long: 'Nimisampo: nimistöntutkijan työpöytä'

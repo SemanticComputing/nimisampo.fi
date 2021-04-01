@@ -1,5 +1,9 @@
 export default {
   languageLabel: 'English',
+  html: {
+    title: 'NameSampo: A Workbench for Toponomastic Research',
+    description: 'NameSampo is a semantic portal for searching and studying place names. The data can be viewed as a table, on maps, and as statistical distributions.'
+  },
   appTitle: {
     short: 'NameSampo',
     long: 'NameSampo: A Workbench for Toponomastic Research'
