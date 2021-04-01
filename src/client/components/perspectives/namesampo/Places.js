@@ -52,15 +52,32 @@ const Places = props => {
             fetching={false}
             showInstanceCountInClusters={false}
             updateFacetOption={props.updateFacetOption}
-            showExternalLayers
             facetedSearchMode='clientFS'
             perspectiveID={perspective.id}
+            showExternalLayers
+            layerConfigs={[
+              {
+                id: 'karelianMaps',
+                type: 'WMTS',
+                url: 'https:///mapwarper.onki.fi/mosaics/tile/4/{z}/{x}/{y}.png',
+                opacityControl: true,
+                attribution: 'Semantic Computing Research Group'
+              },
+              {
+                id: 'senateAtlas',
+                type: 'WMTS',
+                url: 'https:///mapwarper.onki.fi/mosaics/tile/5/{z}/{x}/{y}.png',
+                opacityControl: true,
+                attribution: 'Semantic Computing Research Group'
+              }
+            ]}
+            showError={props.showError}
           />}
       />
       <Route
         path={`${rootUrl}/app/map_markers`}
         render={() => {
-          if (props.clientFSResults.length > 3000) {
+          if (props.clientFSResults.length > 1500) {
             return <ResultInfo message={intl.get('leafletMap.tooManyResults')} />
           } else {
             return (
@@ -79,9 +96,26 @@ const Places = props => {
                 fetching={false}
                 showInstanceCountInClusters={false}
                 updateFacetOption={props.updateFacetOption}
-                showExternalLayers
                 facetedSearchMode='clientFS'
                 perspectiveID={perspective.id}
+                showExternalLayers
+                layerConfigs={[
+                  {
+                    id: 'karelianMaps',
+                    type: 'WMTS',
+                    url: 'https:///mapwarper.onki.fi/mosaics/tile/4/{z}/{x}/{y}.png',
+                    opacityControl: true,
+                    attribution: 'Semantic Computing Research Group'
+                  },
+                  {
+                    id: 'senateAtlas',
+                    type: 'WMTS',
+                    url: 'https:///mapwarper.onki.fi/mosaics/tile/5/{z}/{x}/{y}.png',
+                    opacityControl: true,
+                    attribution: 'Semantic Computing Research Group'
+                  }
+                ]}
+                showError={props.showError}
               />
             )
           }

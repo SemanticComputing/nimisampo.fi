@@ -89,7 +89,7 @@ export default {
       heatmap: 'Heatmap'
     },
     wrongZoomLevel: 'The map zoom level has to at least 11',
-    tooManyResults: 'More than 3000 results, please use clustered map or heatmap'
+    tooManyResults: 'More than 1500 results, please use clustered map or heatmap'
   },
   instancePageGeneral: {
     introduction: `
