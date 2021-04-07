@@ -34,8 +34,7 @@ export default {
     feedback: 'palaute',
     info: {
       info: 'tietoja',
-      blog: 'Project blog',
-      blogUrl: 'https://seco.cs.aalto.fi'
+      infoURL: 'https://seco.cs.aalto.fi/projects/nimisampo/'
     }
   },
   facetBar: {

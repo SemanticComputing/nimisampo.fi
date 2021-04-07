@@ -182,7 +182,7 @@ const TopBar = props => {
       <a
         className={classes.link}
         key={1}
-        href='https://seco.cs.aalto.fi/projects/nimisampo'
+        href={intl.get('topBar.info.infoURL')}
         target='_blank'
         rel='noopener noreferrer'
         onClick={handleMobileMenuClose}
@@ -228,7 +228,7 @@ const TopBar = props => {
             })}
             {/* <TopBarInfoButton rootUrl={props.rootUrl} /> */}
             <a
-              href='https://seco.cs.aalto.fi/projects/nimisampo'
+              href={intl.get('topBar.info.infoURL')}
               target='_blank'
               rel='noopener noreferrer'
             >

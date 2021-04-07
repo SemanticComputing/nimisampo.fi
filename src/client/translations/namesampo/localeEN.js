@@ -27,9 +27,7 @@ export default {
     feedback: 'feedback',
     info: {
       info: 'Info',
-      blog: 'Project blog',
-      blogUrl: 'https://seco.cs.aalto.fi',
-      aboutThePortal: 'About the Portal'
+      infoURL: 'https://seco.cs.aalto.fi/projects/nimisampo/en/'
     },
     searchBarPlaceHolder: 'Search all content',
     searchBarPlaceHolderShort: 'Search',
