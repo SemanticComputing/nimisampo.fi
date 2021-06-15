@@ -22,13 +22,17 @@ import FacetBar from '../components/facet_bar/FacetBar'
 // ** General components end **
 
 // ** Portal specific components and configs **
-import Main from '../components/perspectives/namesampo/Main'
-import Places from '../components/perspectives/namesampo/Places'
 import TopBar from '../components/perspectives/namesampo/TopBar'
+// import Main from '../components/perspectives/sampo/Main'
+// import FacetedSearchPerspective from '../components/perspectives/sampo/FacetedSearchPerspective'
+// import FullTextSearch from '../components/perspectives/sampo/FullTextSearch'
+import ClientFSPerspective from '../components/perspectives/namesampo/client_fs/ClientFSPerspective'
+import ClientFSMain from '../components/perspectives/namesampo/client_fs/ClientFSMain'
+// import InstanceHomePage from '../components/perspectives/sampo/InstanceHomePage'
 import Footer from '../components/perspectives/namesampo/Footer'
-// import FeedbackPage from '../components/main_layout/FeedbackPage'
+// import KnowledgeGraphMetadataTable from '../components/perspectives/sampo/KnowledgeGraphMetadataTable'
 import { perspectiveConfig } from '../configs/namesampo/PerspectiveConfig'
-// import { perspectiveConfigOnlyInfoPages } from '../configs/sampo/PerspectiveConfigOnlyInfoPages''
+// import { perspectiveConfigOnlyInfoPages } from '../configs/sampo/PerspectiveConfigOnlyInfoPages'
 import { rootUrl, layoutConfig } from '../configs/namesampo/GeneralConfig'
 // ** Portal specific components and configs end **
 
@@ -264,10 +268,16 @@ const SemanticPortal = props => {
             location={props.location}
             layoutConfig={layoutConfig}
           />
+          <Route exact path={`${rootUrlWithLang}/app`}>
+            <Redirect to={`${rootUrlWithLang}`} />
+          </Route>
+          <Route exact path={`${rootUrl}/app`}>
+            <Redirect to={`${rootUrlWithLang}`} />
+          </Route>
           <Route exact path={`${rootUrl}/`}>
             <Redirect to={rootUrlWithLang} />
           </Route>
-          <Route
+          {/* <Route
             exact path={`${rootUrlWithLang}/`}
             render={() =>
               <>
@@ -279,7 +289,7 @@ const SemanticPortal = props => {
                 />
                 <Footer layoutConfig={layoutConfig} />
               </>}
-          />
+          /> */}
           {/* https://stackoverflow.com/a/41024944 */}
           <Route
             path={`${rootUrlWithLang}/`} render={({ location }) => {
@@ -516,7 +526,7 @@ const SemanticPortal = props => {
             </Switch>
           )} */}
           <Route
-            path={`${rootUrlWithLang}/clientFSPlaces/federated-search`}
+            path={rootUrlWithLang}
             render={routeProps =>
               <>
                 <Grid container className={classes.mainContainerClientFS}>
@@ -535,7 +545,7 @@ const SemanticPortal = props => {
                       clientFSClearResults={props.clientFSClearResults}
                       clientFSUpdateQuery={props.clientFSUpdateQuery}
                       clientFSUpdateFacet={props.clientFSUpdateFacet}
-                      defaultActiveFacets={perspectiveConfig[0].defaultActiveFacets}
+                      defaultActiveFacets={perspectiveConfig.find(p => p.id === 'clientFSPlaces').defaultActiveFacets}
                       leafletMap={props.leafletMap}
                       updateMapBounds={props.updateMapBounds}
                       screenSize={screenSize}
@@ -545,11 +555,11 @@ const SemanticPortal = props => {
                     />
                   </Grid>
                   <Grid item sm={12} md={8} lg={9} className={classes.resultsContainerClientFS}>
-                    {noResults && <Main />}
+                    {noResults && <ClientFSMain />}
                     {!noResults &&
-                      <Places
+                      <ClientFSPerspective
                         routeProps={routeProps}
-                        perspective={perspectiveConfig[0]}
+                        perspective={perspectiveConfig.find(p => p.id === 'clientFSPlaces')}
                         screenSize={screenSize}
                         clientFSState={props.clientFSState}
                         clientFSResults={props.clientFSResults}
@@ -567,7 +577,6 @@ const SemanticPortal = props => {
                 </Grid>
                 <Footer layoutConfig={layoutConfig} />
               </>}
-
           />
           {/* create routes for info buttons */}
           {/* <Route
