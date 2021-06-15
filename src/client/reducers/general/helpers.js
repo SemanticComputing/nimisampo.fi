@@ -1,12 +1,22 @@
 import { has, isEmpty } from 'lodash'
 import { UPDATE_FACET_VALUES_CONSTRAIN_SELF } from '../../actions'
 
-export const fetchResults = (state, action) => {
+export const fetchResults = (state, action, initialState) => {
+  const { reason } = action
+  let resetMapBounds = false
+  if (
+    reason &&
+    reason === 'facetUpdate' &&
+    initialState.maps
+  ) {
+    resetMapBounds = true
+  }
   return {
     ...state,
     instance: null,
     instanceTableExternalData: null,
-    fetching: true
+    fetching: true,
+    ...(resetMapBounds && { maps: initialState.maps })
   }
 }
 
@@ -203,10 +213,11 @@ export const updateResultCount = (state, action) => {
   }
 }
 
-export const updateResults = (state, action) => {
+export const updateResults = (state, action, initialState) => {
   return {
     ...state,
     results: action.data,
+    resultClass: action.resultClass,
     resultsSparqlQuery: action.sparqlQuery,
     fetching: false,
     resultUpdateID: ++state.resultUpdateID
@@ -321,5 +332,23 @@ export const updateKnowledgeGraphMetadata = (state, action) => {
     ...state,
     knowledgeGraphMetadata: action.data,
     fetching: false
+  }
+}
+
+export const updateMapBounds = (state, action) => {
+  const { resultClass, bounds } = action
+  return {
+    ...state,
+    maps: {
+      ...state.maps,
+      [resultClass]: {
+        latMin: bounds.latMin,
+        longMin: bounds.longMin,
+        latMax: bounds.latMax,
+        longMax: bounds.longMax,
+        center: bounds.center,
+        zoom: bounds.zoom
+      }
+    }
   }
 }

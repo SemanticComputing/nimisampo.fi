@@ -131,6 +131,12 @@ export const backendSearchConfig = {
       relatedInstances: manuscriptsProducedAt
     }
   },
+  placesMsProducedHeatmap: {
+    perspectiveID: 'perspective1',
+    q: productionPlacesQuery,
+    filterTarget: 'manuscripts',
+    resultMapper: mapPlaces
+  },
   lastKnownLocations: {
     perspectiveID: 'perspective1',
     q: lastKnownLocationsQuery,
@@ -164,7 +170,7 @@ export const backendSearchConfig = {
   placesEvents: {
     perspectiveID: 'perspective3',
     q: eventPlacesQuery,
-    filterTarget: 'manuscript__id',
+    filterTarget: 'event',
     resultMapper: mapPlaces,
     instance: {
       properties: placePropertiesInfoWindow,

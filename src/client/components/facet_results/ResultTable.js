@@ -17,34 +17,37 @@ import ResultTableHead from './ResultTableHead'
 import TablePagination from '@material-ui/core/TablePagination'
 import ResultTablePaginationActions from './ResultTablePaginationActions'
 import history from '../../History'
-import has from 'lodash'
 
 const styles = theme => ({
-  tableContainer: {
+  tableContainer: props => ({
     overflow: 'auto',
-    width: '100%',
-    height: 'auto',
-    [theme.breakpoints.up('md')]: {
-      height: 'calc(100% - 126px)'
+    '& td, & th': {
+      fontSize: props.layoutConfig.tableFontSize
+    },
+    [theme.breakpoints.up(props.layoutConfig.hundredPercentHeightBreakPoint)]: {
+      height: `calc(100% - ${props.layoutConfig.tabHeight + props.layoutConfig.paginationToolbarHeight + 2}px)`
     },
     backgroundColor: theme.palette.background.paper,
     borderTop: '1px solid rgba(224, 224, 224, 1);'
-  },
+  }),
   paginationRoot: {
     display: 'flex',
     backgroundColor: '#fff',
-    borderTop: '1px solid rgba(224, 224, 224, 1);'
+    borderTop: '1px solid rgba(224, 224, 224, 1);',
+    alignItems: 'center'
   },
   paginationCaption: {
     minWidth: 110
   },
-  paginationToolbar: {
-    [theme.breakpoints.down('xs')]: {
+  paginationToolbar: props => ({
+    '& p': { fontSize: '0.75rem' },
+    minHeight: props.layoutConfig.paginationToolbarHeight,
+    [theme.breakpoints.down(480)]: {
       display: 'flex',
       flexWrap: 'wrap',
-      height: 100
+      height: 60
     }
-  },
+  }),
   progressContainer: {
     width: '100%',
     height: 'calc(100% - 72px)',
@@ -177,15 +180,28 @@ class ResultTable extends React.Component {
   }
 
   rowRenderer = row => {
-    const { classes } = this.props
+    const { classes, screenSize } = this.props
     const expanded = this.state.expandedRows.has(row.id)
     let hasExpandableContent = false
     const dataCells = this.props.data.properties.map(column => {
+      const {
+        id, valueType, makeLink, externalLink, sortValues, sortBy, numberedList, minWidth,
+        linkAsButton, collapsedMaxWords, sourceExternalLink, renderAsHTML, HTMLParserTask
+      } = column
+      let { previewImageHeight } = column
+      if (screenSize === 'xs' || screenSize === 'sm') {
+        previewImageHeight = 50
+      }
       if (column.onlyOnInstancePage) { return null }
       const columnData = row[column.id] == null ? '-' : row[column.id]
       const isArray = Array.isArray(columnData)
       if (isArray) {
         hasExpandableContent = true
+      }
+      // if there are multiple images, they can be viewed by clicking the preview image,
+      // not by expanding
+      if (column.valueType === 'image' && Array.isArray(columnData)) {
+        hasExpandableContent = false
       }
       if (!isArray &&
         columnData !== '-' &&
@@ -197,28 +213,26 @@ class ResultTable extends React.Component {
       }
       return (
         <ResultTableCell
-          key={column.id}
-          columnId={column.id}
+          key={id}
+          columnId={id}
           data={columnData}
-          valueType={column.valueType}
-          makeLink={column.makeLink}
-          externalLink={column.externalLink}
-          sortValues={column.sortValues}
-          sortBy={column.sortBy}
-          numberedList={column.numberedList}
-          minWidth={column.minWidth}
-          previewImageHeight={column.previewImageHeight}
+          valueType={valueType}
+          makeLink={makeLink}
+          externalLink={externalLink}
+          sortValues={sortValues}
+          sortBy={sortBy}
+          numberedList={numberedList}
+          minWidth={minWidth}
+          previewImageHeight={previewImageHeight}
           container='cell'
           expanded={expanded}
-          linkAsButton={has(column, 'linkAsButton')
-            ? column.linkAsButton
-            : null}
-          collapsedMaxWords={has(column, 'collapsedMaxWords')
-            ? column.collapsedMaxWords
-            : null}
-          renderAsHTML={has(column, 'renderAsHTML')
-            ? column.renderAsHTML
-            : null}
+          linkAsButton={linkAsButton}
+          collapsedMaxWords={collapsedMaxWords}
+          showSource={false}
+          sourceExternalLink={sourceExternalLink}
+          renderAsHTML={renderAsHTML}
+          HTMLParserTask={HTMLParserTask}
+          referencedTerm={columnData.referencedTerm}
         />
       )
     })

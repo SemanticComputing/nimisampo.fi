@@ -17,9 +17,11 @@ import {
 // https://github.com/bvaughn/react-virtualized/blob/master/docs/usingAutoSizer.md
 
 const styles = theme => ({
-  root: {
+  root: props => ({
     display: 'flex',
-    height: 'calc(100% - 74px)',
+    [theme.breakpoints.up(props.layoutConfig.hundredPercentHeightBreakPoint)]: {
+      height: `calc(100% - ${props.layoutConfig.tabHeight}px)`
+    },
     // width: 'calc(100% - 1px)',
     flexGrow: 1,
     borderTop: '1px solid rgb(224, 224, 224)',
@@ -27,7 +29,7 @@ const styles = theme => ({
     '& a': {
       textDecoration: 'underline'
     }
-  },
+  }),
   resultsInfo: {
     flexGrow: 0
   }
@@ -161,8 +163,8 @@ class VirtualizedTable extends React.PureComponent {
                   rowGetter={rowGetter}
                   rowCount={this.props.list.size}
                   sort={this._sort}
-                  sortBy={this.props.clientFS.sortBy}
-                  sortDirection={this.props.clientFS.sortDirection.toUpperCase()}
+                  sortBy={this.props.clientFSState.sortBy}
+                  sortDirection={this.props.clientFSState.sortDirection.toUpperCase()}
                   width={width}
                   height={height}
                   headerHeight={50}
@@ -284,7 +286,7 @@ class VirtualizedTable extends React.PureComponent {
 VirtualizedTable.propTypes = {
   classes: PropTypes.object.isRequired,
   list: PropTypes.instanceOf(Immutable.List).isRequired,
-  clientFS: PropTypes.object,
+  clientFSState: PropTypes.object,
   clientFSSortResults: PropTypes.func,
   perspectiveID: PropTypes.string.isRequired
 }

@@ -17,37 +17,34 @@ import TopBarLanguageButton from '../../main_layout/TopBarLanguageButton'
 import Divider from '@material-ui/core/Divider'
 import { has } from 'lodash'
 import secoLogo from '../../../img/logos/seco-logo-48x50.png'
-import { showLanguageButton, feedbackLink } from '../../../configs/sampo/GeneralConfig'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1
   },
-  toolbar: {
+  topBarToolbar: props => ({
+    minHeight: props.layoutConfig.topBar.reducedHeight,
+    [theme.breakpoints.up(props.layoutConfig.reducedHeightBreakpoint)]: {
+      minHeight: props.layoutConfig.topBar.defaultHeight
+    },
     paddingLeft: theme.spacing(1.5),
     paddingRight: theme.spacing(1.5)
-  },
-  sectionDesktop: {
+  }),
+  sectionDesktop: props => ({
     display: 'none',
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up(props.layoutConfig.topBar.mobileMenuBreakpoint)]: {
       display: 'flex'
     }
-  },
+  }),
   link: {
     textDecoration: 'none'
   },
-  sectionMobile: {
+  sectionMobile: props => ({
     display: 'flex',
-    [theme.breakpoints.up('lg')]: {
+    [theme.breakpoints.up(props.layoutConfig.topBar.mobileMenuBreakpoint)]: {
       display: 'none'
     }
-  },
-  homeButtonText: {
-    whiteSpace: 'nowrap',
-    [theme.breakpoints.down('sm')]: {
-      fontSize: '1rem'
-    }
-  },
+  }),
   appBarButton: {
     whiteSpace: 'nowrap',
     color: 'white !important',
@@ -61,11 +58,42 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
     borderLeft: '2px solid white'
   },
-  secoLogo: {
+  secoLogo: props => ({
     marginLeft: theme.spacing(1),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(props.layoutConfig.topBar.mobileMenuBreakpoint)]: {
       display: 'none'
     }
+  }),
+  secoLogoImage: props => ({
+    height: 32,
+    [theme.breakpoints.up(props.layoutConfig.reducedHeightBreakpoint)]: {
+      height: 50
+    }
+  }),
+  mainLogo: props => ({
+    height: 23,
+    [theme.breakpoints.up(props.layoutConfig.reducedHeightBreakpoint)]: {
+      height: 40
+    },
+    marginRight: theme.spacing(1)
+  }),
+  mainLogoButtonRoot: {
+    paddingLeft: 0,
+    [theme.breakpoints.down('xs')]: {
+      minWidth: 48
+    }
+  },
+  mainLogoButtonLabel: {
+    justifyContent: 'left'
+  },
+  mainLogoTypography: {
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('sm')]: {
+      fontSize: '1rem'
+    }
+    // [theme.breakpoints.down('xs')]: {
+    //     display: 'none'
+    // }
   }
 }))
 
@@ -77,7 +105,7 @@ const TopBar = props => {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
   const { perspectives, currentLocale, availableLocales, rootUrl } = props
-  const classes = useStyles()
+  const classes = useStyles(props)
   const handleMobileMenuOpen = event => setMobileMoreAnchorEl(event.currentTarget)
   const handleMobileMenuClose = () => setMobileMoreAnchorEl(null)
   const clientFSMode = props.location.pathname.indexOf('clientFS') !== -1
@@ -166,7 +194,7 @@ const TopBar = props => {
       <Divider />
       {renderMobileMenuItem({
         id: 'feedback',
-        externalUrl: feedbackLink,
+        externalUrl: props.layoutConfig.topBar.feedbackLink,
         label: intl.get('topBar.feedback')
       })}
       {/* <MenuItem
@@ -212,10 +240,19 @@ const TopBar = props => {
       {/* Add an empty Typography element to ensure that that the MuiTypography class is loaded for
          any lower level components that use MuiTypography class only in translation files */}
       <Typography />
-      <AppBar position='absolute'>
-        <Toolbar className={classes.toolbar}>
-          <Button component={AdapterLink} to='/'>
-            <Typography className={classes.homeButtonText} variant='h6'>{intl.get('appTitle.short')}</Typography>
+      <AppBar position='static'>
+        <Toolbar className={classes.topBarToolbar}>
+          <Button
+            component={AdapterLink} to='/'
+            classes={{
+              root: classes.mainLogoButtonRoot,
+              label: classes.mainLogoButtonLabel
+            }}
+          >
+            {/* <img className={classes.mainLogo} src={} /> */}
+            <Typography className={classes.mainLogoTypography} variant='h6'>
+              {props.xsScreen ? intl.get('appTitle.mobile') : intl.get('appTitle.short')}
+            </Typography>
           </Button>
           {!clientFSMode &&
             <TopBarSearchField
@@ -230,7 +267,7 @@ const TopBar = props => {
             <div className={classes.appBarDivider} />
             {renderDesktopTopMenuItem({
               id: 'feedback',
-              externalUrl: feedbackLink,
+              externalUrl: props.layoutConfig.topBar.feedbackLink,
               label: intl.get('topBar.feedback')
             })}
             <TopBarInfoButton rootUrl={props.rootUrl} />
@@ -243,7 +280,7 @@ const TopBar = props => {
             >
               {intl.get('topBar.instructions')}
             </Button>
-            {showLanguageButton &&
+            {props.layoutConfig.topBar.showLanguageButton &&
               <TopBarLanguageButton
                 currentLocale={currentLocale}
                 availableLocales={availableLocales}
@@ -257,10 +294,10 @@ const TopBar = props => {
             target='_blank'
             rel='noopener noreferrer'
           >
-            <Button><img src={secoLogo} /></Button>
+            <Button><img className={classes.secoLogoImage} src={secoLogo} /></Button>
           </a>
           <div className={classes.sectionMobile}>
-            {showLanguageButton &&
+            {props.layoutConfig.topBar.showLanguageButton &&
               <TopBarLanguageButton
                 currentLocale={currentLocale}
                 availableLocales={availableLocales}
@@ -314,7 +351,8 @@ TopBar.propTypes = {
   /**
    * Root url of the application.
    */
-  rootUrl: PropTypes.string.isRequired
+  rootUrl: PropTypes.string.isRequired,
+  layoutConfig: PropTypes.object.isRequired
 }
 
 export default TopBar

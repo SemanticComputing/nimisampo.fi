@@ -5,6 +5,7 @@ export const FETCH_RESULTS_FAILED = 'FETCH_RESULTS_FAILED'
 export const FETCH_RESULT_COUNT = 'FETCH_RESULT_COUNT'
 export const FETCH_RESULT_COUNT_FAILED = 'FETCH_RESULT_COUNT_FAILED'
 export const FETCH_FULL_TEXT_RESULTS = 'FETCH_FULL_TEXT_RESULTS'
+export const SORT_FULL_TEXT_RESULTS = 'SORT_FULL_TEXT_RESULTS'
 export const UPDATE_RESULT_COUNT = 'UPDATE_RESULT_COUNT'
 export const UPDATE_PAGINATED_RESULTS = 'UPDATE_PAGINATED_RESULTS'
 export const UPDATE_RESULTS = 'UPDATE_RESULTS'
@@ -76,28 +77,34 @@ export const fetchResults = ({
   facetClass,
   uri = null,
   limit = null,
-  optimize = null
+  optimize = null,
+  reason = null
 }) => ({
   type: FETCH_RESULTS,
   resultClass,
   facetClass,
   uri,
   limit,
-  optimize
+  optimize,
+  reason
 })
 export const fetchInstanceAnalysis = ({
   resultClass,
   facetClass,
   uri = null,
   fromID = null,
-  toID = null
+  toID = null,
+  period = null,
+  province = null
 }) => ({
   type: FETCH_INSTANCE_ANALYSIS,
   resultClass,
   facetClass,
   uri,
   fromID,
-  toID
+  toID,
+  period,
+  province
 })
 export const fetchResultCount = ({ resultClass, facetClass }) => ({
   type: FETCH_RESULT_COUNT,
@@ -114,6 +121,11 @@ export const fetchFullTextResults = ({ resultClass, query }) => ({
   type: FETCH_FULL_TEXT_RESULTS,
   resultClass,
   query
+})
+export const sortFullTextResults = ({ resultClass, sortBy }) => ({
+  type: SORT_FULL_TEXT_RESULTS,
+  resultClass,
+  sortBy
 })
 export const fetchResultsFailed = (resultClass, error, message) => ({
   type: FETCH_RESULTS_FAILED,
@@ -148,7 +160,7 @@ export const sortResults = (resultClass, sortBy) => ({
   resultClass,
   sortBy
 })
-export const clearResults = resultClass => ({
+export const clearResults = ({ resultClass }) => ({
   type: CLEAR_RESULTS,
   resultClass
 })
@@ -308,8 +320,9 @@ export const animateMap = value => ({
   type: ANIMATE_MAP,
   value
 })
-export const updateMapBounds = bounds => ({
+export const updateMapBounds = ({ resultClass, bounds }) => ({
   type: UPDATE_MAP_BOUNDS,
+  resultClass,
   bounds
 })
 export const fetchGeoJSONLayers = ({ layerIDs, bounds }) => ({
