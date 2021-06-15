@@ -12,11 +12,12 @@ import MoreIcon from '@material-ui/icons/MoreVert'
 import Button from '@material-ui/core/Button'
 import { Link, NavLink } from 'react-router-dom'
 import TopBarSearchField from '../../main_layout/TopBarSearchField'
-import TopBarInfoButton from '../../main_layout/TopBarInfoButton'
+// import TopBarInfoButton from '../../main_layout/TopBarInfoButton'
 import TopBarLanguageButton from '../../main_layout/TopBarLanguageButton'
-import Divider from '@material-ui/core/Divider'
+// import Divider from '@material-ui/core/Divider'
 import { has } from 'lodash'
 import secoLogo from '../../../img/logos/seco-logo-48x50.png'
+import nameSampoLogoFi from '../../../img/logos/nimisampo-logo.png'
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -94,7 +95,13 @@ const useStyles = makeStyles(theme => ({
     // [theme.breakpoints.down('xs')]: {
     //     display: 'none'
     // }
-  }
+  },
+  mainLogoImg: props => ({
+    height: 30,
+    [theme.breakpoints.up(props.layoutConfig.reducedHeightBreakpoint)]: {
+      height: 35
+    }
+  })
 }))
 
 /**
@@ -190,12 +197,17 @@ const TopBar = props => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {perspectives.map(perspective => perspective.isHidden ? null : renderMobileMenuItem(perspective))}
-      <Divider />
+      {/* {perspectives.map(perspective => perspective.isHidden ? null : renderMobileMenuItem(perspective))}
+      <Divider /> */}
       {renderMobileMenuItem({
         id: 'feedback',
         externalUrl: props.layoutConfig.topBar.feedbackLink,
         label: intl.get('topBar.feedback')
+      })}
+      {renderMobileMenuItem({
+        id: 'info',
+        externalUrl: intl.get('topBar.info.infoURL'),
+        label: intl.get('topBar.info.info').toUpperCase()
       })}
       {/* <MenuItem
         key='feedback'
@@ -205,7 +217,7 @@ const TopBar = props => {
       >
         {intl.get('topBar.feedback').toUpperCase()}
       </MenuItem> */}
-      <MenuItem
+      {/* <MenuItem
         key={0}
         component={AdapterLink}
         to={`${props.rootUrl}/about`}
@@ -232,7 +244,7 @@ const TopBar = props => {
         onClick={handleMobileMenuClose}
       >
         {intl.get('topBar.instructions').toUpperCase()}
-      </MenuItem>
+      </MenuItem> */}
     </Menu>
 
   return (
@@ -248,11 +260,12 @@ const TopBar = props => {
               root: classes.mainLogoButtonRoot,
               label: classes.mainLogoButtonLabel
             }}
+            onClick={() => props.clearResults()}
           >
-            {/* <img className={classes.mainLogo} src={} /> */}
-            <Typography className={classes.mainLogoTypography} variant='h6'>
+            <img className={classes.mainLogoImg} src={props.currentLocale === 'fi' ? nameSampoLogoFi : nameSampoLogoFi} />
+            {/* <Typography className={classes.mainLogoTypography} variant='h6'>
               {props.xsScreen ? intl.get('appTitle.mobile') : intl.get('appTitle.short')}
-            </Typography>
+            </Typography> */}
           </Button>
           {!clientFSMode &&
             <TopBarSearchField
@@ -264,14 +277,19 @@ const TopBar = props => {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             {perspectives.map((perspective, index) => perspective.isHidden ? null : renderDesktopTopMenuItem(perspective, index))}
-            <div className={classes.appBarDivider} />
+            {/* <div className={classes.appBarDivider} /> */}
             {renderDesktopTopMenuItem({
               id: 'feedback',
               externalUrl: props.layoutConfig.topBar.feedbackLink,
               label: intl.get('topBar.feedback')
             })}
-            <TopBarInfoButton rootUrl={props.rootUrl} />
-            <Button
+            {renderDesktopTopMenuItem({
+              id: 'info',
+              externalUrl: intl.get('topBar.info.infoURL'),
+              label: intl.get('topBar.info.info').toUpperCase()
+            })}
+            {/* <TopBarInfoButton rootUrl={props.rootUrl} /> */}
+            {/* <Button
               className={classes.appBarButton}
               component={AdapterNavLink}
               to={`${props.rootUrl}/instructions`}
@@ -279,7 +297,7 @@ const TopBar = props => {
               activeClassName={classes.appBarButtonActive}
             >
               {intl.get('topBar.instructions')}
-            </Button>
+            </Button> */}
             {props.layoutConfig.topBar.showLanguageButton &&
               <TopBarLanguageButton
                 currentLocale={currentLocale}

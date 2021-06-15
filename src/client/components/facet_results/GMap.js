@@ -15,7 +15,7 @@ const GMap = props => {
   return (
     <GoogleMap
       mapContainerStyle={{
-        height: 'calc(100% - 72px)',
+        height: `calc(100% - ${props.layoutConfig.tabHeight}px)`,
         width: '100%'
       }}
       zoom={4}
@@ -27,7 +27,8 @@ const GMap = props => {
 }
 
 GMap.propTypes = {
-  results: PropTypes.array
+  results: PropTypes.array,
+  layoutConfig: PropTypes.object.isRequired
 }
 
 export default GMap

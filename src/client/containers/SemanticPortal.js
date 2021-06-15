@@ -260,7 +260,7 @@ const SemanticPortal = props => {
             rootUrl={rootUrlWithLang}
             search={props.fullTextSearch}
             fetchFullTextResults={props.fetchFullTextResults}
-            clearResults={props.clearResults}
+            clearResults={props.clientFSClearResults}
             perspectives={perspectiveConfig}
             currentLocale={props.options.currentLocale}
             availableLocales={props.options.availableLocales}

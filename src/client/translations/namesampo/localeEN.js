@@ -35,6 +35,7 @@ export default {
   },
   facetBar: {
     results: 'Results',
+    filters: 'Filters',
     narrowDownBy: 'Narrow down by'
   },
   tabs: {
@@ -87,7 +88,7 @@ export default {
       heatmap: 'Heatmap'
     },
     wrongZoomLevel: 'The map zoom level has to at least 11',
-    tooManyResults: 'More than 1500 results, please use clustered map or heatmap'
+    tooManyResults: 'More than 500 results, please use clustered map or heatmap'
   },
   instancePageGeneral: {
     introduction: `

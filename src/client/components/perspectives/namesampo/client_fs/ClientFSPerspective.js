@@ -6,6 +6,7 @@ import { Route, Redirect } from 'react-router-dom'
 import PerspectiveTabs from '../../../main_layout/PerspectiveTabs'
 import LeafletMap from '../../../facet_results/LeafletMap'
 import ResultInfo from '../../../facet_results/ResultInfo'
+import GMap from '../../../facet_results/GMap'
 import VirtualizedTable from '../../../facet_results/VirtualizedTable'
 import Pie from '../../../facet_results/Pie.js'
 import CSVButton from '../../../facet_results/CSVButton'
@@ -13,7 +14,7 @@ import {
   MAPBOX_ACCESS_TOKEN,
   MAPBOX_STYLE
 } from '../../../../configs/sampo/GeneralConfig'
-import { createPopUpContentNameSampo, layerConfigs } from '../../../../configs/sampo/Leaflet/LeafletConfig'
+import { createPopUpContentNameSampo, layerConfigs } from '../../../../configs/namesampo/Leaflet/LeafletConfig'
 
 const ClientFSPerspective = props => {
   const { rootUrl, perspective, screenSize, clientFSState, layoutConfig } = props
@@ -32,11 +33,11 @@ const ClientFSPerspective = props => {
         layoutConfig={layoutConfig}
       />
       <Route
-        exact path={`${rootUrl}/${perspective.id}/federated-search`}
-        render={() => <Redirect to={`${rootUrl}/${perspective.id}/federated-search/table`} />}
+        exact path={`${rootUrl}`}
+        render={() => <Redirect to={`${rootUrl}/table`} />}
       />
       <Route
-        path={`${rootUrl}/${perspective.id}/federated-search/table`}
+        path={`${rootUrl}/table`}
         render={() =>
           <VirtualizedTable
             list={Immutable.List(props.clientFSResults)}
@@ -47,7 +48,7 @@ const ClientFSPerspective = props => {
           />}
       />
       <Route
-        path={`${rootUrl}/${perspective.id}/federated-search/map_clusters`}
+        path={`${rootUrl}/map_clusters`}
         render={() =>
           <LeafletMap
             mapBoxAccessToken={MAPBOX_ACCESS_TOKEN}
@@ -76,7 +77,7 @@ const ClientFSPerspective = props => {
           />}
       />
       <Route
-        path={`${rootUrl}/${perspective.id}/federated-search/map_markers`}
+        path={`${rootUrl}/map_markers`}
         render={() => {
           if (props.clientFSResults.length > 500) {
             return <ResultInfo message={intl.get('leafletMap.tooManyResults')} />
@@ -112,7 +113,15 @@ const ClientFSPerspective = props => {
         }}
       />
       <Route
-        path={`${rootUrl}/${perspective.id}/federated-search/statistics`}
+        path={`${rootUrl}/heatmap`}
+        render={() =>
+          <GMap
+            results={props.clientFSResults}
+            layoutConfig={layoutConfig}
+          />}
+      />
+      <Route
+        path={`${rootUrl}/statistics`}
         render={() =>
           <Pie
             data={props.clientFSResults}
@@ -123,7 +132,7 @@ const ClientFSPerspective = props => {
           />}
       />
       <Route
-        path={`${rootUrl}/${perspective.id}/federated-search/download`}
+        path={`${rootUrl}/download`}
         render={() =>
           <CSVButton results={props.clientFSResults} layoutConfig={layoutConfig} />}
       />

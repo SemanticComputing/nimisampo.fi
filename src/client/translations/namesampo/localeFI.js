@@ -39,7 +39,8 @@ export default {
   },
   facetBar: {
     results: 'Tuloksia',
-    narrowDownBy: 'Rajoita tulosjoukkoa'
+    filters: 'Suodattimet',
+    narrowDownBy: 'Rajaa tulosjoukkoa'
   },
   tabs: {
     table: 'taulukko',
@@ -89,7 +90,7 @@ export default {
       heatmap: 'Heatmap'
     },
     wrongZoomLevel: 'Hakutuloksien suuren määrän johdosta kartan zoomaustason täytyy olla vähintään 11',
-    tooManyResults: 'Hakutuloksia on yli 1500, jolloin täytyy käyttää joko klusteroitua karttaa tai lämpökartta.'
+    tooManyResults: 'Hakutuloksia on yli 500, jolloin täytyy käyttää joko klusteroitua karttaa tai lämpökartta.'
   },
   instancePageGeneral: {
     introduction: `
