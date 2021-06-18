@@ -269,10 +269,10 @@ const SemanticPortal = props => {
             location={props.location}
             layoutConfig={layoutConfig}
           />
-          <Route exact path={`${rootUrlWithLang}/app`}>
+          <Route path={`${rootUrlWithLang}/app`}>
             <Redirect to={`${rootUrlWithLang}`} />
           </Route>
-          <Route exact path={`${rootUrl}/app`}>
+          <Route path={`${rootUrl}/app`}>
             <Redirect to={`${rootUrlWithLang}`} />
           </Route>
           <Route exact path={`${rootUrl}/`}>
