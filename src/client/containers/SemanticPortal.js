@@ -49,7 +49,7 @@ import {
 import { filterResults } from '../selectors'
 import { perspectiveConfig } from '../configs/namesampo/PerspectiveConfig'
 // import { perspectiveConfigOnlyInfoPages } from '../configs/sampo/PerspectiveConfigOnlyInfoPages'
-import { rootUrl, layoutConfig } from '../configs/sampo/GeneralConfig'
+import { rootUrl, layoutConfig } from '../configs/namesampo/GeneralConfig'
 
 // ** General components **
 // import InfoHeader from '../components/main_layout/InfoHeader'
