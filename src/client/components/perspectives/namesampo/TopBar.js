@@ -260,7 +260,7 @@ const TopBar = props => {
               root: classes.mainLogoButtonRoot,
               label: classes.mainLogoButtonLabel
             }}
-            onClick={() => props.clearResults()}
+            onClick={() => props.clientFSClearResults()}
           >
             <img className={classes.mainLogoImg} src={props.currentLocale === 'fi' ? nameSampoLogoFi : nameSampoLogoFi} />
             {/* <Typography className={classes.mainLogoTypography} variant='h6'>
