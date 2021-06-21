@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles'
 import intl from 'react-intl-universal'
 import L from 'leaflet'
 import { has, isEqual } from 'lodash'
-import buffer from '@turf/buffer'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { purple } from '@material-ui/core/colors'
 import history from '../../History'
@@ -38,6 +37,9 @@ import markerIconGreen from '../../img/markers/marker-icon-green.png'
 import markerIconRed from '../../img/markers/marker-icon-red.png'
 import markerIconOrange from '../../img/markers/marker-icon-orange.png'
 import markerIconYellow from '../../img/markers/marker-icon-yellow.png'
+
+// const buffer = lazy(() => import('@turf/buffer'))
+import buffer from '@turf/buffer'
 
 const styles = theme => ({
   leafletContainerfacetResults: props => ({

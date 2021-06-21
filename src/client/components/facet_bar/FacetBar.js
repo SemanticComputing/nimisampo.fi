@@ -92,7 +92,7 @@ class FacetBar extends React.Component {
     const { facetUpdateID, updatedFacet, updatedFilter, facets } = this.props.facetData
     const label = intl.get(`perspectives.${facetClass}.properties.${facetID}.label`)
     const description = intl.get(`perspectives.${facetClass}.properties.${facetID}.description`)
-    const facet = facets[facetID]
+    const facet = { ...facets[facetID] }
     const facetConstrainSelf = this.props.facetDataConstrainSelf == null
       ? null
       : this.props.facetDataConstrainSelf.facets[facetID]
@@ -257,8 +257,8 @@ class FacetBar extends React.Component {
           }}
           expandIcon={<ExpandMoreIcon />}
           IconButtonProps={{ onClick: this.handleExpandButtonOnClick(facetID) }}
-          aria-controls='panel1a-content'
-          id='panel1a-header'
+          aria-controls={`${facetID}-content`}
+          id={`${facetID}-header`}
         >
           <FacetHeader
             facetID={facetID}
@@ -342,6 +342,7 @@ class FacetBar extends React.Component {
     const { classes, facetClass, resultClass, resultCount, facetData, facetedSearchMode } = this.props
     const { facets } = facetData
     let someFacetIsFetching = false
+    const hasClientFSResults = facetData.results !== null
     if (facetedSearchMode === 'serverFS') {
       Object.values(facets).forEach(facet => {
         if (facet.isFetching) {
@@ -372,7 +373,7 @@ class FacetBar extends React.Component {
             perspectiveID={facetClass}
             layoutConfig={this.props.layoutConfig}
           />}
-        {(facetedSearchMode === 'serverFS' || facetData.results !== null) &&
+        {(facetedSearchMode === 'serverFS' || hasClientFSResults) &&
           <Paper className={classes.facetInfoContainer}>
             <FacetInfo
               facetedSearchMode={facetedSearchMode}
@@ -391,7 +392,7 @@ class FacetBar extends React.Component {
               screenSize={this.props.screenSize}
             />
           </Paper>}
-        {(facetedSearchMode === 'serverFS' || facetData.results !== null) &&
+        {(facetedSearchMode === 'serverFS' || hasClientFSResults) &&
           this.renderFacets({ classes, facets, someFacetIsFetching })}
       </div>
     )
