@@ -30,7 +30,7 @@ import 'leaflet.zoominfo/dist/L.Control.Zoominfo.css'
 import 'leaflet-usermarker/src/leaflet.usermarker.js'
 import 'leaflet-usermarker/src/leaflet.usermarker.css'
 import 'leaflet.gridlayer.googlemutant/Leaflet.GoogleMutant.js'
-// import 'mapbox-gl-leaflet/leaflet-mapbox-gl.js'
+import 'mapbox-gl-leaflet/leaflet-mapbox-gl.js'
 
 import markerShadowIcon from '../../img/markers/marker-shadow.png'
 import markerIconViolet from '../../img/markers/marker-icon-violet.png'
@@ -327,10 +327,11 @@ class LeafletMap extends React.Component {
     })
 
     // https://github.com/mapbox/mapbox-gl-leaflet
-    // const nlsVectortilesBackgroundmap = L.mapboxGL({
-    //   accessToken: this.props.mapBoxAccessToken,
-    //   style: `${process.env.API_URL}/nls-vectortiles`
-    // })
+    const nlsVectortilesBackgroundmap = L.mapboxGL({
+      attribution: 'National Land Survey of Finland',
+      accessToken: this.props.mapBoxAccessToken,
+      style: `${process.env.API_URL}/nls-vectortiles`
+    })
 
     // layer for markers
     this.resultMarkerLayer = L.layerGroup()
@@ -342,10 +343,12 @@ class LeafletMap extends React.Component {
         center: this.props.center,
         zoom: this.props.zoom
       }),
+      maxZoom: 20,
       zoomControl: false,
       zoominfoControl: true,
       layers: [
-        googleRoadmap,
+        nlsVectortilesBackgroundmap,
+        // googleRoadmap,
         this.resultMarkerLayer
       ],
       fullscreenControl: true
@@ -375,7 +378,7 @@ class LeafletMap extends React.Component {
     if (this.props.showExternalLayers) {
       const basemaps = {
         // [intl.get(`leafletMap.basemaps.mapbox.${this.props.mapBoxStyle}`)]: mapboxBaseLayer
-        // [intl.get('leafletMap.basemaps.backgroundMapNLS')]: backgroundMapNLS,
+        [intl.get('leafletMap.basemaps.backgroundMapNLS')]: nlsVectortilesBackgroundmap,
         // [intl.get('leafletMap.basemaps.topographicalMapNLS')]: topographicalMapNLS,
         // [intl.get('leafletMap.basemaps.airMapNLS')]: airMapNLS
         [intl.get('leafletMap.basemaps.googleRoadmap')]: googleRoadmap
