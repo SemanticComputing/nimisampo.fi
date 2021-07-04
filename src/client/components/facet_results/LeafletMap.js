@@ -30,6 +30,7 @@ import 'leaflet.zoominfo/dist/L.Control.Zoominfo.css'
 import 'leaflet-usermarker/src/leaflet.usermarker.js'
 import 'leaflet-usermarker/src/leaflet.usermarker.css'
 import 'leaflet.gridlayer.googlemutant/Leaflet.GoogleMutant.js'
+// import 'mapbox-gl-leaflet/leaflet-mapbox-gl.js'
 
 import markerShadowIcon from '../../img/markers/marker-shadow.png'
 import markerIconViolet from '../../img/markers/marker-icon-violet.png'
@@ -324,6 +325,12 @@ class LeafletMap extends React.Component {
     const googleRoadmap = L.gridLayer.googleMutant({
       type: 'roadmap'
     })
+
+    // https://github.com/mapbox/mapbox-gl-leaflet
+    // const nlsVectortilesBackgroundmap = L.mapboxGL({
+    //   accessToken: this.props.mapBoxAccessToken,
+    //   style: `${process.env.API_URL}/nls-vectortiles`
+    // })
 
     // layer for markers
     this.resultMarkerLayer = L.layerGroup()
