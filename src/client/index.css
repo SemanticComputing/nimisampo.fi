@@ -54,12 +54,16 @@ a, a:visited, a:hover, a:active {
 } 
 
 .leaflet-popup-content p {
-    margin: 0px;
+    margin: 0px !important;
 }
 
 .leaflet-popup-content h3 {
     margin-top: 3px;
     margin-bottom: 5px;
+}
+
+.leaflet-popup-content-image {
+    width: 100%;
 }
 
 .leaflet-control-layers span {
@@ -70,6 +74,15 @@ a, a:visited, a:hover, a:active {
     margin-left: 3px;
 }
 
+.leaflet-popup-scrolled {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+
+.leaflet-control-layers-list {
+    max-width: 270px;
+}
+
 @media screen and (min-width: 1440px) {
     .leaflet-control-layers {
         font-size: 14px;
@@ -78,13 +91,23 @@ a, a:visited, a:hover, a:active {
         transform: scale(1.5);
         margin: 6px;
     }
+    .leaflet-control-layers-list {
+        /* min-width: 450px; */
+        max-width: 450px;
+    }
 }
 
-.carousel .control-dots {
-    position: unset;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
+@media screen and (max-width: 450px) {
+    .leaflet-bottom .leaflet-control-scale {
+        margin-bottom: 36px;
+    }
+    .leaflet-popup-content h3, .leaflet-popup-content p {
+        font-size: 0.75rem;
+    }
+    .leaflet-popup-content-image {
+        width: auto;
+        max-height: 60px;
+    }
 }
 
 .leaflet-usermarker-small i.pulse {
