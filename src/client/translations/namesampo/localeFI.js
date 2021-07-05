@@ -71,9 +71,13 @@ export default {
   },
   leafletMap: {
     basemaps: {
+      mapbox: {
+        'light-v10': 'Mapbox Light (OpenStreetMap)'
+      },
       googleRoadmap: 'Google Maps',
       topographicalMapNLS: 'Topografinen kartta (Maanmittauslaitos)',
-      backgroundMapNLS: 'Taustakartta (Maanmittauslaitos)'
+      backgroundMapNLS: 'Taustakartta (Maanmittauslaitos)',
+      airMapNLS: 'Ilmakuva (Maanmittauslaitos)'
     },
     externalLayers: {
       // arkeologiset_kohteet_alue: 'Register of Archaeological Sites, areas',

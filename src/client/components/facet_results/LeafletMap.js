@@ -315,18 +315,18 @@ class LeafletMap extends React.Component {
     //   maxZoom: 18
     // })
     // https://github.com/mapbox/mapbox-gl-leaflet
-    // const nlsVectortilesBackgroundmap = L.mapboxGL({
-    //   accessToken: this.props.mapBoxAccessToken,
-    //   style: `${process.env.API_URL}/nls-vectortiles-open`
-    // })
-    // const topographicalMapNLS = L.tileLayer(`${process.env.API_URL}/nls-wmts-open?z={z}&x={x}&y={y}&layerID=maastokartta`, {
-    //   attribution: 'National Land Survey of Finland',
-    //   maxZoom: 18
-    // })
-    // const airMapNLS = L.tileLayer(`${process.env.API_URL}/nls-wmts-open?z={z}&x={x}&y={y}&layerID=ortokuva`, {
-    //   attribution: 'National Land Survey of Finland',
-    //   maxZoom: 18
-    // })
+    const nlsVectortilesBackgroundmap = L.mapboxGL({
+      accessToken: this.props.mapBoxAccessToken,
+      style: `${process.env.API_URL}/nls-vectortiles-open`
+    })
+    const topographicalMapNLS = L.tileLayer(`${process.env.API_URL}/nls-wmts-open?z={z}&x={x}&y={y}&layerID=maastokartta`, {
+      attribution: 'National Land Survey of Finland',
+      maxZoom: 18
+    })
+    const airMapNLS = L.tileLayer(`${process.env.API_URL}/nls-wmts-open?z={z}&x={x}&y={y}&layerID=ortokuva`, {
+      attribution: 'National Land Survey of Finland',
+      maxZoom: 18
+    })
     const googleRoadmap = L.gridLayer.googleMutant({
       type: 'roadmap'
     })
@@ -341,7 +341,7 @@ class LeafletMap extends React.Component {
         center: this.props.center,
         zoom: this.props.zoom
       }),
-      maxZoom: 20,
+      maxZoom: 18,
       zoomControl: false,
       zoominfoControl: true,
       layers: [
@@ -375,10 +375,10 @@ class LeafletMap extends React.Component {
     // initialize layers from external sources
     if (this.props.showExternalLayers) {
       const basemaps = {
-        [intl.get(`leafletMap.basemaps.mapbox.${this.props.mapBoxStyle}`)]: mapboxBaseLayer
-        // [intl.get('leafletMap.basemaps.backgroundMapNLS')]: nlsVectortilesBackgroundmap,
-        // [intl.get('leafletMap.basemaps.topographicalMapNLS')]: topographicalMapNLS,
-        // [intl.get('leafletMap.basemaps.airMapNLS')]: airMapNLS
+        // [intl.get(`leafletMap.basemaps.mapbox.${this.props.mapBoxStyle}`)]: mapboxBaseLayer,
+        [intl.get('leafletMap.basemaps.backgroundMapNLS')]: nlsVectortilesBackgroundmap,
+        [intl.get('leafletMap.basemaps.topographicalMapNLS')]: topographicalMapNLS,
+        [intl.get('leafletMap.basemaps.airMapNLS')]: airMapNLS,
         [intl.get('leafletMap.basemaps.googleRoadmap')]: googleRoadmap
       }
       this.initOverLays(basemaps)
