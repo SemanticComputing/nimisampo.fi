@@ -30,6 +30,7 @@ export default {
     Hakutermejä voi myös yhdistellä käyttämällä "or"-sanaa, esimerkiksi
     "ukko* or ukon*" löytää kaikki ukko- tai ukon-alkuiset nimet.
   `,
+  backendErrorText: 'Valitettavasti portaalin taustapalvelu ei ole tällä hetkellä saatavilla. Ole hyvä yritä myöhemmin uudestaan.',
   topBar: {
     feedback: 'palaute',
     info: {

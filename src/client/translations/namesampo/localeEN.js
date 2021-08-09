@@ -23,6 +23,7 @@ export default {
   appDescription4: `
   
   `,
+  backendErrorText: 'One of the backend services is not available at the moment. Please try again later.',
   topBar: {
     feedback: 'feedback',
     info: {
