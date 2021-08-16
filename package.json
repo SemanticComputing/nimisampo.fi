@@ -89,8 +89,8 @@
     "@babel/preset-react": "^7.12.10",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
-    "@storybook/addon-docs": "^6.3.2",
-    "@storybook/react": "^6.3.2",
+    "@storybook/addon-docs": "^6.3.6",
+    "@storybook/react": "^6.3.6",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^25.1.0",
     "babel-loader": "^8.2.2",
@@ -107,8 +107,8 @@
     "googleapis": "^71.0.0",
     "html-webpack-plugin": "^5.3.1",
     "jest": "^26.6.3",
-    "node-sass": "^5.0.0",
     "react-test-renderer": "^16.6.1",
+    "sass": "^1.37.5",
     "sass-loader": "^10.1.0",
     "sitemap": "^6.3.5",
     "standard": "^14.3.4",
@@ -123,5 +123,8 @@
     "env": {
       "jest": true
     }
+  },
+  "optionalDependencies": {
+    "fsevents": "^2.3.2"
   }
 }
