@@ -23,6 +23,8 @@ const ResultTable = lazy(() => import('../../facet_results/ResultTable'))
 const LeafletMap = lazy(() => import('../../facet_results/LeafletMap'))
 const Deck = lazy(() => import('../../facet_results/Deck'))
 const ApexChart = lazy(() => import('../../facet_results/ApexChart'))
+const BarChartRace = lazy(() => import('../../facet_results/BarChartRace'))
+const BarChartRaceTest = lazy(() => import('../../facet_results/BarChartRaceTest'))
 const Network = lazy(() => import('../../facet_results/Network'))
 const Export = lazy(() => import('../../facet_results/Export'))
 
@@ -203,6 +205,28 @@ const Perspective1 = props => {
           />}
       />
       <Route
+        path={`${rootUrl}/${perspective.id}/faceted-search/choropleth_map`}
+        render={() =>
+          <Deck
+            center={props.perspectiveState.maps.casualtiesByMunicipality.center}
+            zoom={props.perspectiveState.maps.casualtiesByMunicipality.zoom}
+            results={props.perspectiveState.results}
+            facetUpdateID={props.facetState.facetUpdateID}
+            instanceAnalysisData={props.perspectiveState.instanceAnalysisData}
+            instanceAnalysisDataUpdateID={props.perspectiveState.instanceAnalysisDataUpdateID}
+            resultClass='casualtiesByMunicipality'
+            facetClass='perspective1'
+            fetchResults={props.fetchResults}
+            fetchInstanceAnalysis={props.fetchInstanceAnalysis}
+            fetching={props.perspectiveState.fetching}
+            fetchingInstanceAnalysisData={props.perspectiveState.fetchingInstanceAnalysisData}
+            layerType='polygonLayer'
+            mapBoxAccessToken={MAPBOX_ACCESS_TOKEN}
+            mapBoxStyle={MAPBOX_STYLE}
+            layoutConfig={props.layoutConfig}
+          />}
+      />
+      <Route
         path={`${rootUrl}/${perspective.id}/faceted-search/production_dates`}
         render={() =>
           <ApexChart
@@ -259,6 +283,47 @@ const Perspective1 = props => {
             resultClass='eventLineChart'
             facetClass='perspective1'
             layoutConfig={props.layoutConfig}
+          />}
+      />
+      <Route
+        path={`${rootUrl}/${perspective.id}/faceted-search/bar_chart_race_ms_productions`}
+        render={() =>
+          <BarChartRace
+            fetchData={props.fetchResults}
+            resultClass='productionsByDecadeAndCountry'
+            facetClass='perspective1'
+            resultUpdateID={props.perspectiveState.resultUpdateID}
+            results={props.perspectiveState.results}
+            stepBegin={1000}
+            stepEnd={1900}
+            stepIncrement={10}
+            stepDuration={1000}
+          />}
+      />
+      <Route
+        path={`${rootUrl}/${perspective.id}/faceted-search/bar_chart_race_speeches`}
+        render={() =>
+          <BarChartRace
+            fetchData={props.fetchResults}
+            resultClass='speechesByYearAndParty'
+            facetClass='perspective1'
+            resultUpdateID={props.perspectiveState.resultUpdateID}
+            results={props.perspectiveState.results}
+            stepBegin={1907}
+            stepEnd={2021}
+            stepIncrement={1}
+            stepDuration={1000}
+          />}
+      />
+      <Route
+        path={`${rootUrl}/${perspective.id}/faceted-search/bar_chart_race2`}
+        render={() =>
+          <BarChartRaceTest
+            fetchData={props.fetchResults}
+            resultClass='productionsByDecadeAndCountry'
+            facetClass='perspective1'
+            resultUpdateID={props.perspectiveState.resultUpdateID}
+            results={props.perspectiveState.results}
           />}
       />
       <Route

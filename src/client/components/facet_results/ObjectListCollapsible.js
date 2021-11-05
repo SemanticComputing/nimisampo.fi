@@ -25,13 +25,16 @@ const styles = () => ({
   dateContainer: {
     width: 180,
     display: 'inline-block'
+  },
+  threeDots: {
+    cursor: 'pointer'
   }
 })
 
-const ObjectList = props => {
+const ObjectListCollapsible = props => {
   const {
     sortValues, sortBy, makeLink, externalLink, linkAsButton, columnId, showSource,
-    sourceExternalLink, numberedList
+    sourceExternalLink, numberedList, collapsedMaxWords, classes, shortenLabel
   } = props
   let { data } = props
 
@@ -53,7 +56,7 @@ const ObjectList = props => {
     return data
   }
 
-  const renderItem = ({ collapsed, itemData, isFirstValue = false }) => {
+  const renderItem = ({ addThreeDots, itemData, isFirstValue = false }) => {
     if (columnId === 'event') {
       return (
         <>
@@ -61,7 +64,8 @@ const ObjectList = props => {
             data={itemData}
             isFirstValue={isFirstValue}
           />
-          {collapsed && <span> ...</span>}
+          {addThreeDots &&
+            <span className={classes.threeDots} onClick={() => props.onExpandClick(props.rowId)}> ...</span>}
         </>
       )
     } else {
@@ -69,14 +73,19 @@ const ObjectList = props => {
         <>
           <ObjectListItem
             data={itemData}
+            shortenLabel={shortenLabel}
             makeLink={makeLink}
             externalLink={externalLink}
             linkAsButton={linkAsButton}
+            isFirstValue={isFirstValue}
+            collapsedMaxWords={collapsedMaxWords}
           />
-          {collapsed && <span> ...</span>}
+          {addThreeDots &&
+            <span className={classes.threeDots} onClick={() => props.onExpandClick(props.rowId)}> ...</span>}
           {showSource && itemData.source &&
             <ObjectListItemSources
               data={itemData.source}
+              shortenLabel={shortenLabel}
               externalLink={sourceExternalLink}
             />}
         </>
@@ -109,18 +118,18 @@ const ObjectList = props => {
     data = sortValues ? sortList(data) : data
     return (
       <>
-        {!props.expanded && renderItem({ collapsed: true, itemData: data[0], isFirstValue: true })}
+        {!props.expanded && renderItem({ addThreeDots: true, itemData: data[0], isFirstValue: true })}
         <Collapse in={props.expanded} timeout='auto' unmountOnExit>
           {numberedList ? renderNumberedList(data) : renderBulletedList(data)}
         </Collapse>
       </>
     )
   } else {
-    return renderItem({ collapsed: false, itemData: data, isFirstValue: true })
+    return renderItem({ addThreeDots: shortenLabel, itemData: data })
   }
 }
 
-ObjectList.propTypes = {
+ObjectListCollapsible.propTypes = {
   classes: PropTypes.object.isRequired,
   data: PropTypes.oneOfType([PropTypes.object, PropTypes.array, PropTypes.string]),
   makeLink: PropTypes.bool.isRequired,
@@ -130,7 +139,8 @@ ObjectList.propTypes = {
   expanded: PropTypes.bool.isRequired,
   columnId: PropTypes.string.isRequired,
   linkAsButton: PropTypes.bool,
-  showSource: PropTypes.bool
+  showSource: PropTypes.bool,
+  shortenLabel: PropTypes.bool.isRequired
 }
 
-export default withStyles(styles)(ObjectList)
+export default withStyles(styles)(ObjectListCollapsible)

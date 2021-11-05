@@ -4,6 +4,8 @@ import { perspective3Config } from './perspective_configs/Perspective3Config'
 import { findsConfig } from './perspective_configs/FindsConfig'
 import { actorsConfig } from './perspective_configs/EmloActorsConfig'
 import { hellerauConfig } from './perspective_configs/HellerauConfig'
+import { speechesConfig } from './perspective_configs/SemparlSpeechesConfig'
+import { warsaConfig } from './perspective_configs/WarsaConfig'
 import {
   productionPlacesQuery,
   lastKnownLocationsQuery,
@@ -13,11 +15,13 @@ import {
   expressionProperties,
   collectionProperties,
   productionsByDecadeQuery,
+  productionsByDecadeAndCountryQuery,
   eventsByDecadeQuery,
   manuscriptInstancePageNetworkLinksQuery,
   manuscriptFacetResultsNetworkLinksQuery,
   manuscriptNetworkNodesQuery,
-  knowledgeGraphMetadataQuery
+  knowledgeGraphMetadataQuery,
+  choroplethQuery
 } from './sparql_queries/SparqlQueriesPerspective1'
 import {
   workProperties
@@ -52,6 +56,7 @@ import {
   emloPeopleRelatedTo
 } from './sparql_queries/SparqlQueriesEmloPlaces'
 import { hellerauMigrationsQuery } from './sparql_queries/SparqlQueriesHellerau'
+import { speechesByYearAndPartyQuery } from './sparql_queries/SparqlQueriesSpeeches'
 import { federatedSearchDatasets } from './sparql_queries/SparqlQueriesFederatedSearch'
 import { fullTextSearchProperties } from './sparql_queries/SparqlQueriesFullText'
 import { sitemapInstancePageQuery } from '../SparqlQueriesGeneral'
@@ -60,7 +65,9 @@ import {
   mapPlaces,
   mapLineChart,
   mapMultipleLineChart,
-  linearScale
+  linearScale,
+  toBarChartRaceFormat,
+  toPolygonLayerFormat
 } from '../Mappers'
 
 export const backendSearchConfig = {
@@ -70,6 +77,8 @@ export const backendSearchConfig = {
   finds: findsConfig,
   emloActors: actorsConfig,
   hellerau: hellerauConfig,
+  semparlSpeeches: speechesConfig,
+  warsa: warsaConfig,
   manuscripts: {
     perspectiveID: 'perspective1', // get rest of the config from 'perspective1'
     instance: {
@@ -161,6 +170,17 @@ export const backendSearchConfig = {
       }
     }
   },
+  casualtiesByMunicipality: {
+    perspectiveID: 'warsa',
+    q: choroplethQuery,
+    resultMapper: makeObjectList,
+    postprocess: {
+      func: toPolygonLayerFormat,
+      config: {
+        variable: 'death'
+      }
+    }
+  },
   placesMsMigrationsDialog: {
     perspectiveID: 'perspective1',
     q: migrationsDialogQuery,
@@ -184,6 +204,30 @@ export const backendSearchConfig = {
     resultMapper: mapLineChart,
     resultMapperConfig: {
       fillEmptyValues: false
+    }
+  },
+  productionsByDecadeAndCountry: {
+    perspectiveID: 'perspective1',
+    q: productionsByDecadeAndCountryQuery,
+    filterTarget: 'manuscript',
+    resultMapper: makeObjectList,
+    postprocess: {
+      func: toBarChartRaceFormat,
+      config: {
+        step: 10
+      }
+    }
+  },
+  speechesByYearAndParty: {
+    perspectiveID: 'semparlSpeeches',
+    q: speechesByYearAndPartyQuery,
+    filterTarget: 'speech',
+    resultMapper: makeObjectList,
+    postprocess: {
+      func: toBarChartRaceFormat,
+      config: {
+        step: 1
+      }
     }
   },
   eventLineChart: {

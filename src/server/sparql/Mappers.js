@@ -1,5 +1,6 @@
-import { has } from 'lodash'
-import { getTreeFromFlatData } from 'react-sortable-tree'
+import { has, cloneDeep } from 'lodash'
+import { getTreeFromFlatData } from '@nosferatu500/react-sortable-tree'
+import { ckmeans } from 'simple-statistics'
 
 export const mapPlaces = sparqlBindings => {
   const results = sparqlBindings.map(b => {
@@ -85,7 +86,7 @@ export const mapLineChart = ({ sparqlBindings, config }) => {
   const seriesData = []
   const categoriesData = []
   const sparqlBindingsLength = sparqlBindings.length
-  sparqlBindings.map((b, index, bindings) => {
+  sparqlBindings.forEach((b, index, bindings) => {
     const currentCategory = parseInt(b.category.value)
     const currentValue = parseInt(b.count.value)
     seriesData.push(currentValue)
@@ -129,7 +130,7 @@ export const mapMultipleLineChart = ({ sparqlBindings, config }) => {
   if (config && config.fillEmptyValues) {
     //  fill the missing years with zeroes
     const valmax = Math.max(...category)
-    for (var i = Math.min(...category); i <= valmax; i++) {
+    for (let i = Math.min(...category); i <= valmax; i++) {
       for (const p in res) {
         if (p !== 'category') {
           res[p][i] = 0
@@ -149,7 +150,7 @@ export const mapMultipleLineChart = ({ sparqlBindings, config }) => {
 
   // sort by year and remove empty sequence at start and end
   for (const p in res) {
-    var arr = Object.entries(res[p])
+    const arr = Object.entries(res[p])
       .map(p => [parseFloat(p[0]), p[1]])
       .sort((a, b) => ((a[0] < b[0]) ? -1 : ((a[0] > b[0]) ? 1 : 0)))
     res[p] = trimResult(arr)
@@ -171,15 +172,17 @@ export const mapPieChart = sparqlBindings => {
 export const linearScale = ({ data, config }) => {
   const { variable, minAllowed, maxAllowed } = config
   const length = data.length
-  const min = data[length - 1][variable]
-  const max = data[0][variable]
+  const min = Number(data[length - 1][variable])
+  const max = Number(data[0][variable])
   data.forEach(item => {
     if (item[variable]) {
-      const unscaledNum = item[variable]
+      const unscaledNum = Number(item[variable])
       // https://stackoverflow.com/a/31687097
-      item[`${variable}Scaled`] = (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed
+      const scaled = (maxAllowed - minAllowed) * (unscaledNum - min) / (max - min) + minAllowed
+      item[`${variable}Scaled`] = parseFloat(scaled.toFixed(2))
     }
   })
+  return data
 }
 
 /* Data processing as in:
@@ -213,6 +216,7 @@ const mapFacetValues = sparqlBindings => {
     } catch (err) {
       console.log(err)
     }
+    return null
   })
   return results
 }
@@ -241,4 +245,108 @@ const recursiveSortAndSelectChildren = nodes => {
     }
   })
   return nodes
+}
+
+export const toBarChartRaceFormat = ({ data, config }) => {
+  const { step } = config
+  const firstKey = parseInt(data[0].id)
+  const lastKey = parseInt(data[data.length - 1].id)
+  const resultObj = {}
+  let rawDataIndex = 0
+  let lastNonNullIndex = null
+  for (let i = firstKey; i <= lastKey; i += step) {
+    const dataItemExists = parseInt(data[rawDataIndex].id) === i
+    if (dataItemExists) {
+      const currentDataItem = dataItemToObject(data[rawDataIndex].dataItem)
+      if (i === firstKey) {
+        resultObj[i] = currentDataItem
+      } else {
+        resultObj[i] = mergeDataItems(resultObj[lastNonNullIndex], currentDataItem)
+      }
+      lastNonNullIndex = i
+      rawDataIndex++
+    } else {
+      resultObj[i] = null
+    }
+  }
+  return resultObj
+}
+
+const dataItemToObject = dataItem => {
+  if (Array.isArray(dataItem)) {
+    return dataItem.reduce((obj, item) => {
+      return {
+        ...obj,
+        [item.id]: {
+          prefLabel: item.prefLabel,
+          value: parseInt(item.value)
+        }
+      }
+    }, {})
+  } else {
+    return {
+      [dataItem.id]: {
+        prefLabel: dataItem.prefLabel,
+        value: parseInt(dataItem.value)
+      }
+    }
+  }
+}
+
+const mergeDataItems = (itemA, itemB) => {
+  const merged = cloneDeep(itemA)
+  const keys = Object.keys(itemB)
+  for (let i = 0; i < keys.length; i++) {
+    const itemBkey = keys[i]
+    if (Object.prototype.hasOwnProperty.call(itemA, itemBkey)) {
+      merged[itemBkey].value += itemB[itemBkey].value
+    } else {
+      merged[itemBkey] = itemB[itemBkey]
+    }
+  }
+  return merged
+}
+
+export const toPolygonLayerFormat = ({ data, config }) => {
+  // const scaledData = linearScale({ data, config })
+  const valuesArray = []
+  data.forEach(item => {
+    valuesArray.push(item.instanceCount)
+    const pointArray = item.polygon.split(' ')
+    const deckGlArray = pointArray.map(point => {
+      const latLng = point.split(',')
+      return [
+        parseFloat(parseFloat(latLng[0]).toFixed(4)),
+        parseFloat(parseFloat(latLng[1]).toFixed(4))
+      ]
+    })
+    item.polygon = deckGlArray
+  })
+  // Ckmeans algorithm: https://journal.r-project.org/archive/2011-2/RJournal_2011-2_Wang+Song.pdf
+  const clusters = ckmeans(valuesArray, 8)
+  data.forEach(item => {
+    item.choroplethColor = getChoroplethMapColor({ value: Number(item.instanceCount), clusters })
+  })
+  return data
+}
+
+const getChoroplethMapColor = ({ value, clusters }) => {
+  // https://colorbrewer2.org/#type=sequential&scheme=YlOrRd&n=8
+  const colors = [
+    [255, 255, 204],
+    [255, 237, 160],
+    [254, 217, 118],
+    [254, 178, 76],
+    [253, 141, 60],
+    [252, 78, 42],
+    [227, 26, 28],
+    [177, 0, 38]
+  ]
+  let heatmapColor
+  colors.forEach((color, index) => {
+    if (value >= Number(clusters[index][0]) && value <= Number(clusters[index][clusters[index].length - 1])) {
+      heatmapColor = color
+    }
+  })
+  return heatmapColor
 }

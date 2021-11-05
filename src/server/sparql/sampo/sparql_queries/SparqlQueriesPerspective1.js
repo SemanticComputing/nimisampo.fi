@@ -528,12 +528,34 @@ export const migrationsDialogQuery = `
 
 export const productionsByDecadeQuery = `
   SELECT ?category (COUNT (DISTINCT ?instance) as ?count) WHERE {
-    <FILTER>
+   
     ?instance ^crm:P108_has_produced/crm:P4_has_time-span/mmm-schema:decade ?category .
   }
   GROUP BY ?category
   ORDER BY ?category
 `
+
+export const productionsByDecadeAndCountryQuery = `
+  SELECT ?id ?dataItem__id ?dataItem__prefLabel (count(?manuscript) as ?dataItem__value) WHERE {
+    <FILTER>
+    {
+      []  crm:P108_has_produced ?manuscript ;
+          crm:P7_took_place_at/gvp:broaderPreferred* ?dataItem__id ; 
+          crm:P4_has_time-span/mmm-schema:decade ?id .
+      ?dataItem__id  gvp:placeTypePreferred "nations" ;
+                      skos:prefLabel ?dataItem__prefLabel .
+    
+      FILTER(?id < 1900)
+      # FILTER(?id > 990 && ?id < 1100)
+      # FILTER(?id < -900)
+      # FILTER(?id > 1400 && ?id < 1440)
+      # FILTER(?id != 1420)
+    }
+  } 
+  GROUP BY ?id ?dataItem__id ?dataItem__prefLabel 
+  ORDER BY ?id
+`
+
 export const eventsByDecadeQuery = `
   SELECT DISTINCT ?category 
   (COUNT(?production) AS ?productionCount) 
@@ -573,4 +595,17 @@ export const knowledgeGraphMetadataQuery = `
                       mmm-schema:data_provider_url ?databaseDump__dataProviderUrl ;
                       dct:modified ?databaseDump__modified .
   }
+`
+
+export const choroplethQuery = `
+  SELECT ?id ?prefLabel ?polygon (count(?death) as ?instanceCount) 
+  WHERE {
+    ?id a <http://www.yso.fi/onto/suo/kunta> ;
+        skos:prefLabel ?prefLabel ;
+        sch:polygon ?polygon .
+    OPTIONAL { ?death crm-org:P7_took_place_at ?id }
+  }
+  GROUP BY ?id ?prefLabel ?polygon
+  ORDER BY desc(?instanceCount)
+  # LIMIT 40
 `
