@@ -30,7 +30,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/pickers": "^3.2.10",
     "@nosferatu500/react-sortable-tree": "^3.0.5",
-    "@react-google-maps/api": "^1.8.6",
+    "@react-google-maps/api": "^2.5.0",
     "@shakacode/recompose": "^0.30.3",
     "@turf/buffer": "^6.3.0",
     "apexcharts": "^3.26.0",
