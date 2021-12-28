@@ -95,11 +95,17 @@ const generateTextFilter = ({
 }) => {
   const facetConfig = backendSearchConfig[facetClass].facets[facetID]
   let filterStr = ''
-  if (facetConfig.textQueryPredicate === '') {
-    filterStr = `?${filterTarget} text:query (${facetConfig.textQueryProperty} '${queryString}') .`
+  let queryObject
+  if (facetConfig.textQueryProperty) {
+    queryObject = `(${facetConfig.textQueryProperty} '${queryString}')`
+  } else {
+    queryObject = `'${queryString}'`
+  }
+  if (!has(facetConfig, 'textQueryPredicate')) {
+    filterStr = `?${filterTarget} text:query ${queryObject} .`
   } else {
     filterStr = `
-      ?textQueryTarget text:query (${facetConfig.textQueryProperty} '${queryString}') .
+      ?textQueryTarget text:query ${queryObject} .
       ?${filterTarget} ${facetConfig.textQueryPredicate} ?textQueryTarget .
 
     `
@@ -237,7 +243,7 @@ const generateUriFilter = ({
   useConjuction
 }) => {
   const facetConfig = backendSearchConfig[facetClass].facets[facetID]
-  const includeChildren = facetConfig.type === 'hierarchical' && selectAlsoSubconcepts
+  const includeChildren = facetConfig.facetType === 'hierarchical' && selectAlsoSubconcepts
   const { literal, predicate, parentProperty } = facetConfig
   const { modifiedValues, indexOfUnknown } = handleUnknownValue(values)
   let s

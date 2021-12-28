@@ -184,13 +184,16 @@ class ResultTable extends React.Component {
   }
 
   rowRenderer = row => {
-    const { classes, screenSize } = this.props
-    const expanded = this.state.expandedRows.has(row.id)
+    const { classes, screenSize, data } = this.props
+    const expanded = data.paginatedResultsAlwaysExpandRows
+      ? true
+      : this.state.expandedRows.has(row.id)
     let hasExpandableContent = false
+    let renderExpandButton
     const dataCells = this.props.data.properties.map(column => {
       const {
         id, valueType, makeLink, externalLink, sortValues, sortBy, numberedList, minWidth,
-        linkAsButton, collapsedMaxWords, sourceExternalLink, renderAsHTML, HTMLParserTask
+        height, linkAsButton, collapsedMaxWords, sourceExternalLink, renderAsHTML, HTMLParserTask
       } = column
       let { previewImageHeight } = column
       if (screenSize === 'xs' || screenSize === 'sm') {
@@ -219,11 +222,15 @@ class ResultTable extends React.Component {
           shortenLabel = !expanded // shorten label only if the cell is not expanded
         }
       }
+      renderExpandButton = data.paginatedResultsAlwaysExpandRows
+        ? false
+        : hasExpandableContent
       return (
         <ResultTableCell
           key={id}
           rowId={row.id}
           columnId={id}
+          tableData={data}
           data={columnData}
           valueType={valueType}
           makeLink={makeLink}
@@ -231,6 +238,7 @@ class ResultTable extends React.Component {
           sortValues={sortValues}
           sortBy={sortBy}
           numberedList={numberedList}
+          height={height}
           minWidth={minWidth}
           previewImageHeight={previewImageHeight}
           container='cell'
@@ -250,7 +258,7 @@ class ResultTable extends React.Component {
     return (
       <TableRow key={row.id}>
         <TableCell className={classes.expandCell}>
-          {hasExpandableContent &&
+          {renderExpandButton &&
             <IconButton
               className={clsx(classes.expand, {
                 [classes.expandOpen]: expanded

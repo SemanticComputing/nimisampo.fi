@@ -19,8 +19,8 @@ export const getFacet = async ({
   backendSearchConfig,
   facetClass,
   facetID,
-  sortBy,
-  sortDirection,
+  sortBy = null,
+  sortDirection = null,
   constraints,
   resultFormat,
   constrainSelf
@@ -30,7 +30,7 @@ export const getFacet = async ({
   // choose query template and result mapper:
   let q = ''
   let mapper = null
-  switch (facetConfig.type) {
+  switch (facetConfig.facetType) {
     case 'list':
       q = facetValuesQuery
       mapper = mapFacet
@@ -99,15 +99,20 @@ export const getFacet = async ({
       })
     }
   }
+  if (facetConfig.hideUnknownValue) {
+    q = q.replace(/<UNKNOWN_VALUES>/g, '')
+  } else {
+    q = q.replace(/<UNKNOWN_VALUES>/g, unknownBlock)
+  }
   q = q.replace('<SELECTED_VALUES>', selectedBlock)
   q = q.replace('<SELECTED_VALUES_NO_HITS>', selectedNoHitsBlock)
-  q = q.replace(/<FACET_VALUE_FILTER>/g, facetConfig.facetValueFilter)
+  q = q.replace(/<FACET_VALUE_FILTER>/g, facetConfig.facetValueFilter ? facetConfig.facetValueFilter : '')
   q = q.replace(/<FACET_LABEL_FILTER>/g,
     has(facetConfig, 'facetLabelFilter')
       ? facetConfig.facetLabelFilter
       : ''
   )
-  if (facetConfig.type === 'hierarchical') {
+  if (facetConfig.facetType === 'hierarchical') {
     q = q.replace('<ORDER_BY>', '# no need for ordering')
     q = q.replace(/<PREDICATE>/g, `${facetConfig.predicate}/${facetConfig.parentProperty}*`)
     q = q.replace('<PARENTS>', `
@@ -144,7 +149,7 @@ export const getFacet = async ({
         : ''
     )
   }
-  if (facetConfig.type === 'timespan') {
+  if (facetConfig.facetType === 'timespan') {
     q = q.replace('<START_PROPERTY>', facetConfig.startProperty)
     q = q.replace('<END_PROPERTY>', facetConfig.endProperty)
   }
@@ -159,9 +164,10 @@ export const getFacet = async ({
     endpoint: endpoint.url,
     useAuth: endpoint.useAuth,
     resultMapper: mapper,
+    resultMapperConfig: facetConfig,
     resultFormat
   })
-  if (facetConfig.type === 'hierarchical') {
+  if (facetConfig.facetType === 'hierarchical') {
     return ({
       facetClass: facetClass,
       id: facetID,
@@ -267,3 +273,25 @@ export const generateSelectedFilter = ({
           FILTER(?id ${inverse ? 'NOT' : ''} IN ( ${selections} ))
   `)
 }
+
+const unknownBlock = `
+  UNION
+  {
+    # 'Unknown' facet value for results with no predicate path
+    {
+      SELECT DISTINCT (count(DISTINCT ?instance) as ?instanceCount) {
+        <FILTER>
+        VALUES ?facetClass { <FACET_CLASS> }
+        ?instance a ?facetClass .
+        FILTER NOT EXISTS {
+          ?instance <MISSING_PREDICATE> [] .
+        }
+      }
+    }
+    FILTER(?instanceCount > 0)
+    BIND(IRI("http://ldf.fi/MISSING_VALUE") AS ?id)
+    # prefLabel for <http://ldf.fi/MISSING_VALUE> is given in client/translations
+    BIND('0' as ?parent)
+    BIND(<UNKNOWN_SELECTED> as ?selected)
+  }
+`

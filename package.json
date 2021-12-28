@@ -13,28 +13,26 @@
     "build": "npm run build-client && npm run build-server",
     "build-client": "cross-env BABEL_ENV=browser webpack --progress --config webpack.client.prod.js",
     "build-server": "cross-env BABEL_ENV=node babel src/server --out-dir ./dist/server --copy-files",
-    "build-storybook": "build-storybook -c .storybook -o docs",
     "client": "cross-env BABEL_ENV=browser webpack serve --config webpack.client.dev.js",
     "dev": "concurrently --prefix none --kill-others \"npm run server\" \"npm run client\"",
     "server": "cross-env BABEL_ENV=node NODE_ENV=development nodemon -r dotenv/config src/server/index.js --exec babel-node",
+    "utils": "cross-env BABEL_ENV=node NODE_ENV=development nodemon -r dotenv/config src/server/sparql/Utils.js --exec babel-node",
     "sitemap": "cross-env BABEL_ENV=node babel-node src/server/sitemap_generator/SitemapGenerator.js",
-    "translate": "cross-env BABEL_ENV=node babel-node src/server/translations_generator/index.js",
-    "storybook": "start-storybook",
-    "test": "jest --watch"
+    "translate": "cross-env BABEL_ENV=node babel-node src/server/translations_generator/index.js"
   },
   "dependencies": {
     "@amcharts/amcharts5": "^5.0.3",
     "@babel/runtime": "^7.15.4",
     "@date-io/moment": "^1.3.11",
-    "@material-ui/core": "^4.9.14",
-    "@material-ui/icons": "^4.9.1",
-    "@material-ui/pickers": "^3.2.10",
+    "@material-ui/core": "^4.12.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/pickers": "^3.3.10",
     "@nosferatu500/react-sortable-tree": "^3.0.5",
     "@react-google-maps/api": "^2.5.0",
     "@shakacode/recompose": "^0.30.3",
     "@turf/buffer": "^6.3.0",
     "apexcharts": "^3.26.0",
-    "axios": "^0.21.4",
+    "axios": "^0.24.0",
     "buffer": "^6.0.3",
     "core-js": "^3.19.1",
     "cytoscape": "^3.12.1",
@@ -45,6 +43,7 @@
     "express-openapi-validator": "^4.13.2",
     "express-static-gzip": "^2.1.1",
     "flat": "^5.0.2",
+    "html-react-parser": "^1.4.4",
     "immutable": "^4.0.0-rc.12",
     "js-yaml": "^3.13.1",
     "leaflet": "^1.7.1",
@@ -66,13 +65,14 @@
     "react-csv": "^2.0.3",
     "react-dom": "^17.0.2",
     "react-html-parser": "^2.0.2",
-    "react-intl-universal": "^2.2.1",
+    "react-intl-universal": "^2.4.8",
     "react-map-gl": "^6.1.0",
     "react-redux": "^7.2.0",
     "react-redux-toastr": "^7.4.1",
     "react-router-dom": "^5.3.0",
     "react-sortable-tree-theme-file-explorer": "git+https://github.com/SemanticComputing/react-sortable-tree-theme-file-explorer.git#e60a5a73b4c5892b1dcd598a27a72bd3ebbd5e96",
     "react-virtualized": "^9.22.3",
+    "react-wordcloud": "^1.2.7",
     "redux": "^4.1.0",
     "redux-observable": "^2.0.0",
     "reselect": "^4.0.0",
@@ -109,16 +109,13 @@
     "sitemap": "^6.3.5",
     "standard": "^16.0.4",
     "style-loader": "^2.0.0",
-    "webpack": "^5.51.1",
+    "webpack": "^5.64.4",
     "webpack-cli": "^4.8.0",
-    "webpack-dev-server": "^4.0.0",
+    "webpack-dev-server": "^4.6.0",
     "webpack-merge": "^5.7.3"
   },
   "standard": {
-    "parser": "@babel/eslint-parser",
-    "env": {
-      "jest": true
-    }
+    "parser": "@babel/eslint-parser"
   },
   "optionalDependencies": {
     "fsevents": "^2.3.2"

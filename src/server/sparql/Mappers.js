@@ -1,4 +1,15 @@
-import { has, cloneDeep } from 'lodash'
+import {
+  has,
+  cloneDeep,
+  isEqual,
+  transform,
+  forIn,
+  findLast,
+  isObject,
+  set,
+  isArray,
+  mergeWith
+} from 'lodash'
 import { getTreeFromFlatData } from '@nosferatu500/react-sortable-tree'
 import { ckmeans } from 'simple-statistics'
 
@@ -28,16 +39,32 @@ export const mapCount = sparqlBindings => {
   return sparqlBindings[0].count.value
 }
 
-export const mapFacet = (sparqlBindings, previousSelections) => {
+export const mapFacet = ({ sparqlBindings, config }) => {
   let results = []
   if (sparqlBindings.length > 0) {
-    results = mapFacetValues(sparqlBindings)
+    results = sparqlBindings.map(b => {
+      try {
+        return {
+          id: b.id.value,
+          prefLabel: b.prefLabel
+            ? b.prefLabel.value
+            : '0', // temporary prefLabel for <http://ldf.fi/MISSING_VALUE> to support sorting
+          selected: b.selected.value,
+          parent: b.parent ? b.parent.value : null,
+          instanceCount: b.instanceCount.value
+        }
+      } catch (err) {
+        console.log(err)
+      }
+      return null
+    })
+    return results
   }
   return results
 }
 
-export const mapHierarchicalFacet = (sparqlBindings, previousSelections) => {
-  const results = mapFacetValues(sparqlBindings)
+export const mapHierarchicalFacet = ({ sparqlBindings, config }) => {
+  const results = mapFacet({ sparqlBindings, config })
   let treeData = getTreeFromFlatData({
     flatData: results,
     getKey: node => node.id, // resolve a node's key
@@ -51,7 +78,7 @@ export const mapHierarchicalFacet = (sparqlBindings, previousSelections) => {
   })
 }
 
-export const mapTimespanFacet = sparqlBindings => {
+export const mapTimespanFacet = ({ sparqlBindings, config }) => {
   const b = sparqlBindings[0]
   return {
     min: b.min.value,
@@ -201,26 +228,6 @@ const trimResult = arr => {
   return arr.slice(i, j + 1)
 }
 
-const mapFacetValues = sparqlBindings => {
-  const results = sparqlBindings.map(b => {
-    try {
-      return {
-        id: b.id.value,
-        prefLabel: b.prefLabel
-          ? b.prefLabel.value
-          : '0', // temporary prefLabel for <http://ldf.fi/MISSING_VALUE> to support sorting
-        selected: b.selected.value,
-        parent: b.parent ? b.parent.value : null,
-        instanceCount: b.instanceCount.value
-      }
-    } catch (err) {
-      console.log(err)
-    }
-    return null
-  })
-  return results
-}
-
 const comparator = (a, b) => {
   if (Array.isArray(a.prefLabel)) {
     a.prefLabel = a.prefLabel[0]
@@ -350,3 +357,161 @@ const getChoroplethMapColor = ({ value, clusters }) => {
   })
   return heatmapColor
 }
+
+export const createPaddedTimeCodes = ({ data, config }) => {
+  data.forEach(item => {
+    let target = item[config.target]
+    if (!Array.isArray(target)) {
+      target = [target]
+    }
+    target.forEach(targetItem => {
+      const { hours, minutes, seconds } = targetItem
+      if (hours == null || minutes == null || seconds == null) {
+        // console.log(targetItem)
+      } else {
+        const paddedTimecode = createPaddedTimeCode({ hours, minutes, seconds })
+        targetItem[config.timeCodeProperty] = paddedTimecode
+      }
+    })
+  })
+  return data
+}
+
+const createPaddedTimeCode = ({ hours, minutes, seconds }) => {
+  return `${hours}:${minutes.padStart(2, '0')}:${seconds.padStart(2, '0')}`
+}
+
+// const NS_PER_SEC = 1e9
+// const MS_PER_NS = 1e-6
+
+/**
+* @param {Array} objects A list of objects as SPARQL results.
+* @returns {Array} The mapped object list.
+* @description
+* Map the SPARQL results as objects, and return a list where result rows with the same
+* id are merged into one object.
+*/
+export const makeObjectList = (objects) => {
+  // const time = process.hrtime()
+  const objList = transform(objects, function (result, obj) {
+    if (!obj.id) {
+      return null
+    }
+    // let orig = obj;
+    obj = makeObject(obj)
+    // obj = reviseObject(obj, orig);
+    mergeValueToList(result, obj)
+  })
+  // const diff = process.hrtime(time)
+  // console.log(`makeObjectList took ${(diff[0] * NS_PER_SEC + diff[1]) * MS_PER_NS} milliseconds`)
+  return objList
+  // return self.postProcess(objList);
+}
+
+export const makeDict = (objects) => {
+  return arrayToObject(objects, 'id')
+}
+
+/**
+* @param {Object} obj A single SPARQL result row object.
+* @returns {Object} The mapped object.
+* @description
+* Flatten the result object. Discard everything except values.
+* Assume that each property of the obj has a value property with
+* the actual value.
+*/
+const makeObject = (obj) => {
+  const o = {}
+  forIn(obj, function (value, key) {
+    // If the variable name contains "__", an object
+    // will be created as the value
+    // E.g. { place__id: '1' } -> { place: { id: '1' } }
+    set(o, key.replace(/__/g, '.'), value.value)
+  })
+  return o
+}
+
+/**
+* @param {Array} valueList A list to which the value should be added.
+* @param {Object} value The value to add to the list.
+* @returns {Array} The merged list.
+* @description
+* Add the given value to the given list, merging an object value to and
+* object in the list if both have the same id attribute.
+* A value already present in valueList is discarded.
+*/
+const mergeValueToList = (valueList, value) => {
+  let old
+  if (isObject(value) && value.id) {
+    // Check if this object has been constructed earlier
+    old = findLast(valueList, function (e) {
+      return e.id === value.id
+    })
+    if (old) {
+      // Merge this object to the object constructed earlier
+      mergeObjects(old, value)
+    }
+  } else {
+    // Check if this value is present in the list
+    old = findLast(valueList, function (e) {
+      return isEqual(e, value)
+    })
+  }
+  if (!old) {
+    // This is a distinct value
+    valueList.push(value)
+  }
+  return valueList
+}
+
+/**
+* @param {Object} first An object as returned by makeObject.
+* @param {Object} second The object to merge with the first.
+* @returns {Object} The merged object.
+* @description
+* Merges two objects.
+*/
+const mergeObjects = (first, second) => {
+  // Merge two objects into one object.
+  return mergeWith(first, second, merger)
+}
+
+const merger = (a, b) => {
+  if (isEqual(a, b)) {
+    return a
+  }
+  if (a && !b) {
+    return a
+  }
+  if (b && !a) {
+    return b
+  }
+  if (isArray(a)) {
+    if (isArray(b)) {
+      b.forEach(function (bVal) {
+        return mergeValueToList(a, bVal)
+      })
+      return a
+    }
+    return mergeValueToList(a, b)
+  }
+  if (isArray(b)) {
+    return mergeValueToList(b, a)
+  }
+  if (!(isObject(a) && isObject(b) && a.id === b.id)) {
+    return [a, b]
+  }
+  return mergeObjects(a, b)
+}
+
+const arrayToObject = (array, keyField) =>
+  array.reduce((obj, item) => {
+    const newItem = {}
+    Object.entries(item).forEach(([key, value]) => {
+      if (key !== keyField) {
+        newItem[key] = value.value
+      }
+    })
+    obj[item[keyField].value] = newItem
+    return obj
+  }, {})

@@ -1,13 +1,17 @@
 import React from 'react'
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { MuiThemeProvider, createTheme } from '@material-ui/core/styles'
 import SemanticPortal from '../containers/SemanticPortal'
-// import deepPurple from '@material-ui/core/colors/deepPurple'
-import deepOrange from '@material-ui/core/colors/deepOrange'
-// import green from '@material-ui/core/colors/green'
+import portalConfig from '../../configs/portalConfig.json'
+const { colorPalette } = portalConfig.layoutConfig
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
-    primary: deepOrange
+    primary: {
+      main: colorPalette.primary.main
+    },
+    secondary: {
+      main: colorPalette.secondary.main
+    }
   },
   overrides: {
     MuiTooltip: {
