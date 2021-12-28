@@ -28,7 +28,7 @@ const FederatedResults = props => {
         layoutConfig={layoutConfig}
       />
       <Route
-        exact path={`${rootUrl}/${perspectiveID}/${searchMode}`}
+        exact path={rootUrl}
         render={() => <Redirect to={`${rootUrl}/${perspectiveID}/${searchMode}/table`} />}
       />
       <Route

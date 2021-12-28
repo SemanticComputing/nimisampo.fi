@@ -28,7 +28,8 @@ export default {
     feedback: 'feedback',
     info: {
       info: 'Info',
-      infoURL: 'https://seco.cs.aalto.fi/projects/nimisampo/en/'
+      aboutTheProject: 'Project homepage',
+      aboutTheProjectURL: 'https://seco.cs.aalto.fi/projects/nimisampo/en'
     },
     searchBarPlaceHolder: 'Search all content',
     searchBarPlaceHolderShort: 'Search',
@@ -120,7 +121,7 @@ export default {
     `
   },
   perspectives: {
-    clientFSPlaces: {
+    places: {
       datasets: {
         kotus: {
           label: 'Names Archive of the Institute for the Languages of Finland (NA)',

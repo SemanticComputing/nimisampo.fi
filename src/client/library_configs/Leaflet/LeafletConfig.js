@@ -195,48 +195,48 @@ const createInstanceListing = instances => {
   return root
 }
 
-const createArchealogicalSitePopUp = data => {
-  let html = ''
-  const name = data.kohdenimi
-    ? `<b>Nimi:</b> ${data.kohdenimi}</p>`
-    : ''
-  const classification = data.laji ? `<h3>${data.laji.charAt(0).toUpperCase() + data.laji.slice(1)}</b></h3>` : ''
-  const municipality = data.kunta ? `<b>Kunta:</b> ${data.kunta}</p>` : ''
-  const link = data.mjtunnus
-    ? `<a href="https://www.kyppi.fi/to.aspx?id=112.${data.mjtunnus}" target="_blank">Avaa kohde Muinaisjäännösrekisterissä</a></p>`
-    : ''
-  html += `
-    <div>
-      ${classification}
-      ${name}
-      ${municipality}
-      ${link}
-    </div>
-    `
-  return html
-}
+// const createArchealogicalSitePopUp = data => {
+//   let html = ''
+//   const name = data.kohdenimi
+//     ? `<b>Nimi:</b> ${data.kohdenimi}</p>`
+//     : ''
+//   const classification = data.laji ? `<h3>${data.laji.charAt(0).toUpperCase() + data.laji.slice(1)}</b></h3>` : ''
+//   const municipality = data.kunta ? `<b>Kunta:</b> ${data.kunta}</p>` : ''
+//   const link = data.mjtunnus
+//     ? `<a href="https://www.kyppi.fi/to.aspx?id=112.${data.mjtunnus}" target="_blank">Avaa kohde Muinaisjäännösrekisterissä</a></p>`
+//     : ''
+//   html += `
+//     <div>
+//       ${classification}
+//       ${name}
+//       ${municipality}
+//       ${link}
+//     </div>
+//     `
+//   return html
+// }
 
-const bufferStyle = feature => {
-  if (feature.properties.laji.includes('poistettu kiinteä muinaisjäännös')) {
-    return {
-      fillOpacity: 0,
-      weight: 0,
-      interactive: false
-    }
-  } else {
-    return {
-      fillOpacity: 0,
-      color: '#6E6E6E',
-      dashArray: '3, 5',
-      interactive: false
-    }
-  }
-}
+// const bufferStyle = feature => {
+//   if (feature.properties.laji.includes('poistettu kiinteä muinaisjäännös')) {
+//     return {
+//       fillOpacity: 0,
+//       weight: 0,
+//       interactive: false
+//     }
+//   } else {
+//     return {
+//       fillOpacity: 0,
+//       color: '#6E6E6E',
+//       dashArray: '3, 5',
+//       interactive: false
+//     }
+//   }
+// }
 
-const createArchealogicalSiteColor = feature => {
-  const entry = fhaLegend.find(el => el.key === feature.properties.laji.trim())
-  return entry.color
-}
+// const createArchealogicalSiteColor = feature => {
+//   const entry = fhaLegend.find(el => el.key === feature.properties.laji.trim())
+//   return entry.color
+// }
 
 export const fhaLegend = [
   { key: 'kiinteä muinaisjäännös', color: '#f00501' },
@@ -257,58 +257,58 @@ export const fhaLegend = [
     https://www.museovirasto.fi/uploads/Tietotuotemaarittely_kulttuuriymparisto_kaikki.pdf
   */
 export const layerConfigs = [
-  {
-    // id: 'WFS_MV_KulttuuriymparistoSuojellut:Muinaisjaannokset_alue',
-    id: 'WFS_MV_Kulttuuriymparisto:Arkeologiset_kohteet_alue',
-    type: 'GeoJSON',
-    attribution: 'Museovirasto',
-    minZoom: 13,
-    buffer: {
-      distance: 200,
-      units: 'metres',
-      style: bufferStyle
-    },
-    createGeoJSONPolygonStyle: feature => {
-      return {
-        color: createArchealogicalSiteColor(feature),
-        cursor: 'pointer'
-      }
-    },
-    createPopup: createArchealogicalSitePopUp
-  },
-  {
-    // id: 'WFS_MV_KulttuuriymparistoSuojellut:Muinaisjaannokset_piste',
-    id: 'WFS_MV_Kulttuuriymparisto:Arkeologiset_kohteet_piste',
-    type: 'GeoJSON',
-    attribution: 'Museovirasto',
-    minZoom: 13,
-    buffer: {
-      distance: 200,
-      units: 'metres',
-      style: bufferStyle
-    },
-    createGeoJSONPointStyle: feature => {
-      return {
-        radius: 8,
-        fillColor: createArchealogicalSiteColor(feature),
-        color: '#000',
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8
-      }
-    },
-    createPopup: createArchealogicalSitePopUp
-  },
-  {
-    id: 'fhaLidar',
-    type: 'WMS',
-    url: `${process.env.API_URL}/fha-wms`,
-    layers: 'NBA:lidar',
-    version: '1.3.0',
-    attribution: 'Museovirasto',
-    minZoom: 13,
-    maxZoom: 18
-  },
+  // {
+  //   // id: 'WFS_MV_KulttuuriymparistoSuojellut:Muinaisjaannokset_alue',
+  //   id: 'WFS_MV_Kulttuuriymparisto:Arkeologiset_kohteet_alue',
+  //   type: 'GeoJSON',
+  //   attribution: 'Museovirasto',
+  //   minZoom: 13,
+  //   buffer: {
+  //     distance: 200,
+  //     units: 'metres',
+  //     style: bufferStyle
+  //   },
+  //   createGeoJSONPolygonStyle: feature => {
+  //     return {
+  //       color: createArchealogicalSiteColor(feature),
+  //       cursor: 'pointer'
+  //     }
+  //   },
+  //   createPopup: createArchealogicalSitePopUp
+  // },
+  // {
+  //   // id: 'WFS_MV_KulttuuriymparistoSuojellut:Muinaisjaannokset_piste',
+  //   id: 'WFS_MV_Kulttuuriymparisto:Arkeologiset_kohteet_piste',
+  //   type: 'GeoJSON',
+  //   attribution: 'Museovirasto',
+  //   minZoom: 13,
+  //   buffer: {
+  //     distance: 200,
+  //     units: 'metres',
+  //     style: bufferStyle
+  //   },
+  //   createGeoJSONPointStyle: feature => {
+  //     return {
+  //       radius: 8,
+  //       fillColor: createArchealogicalSiteColor(feature),
+  //       color: '#000',
+  //       weight: 1,
+  //       opacity: 1,
+  //       fillOpacity: 0.8
+  //     }
+  //   },
+  //   createPopup: createArchealogicalSitePopUp
+  // },
+  // {
+  //   id: 'fhaLidar',
+  //   type: 'WMS',
+  //   url: `${process.env.API_URL}/fha-wms`,
+  //   layers: 'NBA:lidar',
+  //   version: '1.3.0',
+  //   attribution: 'Museovirasto',
+  //   minZoom: 13,
+  //   maxZoom: 18
+  // },
   {
     id: 'karelianMaps',
     type: 'WMTS',

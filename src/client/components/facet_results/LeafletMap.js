@@ -297,20 +297,13 @@ class LeafletMap extends React.Component {
 
   initMap = () => {
     const { mapboxConfig } = this.props.portalConfig
-    const { mapboxAccessToken, mapboxStyle } = mapboxConfig
+    const { mapboxAccessToken /* mapboxStyle */ } = mapboxConfig
 
     // Base layer(s)
-    // const mapboxBaseLayer = L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/${this.props.mapBoxStyle}/tiles/{z}/{x}/{y}?access_token=${this.props.mapBoxAccessToken}`, {
-    //   attribution: '&copy; <a href="https://www.mapbox.com/map-feedback/">Mapbox</a> &copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+    // const mapboxBaseLayer = L.tileLayer(`https://api.mapbox.com/styles/v1/mapbox/${mapboxStyle}/tiles/{z}/{x}/{y}?access_token=${mapboxAccessToken}`, {
+    //   attribution: '&copy; <a href="https://www.mapbox.com/map-feedback/" target="_blank" rel="noopener">Mapbox</a> &copy; <a href="http://osm.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
     //   tileSize: 512,
     //   zoomOffset: -1
-    // })
-    // const topographicalMapNLS = L.tileLayer(this.createNLSUrl('maastokartta'), {
-    //   attribution: 'National Land Survey of Finland'
-    // })
-    // // https://www.maanmittauslaitos.fi/kartat-ja-paikkatieto/asiantuntevalle-kayttajalle/kartta-ja-paikkatietojen-rajapintapalvelut-19
-    // const backgroundMapNLS = L.tileLayer(this.createNLSUrl('taustakartta'), {
-    //   attribution: 'National Land Survey of Finland'
     // })
 
     /*
@@ -323,7 +316,7 @@ class LeafletMap extends React.Component {
     // })
     // https://github.com/mapbox/mapbox-gl-leaflet
     const nlsVectortilesBackgroundmap = L.mapboxGL({
-      accessToken: this.props.mapBoxAccessToken,
+      accessToken: mapboxAccessToken,
       style: `${process.env.API_URL}/nls-vectortiles-open`
     })
     const topographicalMapNLS = L.tileLayer(`${process.env.API_URL}/nls-wmts-open?z={z}&x={x}&y={y}&layerID=maastokartta`, {
@@ -334,6 +327,7 @@ class LeafletMap extends React.Component {
       attribution: 'National Land Survey of Finland',
       maxZoom: 18
     })
+
     const googleRoadmap = L.gridLayer.googleMutant({
       type: 'roadmap'
     })
@@ -352,8 +346,8 @@ class LeafletMap extends React.Component {
       zoomControl: false,
       zoominfoControl: true,
       layers: [
+        // mapboxBaseLayer,
         nlsVectortilesBackgroundmap,
-        // googleRoadmap,
         this.resultMarkerLayer
       ],
       fullscreenControl: true
@@ -382,7 +376,7 @@ class LeafletMap extends React.Component {
     // initialize layers from external sources
     if (this.props.showExternalLayers) {
       const basemaps = {
-        // [intl.get(`leafletMap.basemaps.mapbox.${this.props.mapBoxStyle}`)]: mapboxBaseLayer,
+        // [intl.get(`leafletMap.basemaps.mapbox.${mapboxStyle}`)]: mapboxBaseLayer
         [intl.get('leafletMap.basemaps.backgroundMapNLS')]: nlsVectortilesBackgroundmap,
         [intl.get('leafletMap.basemaps.topographicalMapNLS')]: topographicalMapNLS,
         [intl.get('leafletMap.basemaps.airMapNLS')]: airMapNLS,

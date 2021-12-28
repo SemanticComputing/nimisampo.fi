@@ -34,8 +34,9 @@ export default {
   topBar: {
     feedback: 'palaute',
     info: {
-      info: 'tietoja',
-      infoURL: 'https://seco.cs.aalto.fi/projects/nimisampo/'
+      info: 'info',
+      aboutTheProject: 'Projektin kotisivu',
+      aboutTheProjectURL: 'https://seco.cs.aalto.fi/projects/nimisampo/'
     }
   },
   facetBar: {
@@ -122,7 +123,7 @@ export default {
     `
   },
   perspectives: {
-    clientFSPlaces: {
+    places: {
       datasets: {
         kotus: {
           label: 'Kotimaisten kielten keskuksen Nimiarkisto (NA)',

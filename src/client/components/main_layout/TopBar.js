@@ -248,7 +248,7 @@ const TopBar = props => {
         open={isMobileMenuOpen}
         onClose={handleMobileMenuClose}
       >
-        {perspectives.map(perspective => perspective.hideTopPerspectiveButton ? null : renderMobileMenuItem(perspective))}
+        {/* {perspectives.map(perspective => perspective.hideTopPerspectiveButton ? null : renderMobileMenuItem(perspective))} */}
         <Divider />
         {renderMobileMenuItem({
           id: 'feedback',
@@ -261,7 +261,7 @@ const TopBar = props => {
           externalUrl: intl.get('topBar.instructionsUrl'),
           label: intl.get('topBar.instructions')
         })}
-        {!topBar.externalInstructions &&
+        {/* {!topBar.externalInstructions &&
           <MenuItem
             key='instructions'
             component={AdapterLink}
@@ -269,7 +269,7 @@ const TopBar = props => {
             onClick={handleMobileMenuClose}
           >
             {intl.get('topBar.instructions').toUpperCase()}
-          </MenuItem>}
+          </MenuItem>} */}
       </Menu>
     )
   }
@@ -308,8 +308,8 @@ const TopBar = props => {
             />}
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            {perspectives.map((perspective, index) => perspective.hideTopPerspectiveButton ? null : renderDesktopTopMenuItem(perspective, index))}
-            <div className={classes.appBarDivider} />
+            {/* {perspectives.map((perspective, index) => perspective.hideTopPerspectiveButton ? null : renderDesktopTopMenuItem(perspective, index))} */}
+            {/* <div className={classes.appBarDivider} /> */}
             {renderDesktopTopMenuItem({
               id: 'feedback',
               externalUrl: props.layoutConfig.topBar.feedbackLink,
@@ -321,7 +321,7 @@ const TopBar = props => {
               externalUrl: intl.get('topBar.instructionsUrl'),
               label: intl.get('topBar.instructions')
             })}
-            {!topBar.externalInstructions &&
+            {/* {!topBar.externalInstructions &&
               <Button
                 className={classes.appBarButton}
                 component={AdapterNavLink}
@@ -330,7 +330,7 @@ const TopBar = props => {
                 activeClassName={classes.appBarButtonActive}
               >
                 {intl.get('topBar.instructions')}
-              </Button>}
+              </Button>} */}
             {props.layoutConfig.topBar.showLanguageButton &&
               <TopBarLanguageButton
                 currentLocale={currentLocale}

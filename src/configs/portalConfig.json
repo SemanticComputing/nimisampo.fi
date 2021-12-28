@@ -1,37 +1,28 @@
 {
-    "portalID": "sampo",
+    "portalID": "namesampo",
     "rootUrl": "",
     "perspectives": {
         "searchPerspectives": [
-            "perspective1",
-            "perspective2",
-            "perspective3",
-            "perspective4",
-            "fullTextSearch"
-        ],
-        "onlyInstancePages": [
-            "manuscripts",
-            "collections",
-            "works",
-            "expressions",
-            "events",
-            "actors",
             "places"
-        ]
+        ],
+        "onlyInstancePages": []
     },
     "localeConfig": {
-        "defaultLocale": "en",
+        "defaultLocale": "fi",
         "readTranslationsFromGoogleSheets": "false",
         "availableLocales": [
             {
                 "id": "en",
                 "label": "English",
-                "filename": "localeEN.json"
+                "filename": "localeEN",
+                "format": "js"
+
             },
             {
                 "id": "fi",
                 "label": "English",
-                "filename": "localeFI.json"
+                "filename": "localeFI",
+                "format": "js"
             }
         ]
     },
@@ -50,7 +41,7 @@
     "layoutConfig": {
         "colorPalette": {
             "primary": {
-                "main": "#212121"
+                "main": "#ff5722"
             },
             "secondary": {
                 "main": "#EB1806"
@@ -62,8 +53,10 @@
         "paginationToolbarHeight": 37,
         "tableFontSize": "0.8rem",
         "topBar": {
+            "logoTextTransform": "none",
             "showLanguageButton": true,
-            "feedbackLink": "https://link.webropolsurveys.com/...",
+            "showSearchField": false,
+            "feedbackLink": "https://link.webropolsurveys.com/S/3BA01B62823131EF",
             "externalInstructions": false,
             "externalAboutPage": false,
             "reducedHeight": 44,
@@ -71,15 +64,10 @@
             "mobileMenuBreakpoint": 1360,
             "infoDropdown": [
                 {
-                    "id": "about",
-                    "translatedText": "aboutThePortal",
-                    "internalLink": "/about"
-                },
-                {
-                    "id": "blog",
+                    "id": "aboutTheProject",
                     "externalLink": true,
-                    "translatedUrl": "blogUrl",
-                    "translatedText": "blog"
+                    "translatedUrl": "aboutTheProjectURL",
+                    "translatedText": "aboutTheProject"
                 }
             ]
         },

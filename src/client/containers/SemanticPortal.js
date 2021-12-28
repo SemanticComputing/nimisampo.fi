@@ -1,11 +1,11 @@
 import React, { useEffect, lazy } from 'react'
 import PropTypes from 'prop-types'
 import intl from 'react-intl-universal'
-// import { has } from 'lodash'
+import { has } from 'lodash'
 import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-import { withRouter, Route, Redirect /* Switch */ } from 'react-router-dom'
-// import classNames from 'classnames'
+import { withRouter, Route, Redirect, Switch } from 'react-router-dom'
+import classNames from 'classnames'
 import { compose } from '@shakacode/recompose'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
@@ -92,7 +92,7 @@ const KnowledgeGraphMetadataTable = lazy(() => import('../components/main_layout
 // ** General components end **
 
 // ** Import portal specific components **
-const Main = lazy(() => import(`../components/perspectives/${portalID}/Main`))
+// const Main = lazy(() => import(`../components/perspectives/${portalID}/Main`))
 const MainClientFS = lazy(() => import(`../components/perspectives/${portalID}/MainClientFS`))
 const Footer = lazy(() => import(`../components/perspectives/${portalID}/Footer`))
 // ** Portal specific components end **
@@ -158,11 +158,7 @@ const useStyles = makeStyles(theme => ({
         }px)`
     }
   },
-  perspectiveContainerNoHeader: {
-    height: '100%',
-    padding: theme.spacing(1)
-  },
-  // main/perspective container is divided into two columns:
+  // perspective container is divided into two columns:
   facetBarContainer: {
     height: 'auto',
     [theme.breakpoints.up('md')]: {
@@ -328,7 +324,7 @@ const SemanticPortal = props => {
             }}
           />
           {/* route for full text search results */}
-          {/* <Route
+          <Route
             path={`${rootUrlWithLang}/full-text-search`}
             render={routeProps =>
               <FullTextSearch
@@ -339,7 +335,7 @@ const SemanticPortal = props => {
                 rootUrl={rootUrlWithLang}
                 layoutConfig={layoutConfig}
               />}
-          /> */}
+          />
           {/* routes for faceted search perspectives */}
           {perspectiveConfig.map(perspective => {
             if (!has(perspective, 'externalUrl') && perspective.searchMode === 'faceted-search') {
@@ -505,7 +501,7 @@ const SemanticPortal = props => {
             return null
           })}
           {/* create routes for classes that have only info pages and no faceted search perspective */}
-          {/* {perspectiveConfigOnlyInfoPages.map(perspective =>
+          {perspectiveConfigOnlyInfoPages.map(perspective =>
             <Switch key={perspective.id}>
               <Redirect
                 from={`${rootUrl}/${perspective.id}/page/:id`}
@@ -571,9 +567,9 @@ const SemanticPortal = props => {
                 }}
               />
             </Switch>
-          )} */}
+          )}
           <Route
-            path={`${rootUrlWithLang}/perspective4/federated-search`}
+            path={rootUrlWithLang}
             render={routeProps =>
               <>
                 <Grid container className={classes.mainContainerClientFS}>
@@ -582,8 +578,8 @@ const SemanticPortal = props => {
                       portalConfig={portalConfig}
                       layoutConfig={layoutConfig}
                       facetedSearchMode='clientFS'
-                      facetClass='perspective4'
-                      resultClass='perspective4'
+                      facetClass='places'
+                      resultClass='places'
                       facetData={props.clientFSState}
                       clientFSFacetValues={props.clientFSFacetValues}
                       fetchingResultCount={props.clientFSState.textResultsFetching}
@@ -594,7 +590,7 @@ const SemanticPortal = props => {
                       clientFSClearResults={props.clientFSClearResults}
                       clientFSUpdateQuery={props.clientFSUpdateQuery}
                       clientFSUpdateFacet={props.clientFSUpdateFacet}
-                      defaultActiveFacets={perspectiveConfig.find(p => p.id === 'perspective4').defaultActiveFacets}
+                      defaultActiveFacets={perspectiveConfig.find(p => p.id === 'places').defaultActiveFacets}
                       leafletMap={props.leafletMap}
                       updateMapBounds={props.updateMapBounds}
                       screenSize={screenSize}
@@ -611,7 +607,7 @@ const SemanticPortal = props => {
                       <FederatedResults
                         portalConfig={portalConfig}
                         layoutConfig={layoutConfig}
-                        perspective={perspectiveConfig.find(p => p.id === 'perspective4')}
+                        perspective={perspectiveConfig.find(p => p.id === 'places')}
                         routeProps={routeProps}
                         screenSize={screenSize}
                         clientFSState={props.clientFSState}
@@ -635,6 +631,7 @@ const SemanticPortal = props => {
                   layoutConfig={layoutConfig}
                 />
               </>}
+
           />
           {/* create routes for info buttons */}
           {!layoutConfig.topBar.externalAboutPage &&
