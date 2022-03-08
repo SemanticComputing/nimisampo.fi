@@ -3,6 +3,7 @@
     "sparqlQueriesFile": "SparqlQueriesNamesampo.js",
     "sparqlQueries": "federatedSearchSparqlQueries",
     "searchMode": "federated-search",
+    "hideTopPerspectiveButton": true,
     "defaultActiveFacets": [
         "datasetSelector"
     ],
@@ -83,7 +84,8 @@
     },
     "facets": {
         "datasetSelector": {
-            "filterType": "datasetSelector"
+            "filterType": "datasetSelector",
+            "containerClass": "six"
         },
         "prefLabel": {
             "filterType": "clientFSLiteral",

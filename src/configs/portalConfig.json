@@ -20,7 +20,7 @@
             },
             {
                 "id": "fi",
-                "label": "English",
+                "label": "Suomi",
                 "filename": "localeFI",
                 "format": "js"
             }
@@ -53,9 +53,8 @@
         "paginationToolbarHeight": 37,
         "tableFontSize": "0.8rem",
         "topBar": {
-            "logoImage": "logos/logo.png",
             "logoTextTransform": "none",
-            "hideLogoTextOnMobile": true,
+            "hideLogoTextOnMobile": false,
             "showLanguageButton": true,
             "showSearchField": false,
             "feedbackLink": "https://link.webropolsurveys.com/S/3BA01B62823131EF",

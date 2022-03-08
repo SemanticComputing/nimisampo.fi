@@ -156,7 +156,7 @@ const SemanticPortal = props => {
           <Redirect to={rootUrlWithLang} />
         </Route>
         {/* create a route for portal front page */}
-        <Route exact path={`${rootUrlWithLang}`}>
+        {/* <Route exact path={`${rootUrlWithLang}`}>
           <>
             <Main
               perspectives={perspectiveConfig}
@@ -169,7 +169,7 @@ const SemanticPortal = props => {
               layoutConfig={layoutConfig}
             />
           </>
-        </Route>
+        </Route> */}
         {/* create a route for full text search results */}
         <Route path={`${rootUrlWithLang}/full-text-search`}>
           <FullTextSearch
@@ -324,7 +324,7 @@ const SemanticPortal = props => {
         {/* optional: create routes for client side faceted search */}
         {federatedSearchPerspectives.length > 0 &&
           federatedSearchPerspectives.map(perspective =>
-            <Route key={perspective.id} path={`${rootUrlWithLang}/${perspective.id}/federated-search`}>
+            <Route key={perspective.id} path={`${rootUrlWithLang}`}>
               <FederatedSearchPerspective
                 portalConfig={portalConfig}
                 layoutConfig={layoutConfig}
