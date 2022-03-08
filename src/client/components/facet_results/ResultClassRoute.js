@@ -1,7 +1,8 @@
 import React, { lazy } from 'react'
 import intl from 'react-intl-universal'
-import { Route } from 'react-router-dom'
+import { Route, useLocation } from 'react-router-dom'
 import { has } from 'lodash'
+// import LineChartSotasurmat from '../perspectives/sotasurmat/LineChartSotasurmat'
 const ResultTable = lazy(() => import('./ResultTable'))
 const InstancePageTable = lazy(() => import('../main_layout/InstancePageTable'))
 const ReactVirtualizedList = lazy(() => import('./ReactVirtualizedList'))
@@ -11,7 +12,8 @@ const ApexCharts = lazy(() => import('./ApexCharts'))
 const Network = lazy(() => import('./Network'))
 const VideoPage = lazy(() => import('../main_layout/VideoPage'))
 const WordCloud = lazy(() => import('../main_layout/WordCloud'))
-// const BarChartRace = lazy(() => import('../../facet_results/BarChartRace'))
+const TemporalMap = lazy(() => import('./TemporalMap'))
+const BarChartRace = lazy(() => import('./BarChartRace'))
 const ExportCSV = lazy(() => import('./ExportCSV'))
 const Export = lazy(() => import('./Export'))
 
@@ -50,40 +52,32 @@ const ResultClassRoute = props => {
   switch (component) {
     case 'ResultTable':
       routeComponent = (
-        <Route
-          path={path}
-          render={routeProps =>
-            <ResultTable
-              portalConfig={portalConfig}
-              perspectiveConfig={perspective}
-              data={perspectiveState}
-              facetUpdateID={facetState.facetUpdateID}
-              resultClass={resultClass}
-              facetClass={facetClass}
-              fetchPaginatedResults={props.fetchPaginatedResults}
-              updatePage={props.updatePage}
-              updateRowsPerPage={props.updateRowsPerPage}
-              sortResults={props.sortResults}
-              routeProps={routeProps}
-              rootUrl={rootUrl}
-              layoutConfig={layoutConfig}
-            />}
+        <ResultTable
+          portalConfig={portalConfig}
+          perspectiveConfig={perspective}
+          data={perspectiveState}
+          facetUpdateID={facetState.facetUpdateID}
+          resultClass={resultClass}
+          facetClass={facetClass}
+          fetchPaginatedResults={props.fetchPaginatedResults}
+          updatePage={props.updatePage}
+          updateRowsPerPage={props.updateRowsPerPage}
+          sortResults={props.sortResults}
+          rootUrl={rootUrl}
+          layoutConfig={layoutConfig}
+          location={useLocation()}
         />
       )
       break
     case 'ReactVirtualizedList':
       routeComponent = (
-        <Route
-          path={path}
-          render={routeProps =>
-            <ReactVirtualizedList
-              resultClass={resultClass}
-              facetClass={facetClass}
-              fetchResults={props.fetchResults}
-              perspectiveState={perspectiveState}
-              facetUpdateID={facetState.facetUpdateID}
-              layoutConfig={layoutConfig}
-            />}
+        <ReactVirtualizedList
+          resultClass={resultClass}
+          facetClass={facetClass}
+          fetchResults={props.fetchResults}
+          perspectiveState={perspectiveState}
+          facetUpdateID={facetState.facetUpdateID}
+          layoutConfig={layoutConfig}
         />
       )
       break
@@ -114,12 +108,7 @@ const ResultClassRoute = props => {
           data: perspectiveState.instanceTableData
         }
       }
-      routeComponent = (
-        <Route
-          path={path}
-          render={routeProps => <InstancePageTable {...instanceTableProps} />}
-        />
-      )
+      routeComponent = <InstancePageTable {...instanceTableProps} />
       break
     }
     case 'LeafletMap': {
@@ -141,7 +130,9 @@ const ResultClassRoute = props => {
         perspectiveConfig: perspective,
         center: resultClassMap.center,
         zoom: resultClassMap.zoom,
-        results: perspectiveState.results,
+        results: Array.isArray(perspectiveState.results)
+          ? perspectiveState.results
+          : [],
         leafletMapState: props.leafletMapState,
         pageType,
         resultClass,
@@ -181,13 +172,7 @@ const ResultClassRoute = props => {
       if (pageType === 'instancePage') {
         leafletProps.uri = perspectiveState.instanceTableData.id
       }
-      routeComponent = (
-        <Route
-          path={path}
-          render={() =>
-            <LeafletMap {...leafletProps} />}
-        />
-      )
+      routeComponent = <LeafletMap {...leafletProps} />
       break
     }
     case 'Deck': {
@@ -199,7 +184,9 @@ const ResultClassRoute = props => {
         perspectiveConfig: perspective,
         center: resultClassMap.center,
         zoom: resultClassMap.zoom,
-        results: perspectiveState.results,
+        results: Array.isArray(perspectiveState.results)
+          ? perspectiveState.results
+          : [],
         facetUpdateID: facetState.facetUpdateID,
         resultClass,
         facetClass,
@@ -236,94 +223,102 @@ const ResultClassRoute = props => {
           instanceVariable
         }
       }
-      routeComponent = (
-        <Route
-          path={path}
-          render={() => <Deck {...deckProps} />}
-        />
-      )
+      routeComponent = <Deck {...deckProps} />
       break
     }
     case 'ApexCharts': {
-      const {
-        pageType = 'facetResults',
-        title,
-        xaxisTitle,
-        xaxisType,
-        xaxisTickAmount,
-        yaxisTitle,
-        seriesTitle,
-        stroke,
-        fill,
-        createChartData,
-        doNotRenderOnMount = false,
-        dropdownForResultClasses = false,
-        dropdownForChartTypes = false
-      } = resultClassConfig
+      const { pageType = 'facetResults' } = resultClassConfig
       const apexProps = {
         portalConfig,
         perspectiveConfig: perspective,
+        resultClassConfig,
+        apexChartsConfig: props.apexChartsConfig,
         pageType,
+        screenSize,
         resultClass,
         facetClass,
-        rawData: perspectiveState.results,
-        rawDataUpdateID: perspectiveState.resultUpdateID,
+        perspectiveState,
+        results: perspectiveState.results,
         fetching: perspectiveState.fetching,
-        fetchData: props.fetchResults,
-        createChartData: props.apexChartsConfig[createChartData],
-        title,
-        xaxisTitle,
-        xaxisType,
-        xaxisTickAmount,
-        yaxisTitle,
-        seriesTitle,
-        stroke,
-        fill,
-        layoutConfig: props.layoutConfig,
-        doNotRenderOnMount,
-        dropdownForResultClasses
+        resultUpdateID: perspectiveState.resultUpdateID,
+        fetchInstanceAnalysis: props.fetchInstanceAnalysis,
+        instanceAnalysisDataUpdateID: perspectiveState.instanceAnalysisDataUpdateID,
+        instanceAnalysisData: perspectiveState.instanceAnalysisData,
+        facetUpdateID: facetState ? facetState.facetUpdateID : null,
+        fetchData: props.fetchResults
       }
-      if (pageType === 'facetResults') {
-        apexProps.facetUpdateID = facetState.facetUpdateID
+      routeComponent = <ApexCharts {...apexProps} />
+      break
+    }
+    case 'ApexChartsDouble': {
+      const { pageType = 'facetResults', upperResultClass, lowerResultClass, resultClasses } = resultClassConfig
+      const upperResultClassConfig = resultClasses[upperResultClass]
+      const lowerResultClassConfig = resultClasses[lowerResultClass]
+      const commonApexProps = {
+        portalConfig,
+        perspectiveConfig: perspective,
+        apexChartsConfig: props.apexChartsConfig,
+        pageType,
+        screenSize,
+        perspectiveState,
+        fetchInstanceAnalysis: props.fetchInstanceAnalysis,
+        instanceAnalysisDataUpdateID: perspectiveState.instanceAnalysisDataUpdateID,
+        instanceAnalysisData: perspectiveState.instanceAnalysisData,
+        facetUpdateID: facetState ? facetState.facetUpdateID : null,
+        fetchData: props.fetchResults
       }
-      if (pageType === 'instancePage') {
-        apexProps.uri = perspectiveState.instanceTableData.id
+      const upperApexProps = {
+        ...commonApexProps,
+        component: 'ApexChartsDouble',
+        order: 'upper',
+        resultClassConfig: upperResultClassConfig,
+        resultClass: upperResultClass,
+        facetClass: upperResultClassConfig.facetClass,
+        results: perspectiveState.upper,
+        fetching: perspectiveState.upperFetching,
+        resultUpdateID: perspectiveState.upperResultUpdateID
       }
-      if (dropdownForResultClasses && has(resultClassConfig, 'resultClasses')) {
-        apexProps.resultClass = resultClassConfig.resultClasses[0]
-        apexProps.resultClasses = resultClassConfig.resultClasses
-        apexProps.dropdownForResultClasses = true
-      }
-      if (dropdownForChartTypes && has(resultClassConfig, 'chartTypes')) {
-        const { chartTypes } = resultClassConfig
-        const newChartTypes = chartTypes.map(chartType => {
-          return {
-            id: chartType.id,
-            createChartData: props.apexChartsConfig[chartType.createChartData]
-          }
-        })
-        apexProps.chartTypes = newChartTypes
-        apexProps.dropdownForChartTypes = true
+      const lowerApexProps = {
+        ...commonApexProps,
+        component: 'ApexChartsDouble',
+        order: 'lower',
+        resultClassConfig: lowerResultClassConfig,
+        resultClass: lowerResultClass,
+        facetClass: lowerResultClassConfig.facetClass,
+        perspectiveState,
+        results: perspectiveState.lower,
+        fetching: perspectiveState.lowerFetching,
+        resultUpdateID: perspectiveState.lowerResultUpdateID
       }
       routeComponent = (
-        <Route
-          path={path}
-          render={() =>
-            <ApexCharts {...apexProps} />}
-        />
+        <>
+          <ApexCharts {...upperApexProps} />
+          <ApexCharts {...lowerApexProps} />
+        </>
       )
       break
     }
+    // case 'LineChartSotasurmat': {
+    //   const lineChartProps = {
+    //     data: perspectiveState,
+    //     facetUpdateID: facetState.facetUpdateID,
+    //     fetchResults: props.fetchResults,
+    //     updatePage: props.updatePage,
+    //     resultCount: perspectiveState.resultCount
+    //   }
+    //   routeComponent = <LineChartSotasurmat {...lineChartProps} />
+    //   break
+    // }
     case 'Network': {
       const { networkConfig } = props
       const {
         pageType = 'facetResults',
         limit,
         optimize,
-        style,
         fitLayout = false,
+        style = null,
         layout = null,
-        preprocess
+        preprocess = null
       } = resultClassConfig
       let networkProps = {
         portalConfig,
@@ -338,12 +333,10 @@ const ResultClassRoute = props => {
         layoutConfig: props.layoutConfig,
         limit,
         optimize,
-        style: networkConfig[style],
         fitLayout,
-        preprocess: networkConfig[preprocess]
-      }
-      if (layout) {
-        networkProps.layout = networkConfig[layout]
+        ...(style && { style }),
+        ...(layout && { layout }),
+        ...(preprocess && { preprocess: networkConfig[preprocess] })
       }
       if (pageType === 'facetResults') {
         networkProps = {
@@ -354,13 +347,7 @@ const ResultClassRoute = props => {
       if (pageType === 'instancePage') {
         networkProps.uri = perspectiveState.instanceTableData.id
       }
-      routeComponent = (
-        <Route
-          path={path}
-          render={() =>
-            <Network {...networkProps} />}
-        />
-      )
+      routeComponent = <Network {...networkProps} />
       break
     }
     case 'VideoPage': {
@@ -373,65 +360,78 @@ const ResultClassRoute = props => {
         perspectiveState,
         properties: getVisibleRows(perspectiveState),
         localID: props.localID,
-        routeProps: props.routeProps,
         videoPlayerState: props.videoPlayerState,
         updateVideoPlayerTime: props.updateVideoPlayerTime
       }
-      routeComponent = (
-        <Route
-          path={path}
-          render={() =>
-            <VideoPage {...videoPageProps} />}
-        />
-      )
+      routeComponent = <VideoPage {...videoPageProps} />
+      break
+    }
+    case 'BarChartRace': {
+      const { stepBegin, stepEnd, stepIncrement, stepDuration } = resultClassConfig
+      const barChartRaceProps = {
+        portalConfig,
+        fetchData: props.fetchResults,
+        resultClass,
+        facetClass,
+        resultUpdateID: perspectiveState.resultUpdateID,
+        results: props.perspectiveState.results,
+        stepBegin,
+        stepEnd,
+        stepIncrement,
+        stepDuration
+      }
+      routeComponent = <BarChartRace {...barChartRaceProps} />
+      break
+    }
+    case 'TemporalMap': {
+      const temporalMapProps = {
+        portalConfig,
+        perspectiveConfig: perspective,
+        layoutConfig,
+        screenSize,
+        resultClass,
+        facetClass,
+        results: perspectiveState.results,
+        fetchResults: props.fetchResults,
+        animationValue: props.animationValue,
+        animateMap: props.animateMap,
+        facetUpdateID: facetState.facetUpdateID
+      }
+      routeComponent = <TemporalMap {...temporalMapProps} />
       break
     }
     case 'WordCloud': {
       const wordCloudProps = {
         data: perspectiveState.instanceTableData[resultClassConfig.wordCloudProperty]
       }
-      routeComponent = (
-        <Route
-          path={path}
-          render={() =>
-            <WordCloud {...wordCloudProps} />}
-        />
-      )
+      routeComponent = <WordCloud {...wordCloudProps} />
       break
     }
     case 'Export': {
       const { pageType = 'facetResults' } = resultClassConfig
       const exportResultClass = resultClassConfig.resultClass
       routeComponent = (
-        <Route
-          path={path}
-          render={routeProps =>
-            <Export
-              portalConfig={portalConfig}
-              data={perspectiveState}
-              resultClass={exportResultClass}
-              facetClass={facetClass}
-              pageType={pageType}
-              fetchPaginatedResults={props.fetchPaginatedResults}
-              updatePage={props.updatePage}
-              layoutConfig={props.layoutConfig}
-            />}
+        <Export
+          portalConfig={portalConfig}
+          data={perspectiveState}
+          resultClass={exportResultClass}
+          facetClass={facetClass}
+          pageType={pageType}
+          fetchPaginatedResults={props.fetchPaginatedResults}
+          updatePage={props.updatePage}
+          layoutConfig={props.layoutConfig}
         />
       )
       break
     }
     case 'ExportCSV': {
       routeComponent = (
-        <Route
-          path={path}
-          render={routeProps =>
-            <ExportCSV
-              resultClass={resultClass}
-              facetClass={facetClass}
-              facetUpdateID={facetState.facetUpdateID}
-              facets={facetState.facets}
-              layoutConfig={layoutConfig}
-            />}
+        <ExportCSV
+          resultClass={resultClass}
+          facetClass={facetClass}
+          facetUpdateID={facetState.facetUpdateID}
+          facets={facetState.facets}
+          layoutConfig={layoutConfig}
         />
       )
       break
@@ -440,7 +440,11 @@ const ResultClassRoute = props => {
       routeComponent = <></>
       break
   }
-  return routeComponent
+  return (
+    <Route path={path}>
+      {routeComponent}
+    </Route>
+  )
 }
 
 export default ResultClassRoute

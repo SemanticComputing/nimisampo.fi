@@ -1,16 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import clsx from 'clsx'
-import { withStyles } from '@material-ui/core/styles'
-import TableCell from '@material-ui/core/TableCell'
-import TableSortLabel from '@material-ui/core/TableSortLabel'
-import Tooltip from '@material-ui/core/Tooltip'
+import withStyles from '@mui/styles/withStyles'
+import TableCell from '@mui/material/TableCell'
+import TableSortLabel from '@mui/material/TableSortLabel'
+import Tooltip from '@mui/material/Tooltip'
 import ResultTableCell from './ResultTableCell'
-import Paper from '@material-ui/core/Paper'
+import Paper from '@mui/material/Paper'
 import { AutoSizer, Column, Table } from 'react-virtualized'
 import intl from 'react-intl-universal'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import purple from '@material-ui/core/colors/purple'
+import CircularProgress from '@mui/material/CircularProgress'
 
 const styles = theme => ({
   flexContainer: {
@@ -82,6 +81,7 @@ class MuiVirtualizedTable extends React.PureComponent {
         container='div'
         expanded={false}
         collapsedMaxWords={collapsedMaxWords}
+        shortenLabel={false}
       />
     )
   };
@@ -105,7 +105,9 @@ class MuiVirtualizedTable extends React.PureComponent {
           >
             <TableSortLabel
               active={sortBy === dataKey}
-              direction={sortDirection}
+              direction={typeof sortDirection === 'string'
+                ? sortDirection
+                : 'asc'}
               hideSortIcon
               onClick={this.onSortBy(dataKey)}
             >
@@ -119,7 +121,7 @@ class MuiVirtualizedTable extends React.PureComponent {
 
   onSortBy = sortBy => () => {
     this.props.sortFullTextResults({
-      resultClass: 'fullText',
+      resultClass: this.props.resultClass,
       sortBy
     })
   }
@@ -185,7 +187,7 @@ MuiVirtualizedTable.propTypes = {
 const VirtualizedTable = withStyles(styles)(MuiVirtualizedTable)
 
 const rootStyle = {
-  height: 'calc(100% - 80px)',
+  height: 'calc(100% - 58px)',
   fontFamily: 'Roboto'
 }
 
@@ -198,7 +200,7 @@ const tableContainer = {
 
 const progressContainerStyle = {
   width: '100%',
-  height: 'calc(100% - 80px)',
+  height: 'calc(100% - 58px)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center'
@@ -211,7 +213,7 @@ const ReactVirtualizedTable = props => {
       {fetching
         ? (
           <div style={progressContainerStyle}>
-            <CircularProgress style={{ color: purple[500] }} thickness={5} />
+            <CircularProgress />
           </div>
           )
         : (
@@ -224,6 +226,7 @@ const ReactVirtualizedTable = props => {
               sortBy={sortBy}
               sortDirection={sortDirection}
               sortFullTextResults={props.sortFullTextResults}
+              resultClass={props.resultClass}
             />
           </div>
           )}

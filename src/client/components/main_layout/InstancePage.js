@@ -1,10 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import purple from '@material-ui/core/colors/purple'
+import withStyles from '@mui/styles/withStyles'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
+import CircularProgress from '@mui/material/CircularProgress'
 import PerspectiveTabs from './PerspectiveTabs'
 import ResultClassRoute from '../facet_results/ResultClassRoute'
 import { getLocalIDFromAppLocation, createURIfromLocalID } from '../../helpers/helpers'
@@ -46,8 +45,8 @@ class InstancePage extends React.Component {
 
   componentDidUpdate = prevProps => {
     // handle the case when the TABLE tab was not originally active
-    const prevPathname = prevProps.routeProps.location.pathname
-    const currentPathname = this.props.routeProps.location.pathname
+    const prevPathname = prevProps.location.pathname
+    const currentPathname = this.props.location.pathname
     if (!this.hasTableData() && prevPathname !== currentPathname && currentPathname.endsWith('table')) {
       this.fetchTableData()
     }
@@ -60,7 +59,7 @@ class InstancePage extends React.Component {
 
   getLocalID = () => {
     return getLocalIDFromAppLocation({
-      location: this.props.routeProps.location,
+      location: this.props.location,
       perspectiveConfig: this.props.perspectiveConfig
     })
   }
@@ -113,7 +112,6 @@ class InstancePage extends React.Component {
     return (
       <div className={classes.root}>
         <PerspectiveTabs
-          routeProps={this.props.routeProps}
           tabs={perspectiveConfig.instancePageTabs}
           screenSize={screenSize}
           layoutConfig={layoutConfig}
@@ -121,7 +119,7 @@ class InstancePage extends React.Component {
         <Paper square className={classes.content}>
           {fetching && !hasTableData &&
             <div className={classes.spinnerContainer}>
-              <CircularProgress style={{ color: purple[500] }} thickness={5} />
+              <CircularProgress />
             </div>}
           {!hasTableData &&
             <div className={classes.spinnerContainer}>
@@ -231,7 +229,7 @@ InstancePage.propTypes = {
   /**
     * Routing information from React Router.
     */
-  routeProps: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   /**
     * Perspective config.
     */

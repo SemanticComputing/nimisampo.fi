@@ -1,16 +1,10 @@
 import { readFile } from 'fs/promises'
 import { has } from 'lodash'
 
-// import { backendSearchConfig as oldBackendSearchConfig } from './veterans/BackendSearchConfig'
+// import { backendSearchConfig as oldBackendSearchConfig } from './lettersampo/BackendSearchConfig'
 
-// import { videosConfig } from './veterans/perspective_configs/VideosConfig'
-// import { clipsConfig } from './veterans/perspective_configs/ClipsConfig'
-// import { entitiesConfig } from './veterans/perspective_configs/EntitiesConfig'
-// import { coinsPerspectiveConfig } from './perspective_configs/CoinsPerspectiveConfig'
-
-// import { INITIAL_STATE } from '../../client/reducers/veterans/videosFacets'
-// import { INITIAL_STATE } from '../../client/reducers/veterans/clipsFacets'
-// import { INITIAL_STATE } from '../../client/reducers/veterans/entitiesFacets'
+// import { placesConfig as oldPerspectiveConfig } from './lettersampo/perspective_configs/PlacesConfig'
+// import { INITIAL_STATE } from '../../client/reducers/lettersampo/placesFacets'
 
 export const createBackendSearchConfig = async () => {
   const portalConfigJSON = await readFile('src/configs/portalConfig.json')
@@ -30,6 +24,7 @@ export const createBackendSearchConfig = async () => {
       perspectiveConfig.endpoint.prefixes = prefixes
     }
     if (perspectiveConfig.searchMode === 'faceted-search') {
+      let extraResultClasses = {} // gather nested result classes here
       let hasInstancePageResultClasses = false
       // handle default resultClass which is same as perspectiveID
       const { paginatedResultsConfig, instanceConfig } = perspectiveConfig.resultClasses[perspectiveID]
@@ -50,6 +45,15 @@ export const createBackendSearchConfig = async () => {
           for (const instancePageResultClass in instanceConfig.instancePageResultClasses) {
             const instancePageResultClassConfig = instanceConfig.instancePageResultClasses[instancePageResultClass]
             processResultClassConfig(instancePageResultClassConfig, sparqlQueries, resultMappers)
+            if (instancePageResultClassConfig.resultClasses) {
+              for (const extraResultClass in instancePageResultClassConfig.resultClasses) {
+                processResultClassConfig(instancePageResultClassConfig.resultClasses[extraResultClass], sparqlQueries, resultMappers)
+              }
+              extraResultClasses = {
+                ...extraResultClasses,
+                ...instancePageResultClassConfig.resultClasses
+              }
+            }
           }
           hasInstancePageResultClasses = true
         }
@@ -59,6 +63,19 @@ export const createBackendSearchConfig = async () => {
         if (resultClass === perspectiveID) { continue }
         const resultClassConfig = perspectiveConfig.resultClasses[resultClass]
         processResultClassConfig(resultClassConfig, sparqlQueries, resultMappers)
+        if (resultClassConfig.resultClasses) {
+          for (const extraResultClass in resultClassConfig.resultClasses) {
+            processResultClassConfig(resultClassConfig.resultClasses[extraResultClass], sparqlQueries, resultMappers)
+          }
+          extraResultClasses = {
+            ...extraResultClasses,
+            ...resultClassConfig.resultClasses
+          }
+        }
+      }
+      perspectiveConfig.resultClasses = {
+        ...perspectiveConfig.resultClasses,
+        ...extraResultClasses
       }
       // merge facet results and instance page result classes
       if (hasInstancePageResultClasses) {
@@ -93,10 +110,24 @@ export const createBackendSearchConfig = async () => {
       instanceConfig.postprocess.func = resultMappers[instanceConfig.postprocess.func]
     }
     let hasInstancePageResultClasses = false
+    let extraResultClasses = {} // gather nested result classes here
     if (has(instanceConfig, 'instancePageResultClasses')) {
       for (const instancePageResultClass in instanceConfig.instancePageResultClasses) {
         const instancePageResultClassConfig = instanceConfig.instancePageResultClasses[instancePageResultClass]
         processResultClassConfig(instancePageResultClassConfig, sparqlQueries, resultMappers)
+        if (instancePageResultClassConfig.resultClasses) {
+          for (const extraResultClass in instancePageResultClassConfig.resultClasses) {
+            processResultClassConfig(instancePageResultClassConfig.resultClasses[extraResultClass], sparqlQueries, resultMappers)
+          }
+          extraResultClasses = {
+            ...extraResultClasses,
+            ...instancePageResultClassConfig.resultClasses
+          }
+        }
+      }
+      perspectiveConfig.resultClasses = {
+        ...perspectiveConfig.resultClasses,
+        ...extraResultClasses
       }
       hasInstancePageResultClasses = true
     }
@@ -161,6 +192,9 @@ export const mergeFacetConfigs = (clientFacets, serverFacets) => {
     if (serverFacet.labelPath && serverFacet.labelPath !== '') {
       serverFacet.labelPath = serverFacet.labelPath.replace(/\s+/g, ' ').trim()
     }
+    if (serverFacet.orderByPattern && serverFacet.orderByPattern !== '') {
+      serverFacet.orderByPattern = serverFacet.orderByPattern.replace(/\s+/g, ' ').trim()
+    }
     if (serverFacet.textQueryPredicate && serverFacet.textQueryPredicate !== '') {
       serverFacet.textQueryPredicate = serverFacet.textQueryPredicate.replace(/\s+/g, ' ').trim()
     }
@@ -189,6 +223,9 @@ export const mergeFacetConfigs = (clientFacets, serverFacets) => {
     // labelPath --> sortByPredicate
     if (serverFacet.labelPath) {
       mergedFacet.sortByPredicate = serverFacet.labelPath
+    }
+    if (serverFacet.orderByPattern) {
+      mergedFacet.sortByPattern = serverFacet.orderByPattern
     }
 
     if (serverFacet.type === 'text') {
@@ -327,11 +364,70 @@ export const createExtraResultClassesForJSONConfig = async oldBackendSearchConfi
 }
 
 // createExtraResultClassesForJSONConfig(oldBackendSearchConfig)
+// mergeFacetConfigs(INITIAL_STATE.facets, oldPerspectiveConfig.facets)
 
-// mergeFacetConfigs(INITIAL_STATE.facets, entitiesConfig.facets)
+export class Counter {
+  dct;
 
-// console.log(JSON.stringify(INITIAL_STATE.properties))
+  constructor (arr) {
+    this.dct = {}
+    this.update(arr)
+  }
 
-// "tabID": 0,
-// "tabPath": "",
-// "tabIcon": "",
+  mostCommon (n) {
+    const lst = Object.entries(this.dct)
+    lst.sort((a, b) => {
+      return b[1] - a[1]
+    })
+    return lst.slice(0, n)
+  }
+
+  mostCommonLabels (n) {
+    const lst = this.mostCommon(n)
+    return lst.map(x => { return x[0] })
+  }
+
+  update (arr) {
+    if (arr) {
+      arr.forEach(x => this.addItem(x))
+    }
+  }
+
+  combine (other) {
+    for (const x of Object.keys(other.dct)) {
+      if (x in this.dct) {
+        this.dct[x] += other.dct[x]
+      } else {
+        this.dct[x] = other.dct[x]
+      }
+    }
+  }
+
+  addItem (x) {
+    if (x in this.dct) {
+      this.dct[x] += 1
+    } else {
+      this.dct[x] = 1
+    }
+  }
+}
+
+/**
+ export class DefaultDict {
+  proxy;
+
+  constructor (DefaultClass) {
+    this.proxy = new Proxy({}, {
+      get: (target, name) => {
+        if (!(name in target)) {
+          target[name] = new DefaultClass()
+        }
+        return target[name]
+      }
+    })
+    return this.proxy
+  }
+  // Object.keys(dc)
+  // Object.entries(dc)
+}
+*/

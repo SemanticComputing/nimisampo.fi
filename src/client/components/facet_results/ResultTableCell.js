@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import TableCell from '@material-ui/core/TableCell'
+import TableCell from '@mui/material/TableCell'
 import ObjectListCollapsible from './ObjectListCollapsible'
 import StringList from './StringList'
 import SimpleReactLightbox from 'simple-react-lightbox'
@@ -11,7 +11,7 @@ const ResultTableCell = props => {
     data, tableData, valueType, makeLink, externalLink, sortValues, sortBy, numberedList, minWidth,
     height, container, columnId, expanded, linkAsButton, collapsedMaxWords, showSource,
     sourceExternalLink, renderAsHTML, HTMLParserTask, referencedTerm, previewImageHeight,
-    onExpandClick, rowId, shortenLabel
+    onExpandClick, rowId, shortenLabel = false
   } = props
   let cellContent = null
   const cellStyle = {

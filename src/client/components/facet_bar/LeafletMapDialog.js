@@ -1,20 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles'
 import intl from 'react-intl-universal'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import CropFreeIcon from '@material-ui/icons/CropFree'
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogTitle from '@mui/material/DialogTitle'
+import CropFreeIcon from '@mui/icons-material/CropFree'
 import LeafletMap from '../facet_results/LeafletMap'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Paper from '@material-ui/core/Paper'
+import CircularProgress from '@mui/material/CircularProgress'
+import Paper from '@mui/material/Paper'
 
 const styles = theme => ({
-  root: {
-    marginBottom: theme.spacing(1)
-  },
   dialogContainer: {
     height: '100%',
     width: '100%'
@@ -22,13 +19,6 @@ const styles = theme => ({
   dialogPaper: {
     height: '100%',
     width: '100%'
-  },
-  mapSearch: {
-    margin: theme.spacing(1)
-  },
-  buttonLabel: {
-    fontWeigth: 'normal',
-    textTransform: 'none'
   },
   rightIcon: {
     marginLeft: theme.spacing(1)
@@ -74,17 +64,26 @@ class LeafletMapDialog extends React.Component {
     const { center, zoom } = maps.boundingboxSearch
 
     return (
-      <Paper className={classes.root}>
+      <Paper
+        sx={theme => ({
+          padding: theme.spacing(1),
+          [theme.breakpoints.down('md')]: {
+            marginBottom: theme.spacing(1)
+          }
+        })}
+      >
         <Button
           variant='contained'
           color='primary'
-          className={classes.mapSearch}
-          classes={{ label: classes.buttonLabel }}
           onClick={this.handleClickOpen}
+          sx={{
+            fontWeigth: 'normal',
+            textTransform: 'none'
+          }}
         >
           {intl.get(`perspectives.${perspectiveID}.searchByArea`)}
           {spatialResultsFetching
-            ? <CircularProgress className={classes.rightIcon} color='inherit' size={24} />
+            ? <CircularProgress className={classes.rightIcon} size={24} />
             : <CropFreeIcon className={classes.rightIcon} />}
         </Button>
 

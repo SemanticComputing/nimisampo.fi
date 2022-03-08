@@ -12,6 +12,7 @@ import {
 } from 'lodash'
 import { getTreeFromFlatData } from '@nosferatu500/react-sortable-tree'
 import { ckmeans } from 'simple-statistics'
+import { Counter } from './Utils'
 
 export const mapPlaces = sparqlBindings => {
   const results = sparqlBindings.map(b => {
@@ -35,6 +36,39 @@ export const mapCoordinates = sparqlBindings => {
   return results
 }
 
+export const mapBirthYearCount = sparqlBindings => {
+  // console.log(sparqlBindings);
+  const results = sparqlBindings.map(b => {
+    return {
+      counted: b.counted.value,
+      count: b.count.value
+    }
+  })
+  return results
+}
+
+export const mapAgeCount = sparqlBindings => {
+  // console.log(sparqlBindings);
+  const results = sparqlBindings.map(b => {
+    return {
+      counted: b.counted.value,
+      count: b.count.value
+    }
+  })
+  return results
+}
+
+export const mapCountGroups = sparqlBindings => {
+  // console.log(sparqlBindings);
+  const results = sparqlBindings.map(b => {
+    return {
+      counted: b.counted.value,
+      count: b.count.value
+    }
+  })
+  return results
+}
+
 export const mapCount = sparqlBindings => {
   return sparqlBindings[0].count.value
 }
@@ -51,7 +85,7 @@ export const mapFacet = ({ sparqlBindings, config }) => {
             : '0', // temporary prefLabel for <http://ldf.fi/MISSING_VALUE> to support sorting
           selected: b.selected.value,
           parent: b.parent ? b.parent.value : null,
-          instanceCount: b.instanceCount.value
+          instanceCount: parseInt(b.instanceCount.value)
         }
       } catch (err) {
         console.log(err)
@@ -190,7 +224,7 @@ export const mapPieChart = sparqlBindings => {
     return {
       category: b.category.value,
       prefLabel: b.prefLabel.value,
-      instanceCount: b.instanceCount.value
+      instanceCount: parseInt(b.instanceCount.value)
     }
   })
   return results
@@ -515,3 +549,60 @@ const arrayToObject = (array, keyField) =>
     obj[item[keyField].value] = newItem
     return obj
   }, {})
+
+export const createCorrespondenceChartData = ({ sparqlBindings, config }) => {
+  const { numberTopResults, types, lastLabel } = config
+  let topN = numberTopResults || 10
+
+  sparqlBindings.forEach(b => { Object.keys(b).forEach(key => { b[key] = b[key].value }) })
+
+  //  Dates '1663-10-26' to UTC -9662204389000
+  sparqlBindings.forEach(b => { b.date = Date.parse(b.date) })
+
+  //  find the N most common values in the data
+  const cnAll = new Counter(sparqlBindings.map(ob => ob[ob.type + '__label']))
+  const topTies = cnAll.mostCommonLabels(topN)
+
+  const datas = {}
+  types.forEach(type => { datas[type] = [] })
+  sparqlBindings.forEach(ob => {
+    const v = topTies.indexOf(ob[ob.type + '__label'])
+    //  one of the top correspondences (v > -1) or in other (topTies.length)
+    if (v > -1) {
+      datas[ob.type].push([ob.date, v])
+    } else if (lastLabel) {
+      datas[ob.type].push([ob.date, topTies.length])
+    }
+  })
+
+  const years = new Set(sparqlBindings.map(ob => { return parseInt(ob.year) }))
+
+  topN = topTies.length
+  if (lastLabel) { topTies.push(lastLabel) }
+
+  return {
+    series: types.map(type => { return { name: type, data: datas[type] } }),
+    topTies: topTies,
+    topN: topN,
+    minUTC: Date.UTC(Math.min(...years)),
+    //  NB. January = 0, ... December = 11:
+    maxUTC: Date.UTC(Math.max(...years), 11, 31)
+  }
+}
+
+export const createCorrespondenceChartDataLower = ({ sparqlBindings, config }) => {
+  const series = []
+  Object.entries(mapMultipleLineChart({ sparqlBindings, config })).forEach(([key, arr]) => {
+    // filter out empty result arrays, e.g. 'sent_letters' : []
+    if (arr && arr.length) {
+      const lastX = arr[arr.length - 1]
+      // add an extra zero to the end to show the whole last result in browser
+      arr.push([lastX[0] + 1, 0])
+      series.push({
+        name: key,
+        data: arr.map(y => [Date.UTC(y[0]), y[1]])
+      })
+    }
+  })
+  return series
+}

@@ -1,8 +1,22 @@
 import React from 'react'
-import { MuiThemeProvider, createTheme } from '@material-ui/core/styles'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import AdapterMoment from '@mui/lab/AdapterMoment'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import 'moment/locale/fi'
 import SemanticPortal from '../containers/SemanticPortal'
 import portalConfig from '../../configs/portalConfig.json'
-const { colorPalette } = portalConfig.layoutConfig
+
+const { colorPalette, reducedHeightBreakpoint, hundredPercentHeightBreakPoint, topBar } = portalConfig.layoutConfig
+
+const muiDefaultBreakpoints = {
+  xs: 0,
+  sm: 600,
+  md: 900,
+  lg: 1200,
+  xl: 1536
+}
+
+const defaultTheme = createTheme()
 
 const theme = createTheme({
   palette: {
@@ -13,55 +27,96 @@ const theme = createTheme({
       main: colorPalette.secondary.main
     }
   },
-  overrides: {
+  breakpoints: {
+    values: {
+      ...muiDefaultBreakpoints,
+      reducedHeight: reducedHeightBreakpoint,
+      hundredPercentHeight: hundredPercentHeightBreakPoint
+    }
+  },
+  components: {
+    MuiToolbar: {
+      styleOverrides: {
+        regular: {
+          [defaultTheme.breakpoints.down(reducedHeightBreakpoint)]: {
+            minHeight: topBar.reducedHeight
+          },
+          [defaultTheme.breakpoints.up(reducedHeightBreakpoint)]: {
+            minHeight: topBar.defaultHeight
+          }
+        }
+      }
+    },
+    MuiCircularProgress: {
+      defaultProps: {
+        thickness: 5
+      }
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          padding: 4
+        }
+      }
+    },
     MuiTooltip: {
-      tooltip: {
-        fontSize: '1 rem'
+      styleOverrides: {
+        tooltip: {
+          fontSize: '1rem'
+        }
       }
     },
     MuiAccordion: {
-      root: {
-        '&$expanded': {
-          marginTop: 8,
-          marginBottom: 8
+      styleOverrides: {
+        root: {
+          '&.Mui-expanded': {
+            marginTop: 8,
+            marginBottom: 8
+          }
         }
       }
     },
     MuiAccordionSummary: {
-      content: {
-        '&$expanded': {
-          marginTop: 4
-        }
-      },
-      expandIcon: {
-        '&$expanded': {
-          marginTop: -16
+      styleOverrides: {
+        root: {
+          paddingLeft: 8,
+          paddingRight: 8,
+          minHeight: 40
+        },
+        content: {
+          marginTop: 4,
+          marginBottom: 4,
+          '&.Mui-expanded': {
+            marginTop: 0,
+            marginBottom: 0
+          }
         }
       }
     },
     MuiButton: {
-      endIcon: {
-        marginLeft: 0
-      }
-    },
-    MuiIconButton: {
-      root: {
-        padding: 4
+      styleOverrides: {
+        endIcon: {
+          marginLeft: 0
+        }
       }
     },
     MuiTableCell: {
-      sizeSmall: {
-        paddingTop: 0,
-        paddingBottom: 0
+      styleOverrides: {
+        sizeSmall: {
+          paddingTop: 0,
+          paddingBottom: 0
+        }
       }
     }
   }
 })
 
 const App = () => (
-  <MuiThemeProvider theme={theme}>
-    <SemanticPortal />
-  </MuiThemeProvider>
+  <LocalizationProvider dateAdapter={AdapterMoment}>
+    <ThemeProvider theme={theme}>
+      <SemanticPortal />
+    </ThemeProvider>
+  </LocalizationProvider>
 )
 
 export default App

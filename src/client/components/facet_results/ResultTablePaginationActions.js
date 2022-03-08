@@ -1,33 +1,32 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
-import IconButton from '@material-ui/core/IconButton'
-import FirstPageIcon from '@material-ui/icons/FirstPage'
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
-import LastPageIcon from '@material-ui/icons/LastPage'
+import withStyles from '@mui/styles/withStyles'
+import IconButton from '@mui/material/IconButton'
+import FirstPageIcon from '@mui/icons-material/FirstPage'
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
+import LastPageIcon from '@mui/icons-material/LastPage'
 
 const styles = theme => ({
   root: {
     flexShrink: 0,
-    color: theme.palette.text.secondary,
-    marginLeft: theme.spacing(2.5)
+    color: theme.palette.text.secondary
   }
 })
 
 const ResultTablePaginationActions = props => {
-  const { theme, classes, count, page, rowsPerPage, onChangePage } = props
+  const { theme, classes, count, page, rowsPerPage, onPageChange } = props
   const handleFirstPageButtonClick = event => {
-    onChangePage(event, 0)
+    onPageChange(event, 0)
   }
   const handleBackButtonClick = event => {
-    onChangePage(event, page - 1)
+    onPageChange(event, page - 1)
   }
   const handleNextButtonClick = event => {
-    onChangePage(event, page + 1)
+    onPageChange(event, page + 1)
   }
   const handleLastPageButtonClick = event => {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1))
   }
   return (
     <div className={classes.root}>
@@ -35,16 +34,23 @@ const ResultTablePaginationActions = props => {
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
         aria-label='First Page'
+        size='large'
       >
         {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
       </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label='Previous Page'>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label='Previous Page'
+        size='large'
+      >
         {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label='Next Page'
+        size='large'
       >
         {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
       </IconButton>
@@ -52,6 +58,7 @@ const ResultTablePaginationActions = props => {
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label='Last Page'
+        size='large'
       >
         {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
@@ -62,7 +69,7 @@ const ResultTablePaginationActions = props => {
 ResultTablePaginationActions.propTypes = {
   classes: PropTypes.object.isRequired,
   count: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
+  onPageChange: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
   theme: PropTypes.object.isRequired

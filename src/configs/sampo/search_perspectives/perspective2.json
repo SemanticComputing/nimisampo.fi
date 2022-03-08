@@ -49,8 +49,50 @@
                         "useNetworkAPI": true,
                         "limit": 200,
                         "optimize": 1.2,
-                        "style": "cytoscapeStyle",
-                        "layout": "coseLayout"
+                        "preprocess": "preprocessPageRank",
+                        "style": [
+                            {
+                                "selector": "node",
+                                "style": {
+                                    "shape": "ellipse",
+                                    "label": "data(prefLabel)"
+                                }
+                            },
+                            {
+                                "selector": "edge",
+                                "style": {
+                                    "curve-style": "bezier",
+                                    "target-arrow-shape": "triangle",
+                                    "target-arrow-color": "#999",
+                                    "color": "#555",
+                                    "font-size": "6",
+                                    "text-valign": "top",
+                                    "text-halign": "center",
+                                    "edge-text-rotation": "autorotate",
+                                    "text-background-opacity": 1,
+                                    "text-background-color": "white",
+                                    "text-background-shape": "roundrectangle"
+                                }
+                            }
+                        ],
+                        "layout": {
+                            "name": "cose",
+                            "idealEdgeLength": 100,
+                            "nodeOverlap": 20,
+                            "refresh": 20,
+                            "fit": true,
+                            "padding": 30,
+                            "randomize": false,
+                            "componentSpacing": 100,
+                            "nodeRepulsion": 400000,
+                            "edgeElasticity": 100,
+                            "nestingFactor": 5,
+                            "gravity": 80,
+                            "numIter": 1347,
+                            "initialTemp": 200,
+                            "coolingFactor": 0.95,
+                            "minTemp": 1
+                        }
                     },
                     "instancePageExport": {
                         "tabID": 2,
@@ -134,25 +176,52 @@
         },
         "productionTimespanLineChart": {
             "tabID": 3,
-            "component": "ApexCharts",
+            "component": "ApexChartsDouble",
             "tabPath": "production_dates",
             "tabIcon": "ShowChart",
-            "sparqlQuery": "productionsByDecadeQuery",
-            "facetClass": "perspective2",
-            "filterTarget": "instance",
-            "resultMapper": "mapLineChart",
-            "resultMapperConfig": {
-                "fillEmptyValues": false
-            },
-            "createChartData": "createSingleLineChartData",
-            "title": "Manuscript production by decade",
-            "xaxisTitle": "Decade",
-            "xaxisType": "category",
-            "xaxisTickAmount": 30,
-            "yaxisTitle": "Manuscript count",
-            "seriesTitle": "Manuscript count",
-            "stroke": {
-                "width": 2
+            "upperResultClass": "productionTimespanLineChartUpper",
+            "lowerResultClass": "productionTimespanLineChartLower",
+            "resultClasses": {
+                "productionTimespanLineChartUpper": {
+                    "height": "70%",
+                    "sparqlQuery": "productionsByDecadeQuery",
+                    "facetClass": "perspective2",
+                    "filterTarget": "instance",
+                    "resultMapper": "mapLineChart",
+                    "resultMapperConfig": {
+                        "fillEmptyValues": false
+                    },
+                    "createChartData": "createSingleLineChartData",
+                    "title": "Manuscript production by decade",
+                    "xaxisTitle": "Decade",
+                    "xaxisType": "category",
+                    "xaxisTickAmount": 30,
+                    "yaxisTitle": "Manuscript count",
+                    "seriesTitle": "Manuscript count",
+                    "stroke": {
+                        "width": 2
+                    }
+                },
+                "productionTimespanLineChartLower": {
+                    "height": "30%",
+                    "sparqlQuery": "productionsByDecadeQueryLower",
+                    "facetClass": "perspective2",
+                    "filterTarget": "instance",
+                    "resultMapper": "mapLineChart",
+                    "resultMapperConfig": {
+                        "fillEmptyValues": false
+                    },
+                    "createChartData": "createSingleLineChartData",
+                    "title": "Manuscript production by decade",
+                    "xaxisTitle": "Decade",
+                    "xaxisType": "category",
+                    "xaxisTickAmount": 30,
+                    "yaxisTitle": "Manuscript count",
+                    "seriesTitle": "Manuscript count",
+                    "stroke": {
+                        "width": 2
+                    }
+                }
             }
         },
         "productionsByDecadeAndCountry": {
@@ -171,7 +240,7 @@
             "tabID": 4,
             "component": "ApexCharts",
             "tabPath": "event_dates",
-            "tabIcon": "AddLocation",
+            "tabIcon": "ShowChart",
             "sparqlQuery": "eventsByDecadeQuery",
             "facetClass": "perspective2",
             "filterTarget": "manuscript",
@@ -218,9 +287,50 @@
             "useNetworkAPI": true,
             "limit": 500,
             "optimize": 1.2,
-            "style": "cytoscapeStyle",
-            "layout": "coseLayout",
-            "preprocess": "preprocess"
+            "preprocess": "preprocessPageRank",
+            "style": [
+                {
+                    "selector": "node",
+                    "style": {
+                        "shape": "ellipse",
+                        "label": "data(prefLabel)"
+                    }
+                },
+                {
+                    "selector": "edge",
+                    "style": {
+                        "curve-style": "bezier",
+                        "target-arrow-shape": "triangle",
+                        "target-arrow-color": "#999",
+                        "color": "#555",
+                        "font-size": "6",
+                        "text-valign": "top",
+                        "text-halign": "center",
+                        "edge-text-rotation": "autorotate",
+                        "text-background-opacity": 1,
+                        "text-background-color": "white",
+                        "text-background-shape": "roundrectangle"
+                    }
+                }
+            ],
+            "layout": {
+                "name": "cose",
+                "idealEdgeLength": 100,
+                "nodeOverlap": 20,
+                "refresh": 20,
+                "fit": true,
+                "padding": 30,
+                "randomize": false,
+                "componentSpacing": 100,
+                "nodeRepulsion": 400000,
+                "edgeElasticity": 100,
+                "nestingFactor": 5,
+                "gravity": 80,
+                "numIter": 1347,
+                "initialTemp": 200,
+                "coolingFactor": 0.95,
+                "minTemp": 1
+            }
         },
         "export": {
             "tabID": 8,

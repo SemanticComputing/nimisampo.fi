@@ -1,19 +1,19 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import intl from 'react-intl-universal'
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles'
 import { has } from 'lodash'
 import SortableTree, { changeNodeAtPath } from '@nosferatu500/react-sortable-tree'
 import FileExplorerTheme from 'react-sortable-tree-theme-file-explorer'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import purple from '@material-ui/core/colors/purple'
-import Input from '@material-ui/core/Input'
-import IconButton from '@material-ui/core/IconButton'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext'
-import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore'
-import Typography from '@material-ui/core/Typography'
+import Checkbox from '@mui/material/Checkbox'
+import Box from '@mui/material/Box'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import CircularProgress from '@mui/material/CircularProgress'
+import Input from '@mui/material/Input'
+import IconButton from '@mui/material/IconButton'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore'
+import Typography from '@mui/material/Typography'
 import { generateLabelForMissingValue } from '../../helpers/helpers'
 
 const styles = () => ({
@@ -25,13 +25,6 @@ const styles = () => ({
   },
   facetSearchIconButton: {
     padding: 10
-  },
-  treeContainer: {
-    flex: 1
-  },
-  treeContainerWithSearchField: {
-    width: '100%',
-    flex: 1
   },
   spinnerContainer: {
     display: 'flex',
@@ -308,7 +301,7 @@ class HierarchicalFacet extends Component {
         {isFetching
           ? (
             <div className={classes.spinnerContainer}>
-              <CircularProgress style={{ color: purple[500] }} thickness={5} />
+              <CircularProgress />
             </div>
             )
           : (
@@ -326,6 +319,7 @@ class HierarchicalFacet extends Component {
                         className={classes.facetSearchIconButton}
                         aria-label='Previous'
                         onClick={selectPrevMatch}
+                        size='large'
                       >
                         <NavigateBeforeIcon />
                       </IconButton>
@@ -333,6 +327,7 @@ class HierarchicalFacet extends Component {
                         className={classes.facetSearchIconButton}
                         aria-label='Next'
                         onClick={selectNextMatch}
+                        size='large'
                       >
                         <NavigateNextIcon />
                       </IconButton>
@@ -342,9 +337,15 @@ class HierarchicalFacet extends Component {
                     </>}
                 </div>}
               {facet.filterType !== 'spatialFilter' &&
-                <div className={searchField ? classes.treeContainerWithSearchField : classes.treeContainer}>
+                <Box
+                  sx={{
+                    height: searchField
+                      ? 'calc(100% - 44px)'
+                      : '100%'
+                  }}
+                >
                   <SortableTree
-                    treeData={this.state.treeData}
+                    treeData={this.state.treeData || []}
                     onChange={treeData => this.setState({ treeData })}
                     canDrag={false}
                     rowHeight={30}
@@ -355,7 +356,7 @@ class HierarchicalFacet extends Component {
                       this.setState({
                         searchFoundCount: matches.length,
                         searchFocusIndex:
-                          matches.length > 0 ? searchFocusIndex % matches.length : 0,
+                        matches.length > 0 ? searchFocusIndex % matches.length : 0,
                         matches
                       })
                     }}
@@ -364,7 +365,7 @@ class HierarchicalFacet extends Component {
                     generateNodeProps={this.generateNodeProps}
                     isVirtualized={this.props.facetedSearchMode !== 'storybook'}
                   />
-                </div>}
+                </Box>}
               {facet.filterType === 'spatialFilter' &&
                 <div className={classes.spinnerContainer}>
                   <Typography>

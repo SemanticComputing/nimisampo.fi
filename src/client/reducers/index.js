@@ -68,9 +68,19 @@ for (const perspective of perspectiveConfig) {
   } else if (perspective.searchMode && perspective.searchMode === 'faceted-search') {
     const { resultClasses, properties, facets, maps } = perspective
     const { paginatedResultsConfig, instanceConfig } = resultClasses[perspectiveID]
+    let extraResultClasses = {}
     let instancePageResultClasses = {}
     if (instanceConfig && instanceConfig.instancePageResultClasses) {
       instancePageResultClasses = instanceConfig.instancePageResultClasses
+      // handle nested resultClasses
+      for (const resultClass in instancePageResultClasses) {
+        if (instanceConfig.instancePageResultClasses[resultClass].resultClasses) {
+          extraResultClasses = {
+            ...extraResultClasses,
+            ...instanceConfig.instancePageResultClasses[resultClass].resultClasses
+          }
+        }
+      }
     }
     const resultsInitialStateFull = {
       ...resultsInitialState,
@@ -78,14 +88,29 @@ for (const perspective of perspectiveConfig) {
       maps,
       properties
     }
-    Object.keys(facets).forEach(key => { facets[key].isFetching = false })
+    Object.keys(facets).forEach(key => {
+      facets[key].isFetching = false
+      facets[key].values = null
+    })
     const facetsInitialStateFull = {
       ...facetsInitialState,
       facets
     }
+    for (const resultClass in resultClasses) {
+      if (resultClasses[resultClass].resultClasses) {
+        extraResultClasses = {
+          ...extraResultClasses,
+          ...resultClasses[resultClass].resultClasses
+        }
+      }
+    }
     const resultsReducer = createResultsReducer(
       resultsInitialStateFull,
-      new Set(Object.keys({ ...resultClasses, ...instancePageResultClasses })))
+      new Set(Object.keys({
+        ...resultClasses,
+        ...instancePageResultClasses,
+        ...extraResultClasses
+      })))
     const facetsReducer = createFacetsReducer(facetsInitialStateFull, perspectiveID)
     const facetsConstrainSelfReducer = createFacetsConstrainSelfReducer(facetsInitialStateFull, perspectiveID)
     reducers[perspectiveID] = resultsReducer
@@ -105,11 +130,32 @@ for (const perspective of perspectiveConfig) {
 for (const perspective of perspectiveConfigOnlyInfoPages) {
   const perspectiveID = perspective.id
   const { resultClasses, properties } = perspective
+  const { instanceConfig } = resultClasses[perspectiveID]
+  let extraResultClasses = {}
+  let instancePageResultClasses = {}
+  if (instanceConfig && instanceConfig.instancePageResultClasses) {
+    instancePageResultClasses = instanceConfig.instancePageResultClasses
+    // handle nested resultClasses
+    for (const resultClass in instancePageResultClasses) {
+      if (instanceConfig.instancePageResultClasses[resultClass].resultClasses) {
+        extraResultClasses = {
+          ...extraResultClasses,
+          ...instanceConfig.instancePageResultClasses[resultClass].resultClasses
+        }
+      }
+    }
+  }
   const resultsInitialStateFull = {
     ...resultsInitialState,
     properties
   }
-  const resultsReducer = createResultsReducer(resultsInitialStateFull, new Set(Object.keys(resultClasses)))
+  const resultsReducer = createResultsReducer(
+    resultsInitialStateFull,
+    new Set(Object.keys({
+      ...resultClasses,
+      ...instancePageResultClasses,
+      ...extraResultClasses
+    })))
   reducers[perspectiveID] = resultsReducer
 }
 

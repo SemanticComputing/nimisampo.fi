@@ -1,20 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import intl from 'react-intl-universal'
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles'
 import clsx from 'clsx'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
 import ResultTableCell from './ResultTableCell'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
-import IconButton from '@material-ui/core/IconButton'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import purple from '@material-ui/core/colors/purple'
+import TableRow from '@mui/material/TableRow'
+import TableCell from '@mui/material/TableCell'
+import IconButton from '@mui/material/IconButton'
+import CircularProgress from '@mui/material/CircularProgress'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import querystring from 'querystring'
 import ResultTableHead from './ResultTableHead'
-import TablePagination from '@material-ui/core/TablePagination'
+import TablePagination from '@mui/material/TablePagination'
 import ResultTablePaginationActions from './ResultTablePaginationActions'
 import history from '../../History'
 
@@ -30,24 +29,24 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
     borderTop: '1px solid rgba(224, 224, 224, 1);'
   }),
-  paginationRoot: {
-    display: 'flex',
-    backgroundColor: '#fff',
-    borderTop: '1px solid rgba(224, 224, 224, 1);',
-    alignItems: 'center'
-  },
-  paginationCaption: {
-    minWidth: 110
-  },
-  paginationToolbar: props => ({
-    '& p': { fontSize: '0.75rem' },
-    minHeight: props.layoutConfig.paginationToolbarHeight,
-    [theme.breakpoints.down(480)]: {
-      display: 'flex',
-      flexWrap: 'wrap',
-      height: 60
-    }
-  }),
+  // paginationRoot: {
+  //   display: 'flex',
+  //   backgroundColor: '#fff',
+  //   borderTop: '1px solid rgba(224, 224, 224, 1);',
+  //   alignItems: 'center'
+  // },
+  // paginationCaption: {
+  //   minWidth: 110
+  // },
+  // paginationToolbar: props => ({
+  //   '& p': { fontSize: '0.75rem' },
+  //   minHeight: props.layoutConfig.paginationToolbarHeight,
+  //   [theme.breakpoints.down(undefined)]: {
+  //     display: 'flex',
+  //     flexWrap: 'wrap',
+  //     marginTop: theme.spacing(0.5)
+  //   }
+  // }),
   progressContainer: {
     width: '100%',
     height: 'calc(100% - 72px)',
@@ -56,9 +55,7 @@ const styles = theme => ({
     justifyContent: 'center'
   },
   expandCell: {
-    paddingRight: 0,
-    paddingTop: 0,
-    paddingBottom: 0
+    paddingRight: '0px !important'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -88,10 +85,10 @@ class ResultTable extends React.Component {
     let page
 
     // first check if page was given as url parameter
-    if (this.props.routeProps.location.search === '') {
+    if (this.props.location.search === '') {
       page = this.props.data.page === -1 ? 0 : this.props.data.page
     } else {
-      const qs = this.props.routeProps.location.search.replace('?', '')
+      const qs = this.props.location.search.replace('?', '')
       page = parseInt(querystring.parse(qs).page)
     }
 
@@ -129,7 +126,7 @@ class ResultTable extends React.Component {
 
     // handle browser's back button
     window.onpopstate = () => {
-      const qs = this.props.routeProps.location.search.replace('?', '')
+      const qs = this.props.location.search.replace('?', '')
       const newPage = parseInt(querystring.parse(qs).page)
       if (newPage !== this.props.data.page) {
         this.props.updatePage(this.props.resultClass, newPage)
@@ -150,13 +147,13 @@ class ResultTable extends React.Component {
     )
   }
 
-  handleChangePage = (event, page) => {
+  handlePageChange = (event, page) => {
     if (event != null && !this.props.data.fetching) {
       this.props.updatePage(this.props.resultClass, page)
     }
   }
 
-  handleOnChangeRowsPerPage = event => {
+  handleRowsPerPageChange = event => {
     const rowsPerPage = event.target.value
     if (rowsPerPage !== this.props.data.pagesize) {
       this.props.updateRowsPerPage(this.props.resultClass, rowsPerPage)
@@ -266,6 +263,7 @@ class ResultTable extends React.Component {
               onClick={this.handleExpandRow(row.id)}
               aria-expanded={expanded}
               aria-label='Show more'
+              size='large'
             >
               <ExpandMoreIcon />
             </IconButton>}
@@ -282,16 +280,16 @@ class ResultTable extends React.Component {
       <>
         <TablePagination
           component='div'
-          classes={{
-            root: classes.paginationRoot,
-            caption: classes.paginationCaption,
-            toolbar: classes.paginationToolbar
-          }}
+          // classes={{
+          //   root: classes.paginationRoot,
+          //   caption: classes.paginationCaption,
+          //   toolbar: classes.paginationToolbar
+          // }}
           count={resultCount == null ? 0 : resultCount}
           labelDisplayedRows={resultCount == null
             ? () => '-'
             : ({ from, to, count }) => `${from}-${to} of ${count}`}
-          rowsPerPage={pagesize}
+          rowsPerPage={parseInt(pagesize)}
           labelRowsPerPage={intl.get('table.rowsPerPage')}
           rowsPerPageOptions={[5, 10, 15, 20, 25, 30, 50, 100]}
           page={page === -1 || resultCount === 0 ? 0 : page}
@@ -299,15 +297,37 @@ class ResultTable extends React.Component {
             inputProps: { 'aria-label': 'rows per page' },
             native: true
           }}
-          onChangePage={this.handleChangePage}
-          onChangeRowsPerPage={this.handleOnChangeRowsPerPage}
+          onPageChange={this.handlePageChange}
+          onRowsPerPageChange={this.handleRowsPerPageChange}
           ActionsComponent={ResultTablePaginationActions}
+          sx={theme => ({
+            display: 'flex',
+            backgroundColor: '#fff',
+            borderTop: '1px solid rgba(224, 224, 224, 1);',
+            alignItems: 'center',
+            '& .MuiTablePagination-toolbar': {
+              '& p': {
+                fontSize: '0.75rem',
+                marginTop: 0,
+                marginBottom: 0
+              },
+              minHeight: this.props.layoutConfig.paginationToolbarHeight,
+              [theme.breakpoints.down('sm')]: {
+                display: 'flex',
+                flexWrap: 'wrap',
+                marginTop: theme.spacing(0.5)
+              }
+            },
+            '& .MuiTablePagination-displayedRows': {
+              minWidth: 110
+            }
+          })}
         />
         <div className={classes.tableContainer}>
           {fetching
             ? (
               <div className={classes.progressContainer}>
-                <CircularProgress style={{ color: purple[500] }} thickness={5} />
+                <CircularProgress />
               </div>
               )
             : (
@@ -318,7 +338,6 @@ class ResultTable extends React.Component {
                   onSortBy={this.handleSortBy}
                   sortBy={sortBy}
                   sortDirection={sortDirection}
-                  routeProps={this.props.routeProps}
                 />
                 <TableBody>
                   {paginatedResults.map(row => this.rowRenderer(row))}
@@ -341,7 +360,7 @@ ResultTable.propTypes = {
   sortResults: PropTypes.func.isRequired,
   updatePage: PropTypes.func.isRequired,
   updateRowsPerPage: PropTypes.func.isRequired,
-  routeProps: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   rootUrl: PropTypes.string.isRequired
 }
 

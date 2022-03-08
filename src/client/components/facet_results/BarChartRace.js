@@ -3,7 +3,7 @@ import React from 'react'
 import * as am5 from '@amcharts/amcharts5'
 import * as am5xy from '@amcharts/amcharts5/xy'
 import am5themesAnimated from '@amcharts/amcharts5/themes/Animated'
-import Paper from '@material-ui/core/Paper'
+import Paper from '@mui/material/Paper'
 
 // https://www.amcharts.com/docs/v5/
 
@@ -70,7 +70,7 @@ class BarChartRace extends React.Component {
       }))
 
       this.yAxis.get('renderer').labels.template.adapters.add('text', (label, target, key) => {
-        if (target.dataItem) {
+        if (target.dataItem && target.dataItem.dataContext) {
           return target.dataItem.dataContext.prefLabel
         }
       })

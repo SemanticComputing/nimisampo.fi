@@ -1,23 +1,23 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import intl from 'react-intl-universal'
-import { withStyles } from '@material-ui/core/styles'
+import withStyles from '@mui/styles/withStyles'
 import clsx from 'clsx'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableRow from '@mui/material/TableRow'
+import TableCell from '@mui/material/TableCell'
 import ResultTableCell from '../facet_results/ResultTableCell'
-import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
-import InfoIcon from '@material-ui/icons/InfoOutlined'
+import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import InfoIcon from '@mui/icons-material/InfoOutlined'
 
 const styles = theme => ({
   instanceTable: {
     maxWidth: 1200,
     width: '100%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       tableLayout: 'fixed',
       overflowWrap: 'break-word'
     },
@@ -38,7 +38,7 @@ const styles = theme => ({
     justifyContent: 'center'
   },
   labelCell: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       paddingRight: 0
     },
     [theme.breakpoints.up('md')]: {
@@ -53,7 +53,7 @@ const styles = theme => ({
     paddingTop: 0,
     paddingBottom: 0,
     width: 32,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       paddingLeft: 0
     }
   },
@@ -152,7 +152,7 @@ class InstancePageTable extends React.Component {
                         title={description}
                         enterDelay={300}
                       >
-                        <IconButton>
+                        <IconButton size='large'>
                           <InfoIcon />
                         </IconButton>
                       </Tooltip>
@@ -166,6 +166,7 @@ class InstancePageTable extends React.Component {
                           onClick={this.handleExpandRow(row.id)}
                           aria-expanded={expanded}
                           aria-label='Show more'
+                          size='large'
                         >
                           <ExpandMoreIcon />
                         </IconButton>}

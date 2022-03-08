@@ -103,7 +103,9 @@ export const getAllResults = ({
   optimize,
   limit,
   fromID = null,
-  toID = null
+  toID = null,
+  period = null,
+  province = null
 }) => {
   const finalPerspectiveID = perspectiveID || facetClass
   const perspectiveConfig = backendSearchConfig[finalPerspectiveID]
@@ -131,6 +133,8 @@ export const getAllResults = ({
   const {
     sparqlQuery,
     sparqlQueryNodes = null,
+    property = null,
+    rdfType = null,
     filterTarget = 'id',
     resultMapper = makeObjectList,
     resultMapperConfig = null,
@@ -162,6 +166,18 @@ export const getAllResults = ({
   if (toID) {
     q = q.replace(/<TO_ID>/g, `<${toID}>`)
   }
+  if (period) {
+    q = q.replace(/<PERIOD>/g, `<${period}>`)
+  }
+  if (province) {
+    q = q.replace(/<PROVINCE>/g, `<${province}>`)
+  }
+  if (property) {
+    q = q.replace(/<PROPERTY>/g, property)
+  }
+  if (rdfType) {
+    q = q.replace(/<RDF_TYPE>/g, rdfType)
+  }
   if (resultClassConfig.useNetworkAPI) {
     return runNetworkQuery({
       endpoint: endpoint.url,
@@ -170,7 +186,8 @@ export const getAllResults = ({
       links: q,
       nodes: sparqlQueryNodes,
       optimize,
-      limit
+      limit,
+      queryType: resultClassConfig.queryType
     })
   } else {
     if (uri !== null) {

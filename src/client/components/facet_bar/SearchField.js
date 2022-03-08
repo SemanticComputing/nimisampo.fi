@@ -1,26 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withStyles } from '@material-ui/core/styles'
 import intl from 'react-intl-universal'
-import IconButton from '@material-ui/core/IconButton'
-import SearchIcon from '@material-ui/icons/Search'
-import Input from '@material-ui/core/Input'
-import InputLabel from '@material-ui/core/InputLabel'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import FormControl from '@material-ui/core/FormControl'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Paper from '@material-ui/core/Paper'
-
-const styles = theme => ({
-  root: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    padding: theme.spacing(0.5)
-  },
-  textSearch: {
-    margin: theme.spacing(1)
-  }
-})
+import IconButton from '@mui/material/IconButton'
+import SearchIcon from '@mui/icons-material/Search'
+import Input from '@mui/material/Input'
+import InputLabel from '@mui/material/InputLabel'
+import InputAdornment from '@mui/material/InputAdornment'
+import FormControl from '@mui/material/FormControl'
+import CircularProgress from '@mui/material/CircularProgress'
+import Paper from '@mui/material/Paper'
 
 /**
  * A component for text search in client-side faceted search architecture.
@@ -85,13 +73,10 @@ class SearchField extends React.Component {
   }
 
   render () {
-    const { classes } = this.props
     let searchButton = null
     if (this.props.search.textResultsFetching) {
       searchButton = (
-        <IconButton
-          aria-label='Search places'
-        >
+        <IconButton aria-label='Search places' size='large'>
           <CircularProgress size={24} />
         </IconButton>
       )
@@ -101,6 +86,7 @@ class SearchField extends React.Component {
           aria-label='Search'
           onClick={this.handleClick}
           onMouseDown={this.handleMouseDown}
+          size='large'
         >
           <SearchIcon />
         </IconButton>
@@ -108,8 +94,18 @@ class SearchField extends React.Component {
     }
 
     return (
-      <Paper className={classes.root}>
-        <FormControl className={classes.textSearch}>
+      <Paper
+        sx={theme => ({
+          marginTop: theme.spacing(1),
+          marginBottom: theme.spacing(1),
+          padding: theme.spacing(0.5)
+        })}
+      >
+        <FormControl
+          sx={theme => ({
+            margin: theme.spacing(1)
+          })}
+        >
           <InputLabel htmlFor='adornment-search'>{intl.get(`perspectives.${this.props.perspectiveID}.inputPlaceHolder`)}</InputLabel>
           <Input
             id='adornment-search'
@@ -130,7 +126,6 @@ class SearchField extends React.Component {
 }
 
 SearchField.propTypes = {
-  classes: PropTypes.object.isRequired,
   search: PropTypes.object.isRequired,
   fetchResults: PropTypes.func.isRequired,
   clearResults: PropTypes.func.isRequired,
@@ -139,6 +134,4 @@ SearchField.propTypes = {
   perspectiveID: PropTypes.string.isRequired
 }
 
-export const SearchFieldComponent = SearchField
-
-export default withStyles(styles)(SearchField)
+export default SearchField

@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 import GeneralDialog from '../main_layout/GeneralDialog'
 import ApexCharts from '../facet_results/ApexCharts'
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles(theme => ({
   chartContainer: {
@@ -19,22 +19,19 @@ const useStyles = makeStyles(theme => ({
  */
 const ChartDialog = props => {
   const {
-    fetchData, facetID, rawData, rawDataUpdateID, createChartData, facetClass,
-    resultClass, fetching, tooltip, title, xaxisTitle, yaxisTitle, seriesTitle, lineChartConfig,
-    layoutConfig
+    results, resultUpdateID, fetching, tooltip, resultClassConfig, fetchData,
+    facetClass, resultClass = null, facetID
   } = props
-  let xaxisType = null; let xaxisTickAmount = null; let stroke = null
-  if (lineChartConfig) {
-    ({ xaxisType, xaxisTickAmount, stroke } = lineChartConfig)
-  }
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 
-  const handleClickOpen = () => {
+  const handleClickOpen = event => {
+    event.stopPropagation()
     setOpen(true)
   }
 
-  const handleClose = () => {
+  const handleClose = event => {
+    event.stopPropagation()
     setOpen(false)
   }
 
@@ -46,6 +43,7 @@ const ChartDialog = props => {
           aria-owns={open ? 'facet-option-menu' : undefined}
           aria-haspopup='true'
           onClick={handleClickOpen}
+          size='large'
         >
           {props.icon}
         </IconButton>
@@ -57,23 +55,17 @@ const ChartDialog = props => {
       >
         <div className={classes.chartContainer}>
           <ApexCharts
-            pageType='dialog'
-            facetID={facetID}
+            portalConfig={props.portalConfig}
+            perspectiveConfig={props.perspectiveConfig}
+            apexChartsConfig={props.apexChartsConfig}
+            results={results}
+            resultUpdateID={resultUpdateID}
+            fetching={fetching}
+            fetchData={fetchData}
             resultClass={resultClass}
             facetClass={facetClass}
-            fetchData={fetchData}
-            fetching={fetching}
-            rawData={rawData}
-            rawDataUpdateID={rawDataUpdateID}
-            createChartData={createChartData}
-            title={title}
-            xaxisTitle={xaxisTitle}
-            yaxisTitle={yaxisTitle}
-            seriesTitle={seriesTitle}
-            xaxisType={xaxisType}
-            xaxisTickAmount={xaxisTickAmount}
-            stroke={stroke}
-            layoutConfig={layoutConfig}
+            facetID={facetID}
+            resultClassConfig={resultClassConfig}
           />
         </div>
       </GeneralDialog>
@@ -85,46 +77,30 @@ ChartDialog.propTypes = {
   /**
    * The input data.
    */
-  rawData: PropTypes.oneOfType([
+  results: PropTypes.oneOfType([
     PropTypes.array,
     PropTypes.object
   ]),
   /**
    * An ID to detect if the raw data has changed.
    */
-  rawDataUpdateID: PropTypes.number.isRequired,
+  resultUpdateID: PropTypes.number.isRequired,
   /**
    * Redux action for fetching the raw data.
    */
   fetchData: PropTypes.func,
   /**
-   * Function for creating chart data from raw data
-   */
-  createChartData: PropTypes.func.isRequired,
-  /**
     Loading indicator.
    */
   fetching: PropTypes.bool.isRequired,
   /**
-   * Unique id of the facet.
-   * Used with e.g. 'fetchFacetConstrainSelf' action.
-   */
-  facetID: PropTypes.string,
-  /**
-   * The class of the facets for server-side configs.
+   * The class of the facets.
    */
   facetClass: PropTypes.string,
   /**
-   * The class of results for server-side configs.
-   */
-  resultClass: PropTypes.string,
-  /**
    * Tooltip text.
    */
-  tooltip: PropTypes.string.isRequired,
-  xaxisTitle: PropTypes.string,
-  yaxisTitle: PropTypes.string,
-  seriesTitle: PropTypes.string
+  tooltip: PropTypes.string.isRequired
 }
 
 export default ChartDialog
