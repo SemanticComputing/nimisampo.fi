@@ -1,9 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import withStyles from '@mui/styles/withStyles';
+import withStyles from '@mui/styles/withStyles'
 import Collapse from '@mui/material/Collapse'
+import IconButton from '@mui/material/IconButton'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import HTMLParser from '../../helpers/HTMLParser'
 import classNames from 'classnames'
+import clsx from 'clsx'
 
 const styles = theme => ({
   resultTableList: props => ({
@@ -27,29 +30,42 @@ const styles = theme => ({
   },
   threeDots: {
     cursor: 'pointer'
+  },
+  expand: {
+    transform: 'rotate(0deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest
+    })
+  },
+  expandOpen: {
+    transform: 'rotate(180deg)'
   }
 })
 
 const StringList = props => {
-  const createFirstValue = (data, isArray) => {
-    let firstValue = isArray ? data[0] : data
+  const parser = new HTMLParser(props)
+
+  const createFirstValue = data => {
+    let firstValue = Array.isArray(data) ? data[0] : data
     let addThreeDots = false
     if (props.collapsedMaxWords) {
       const wordCount = firstValue.split(' ').length
       if (wordCount > props.collapsedMaxWords) {
         firstValue = firstValue.trim().split(' ').splice(0, props.collapsedMaxWords).join(' ')
         addThreeDots = true
-        // firstValue = `${firstValue}...`
       }
     } else if (isArray) {
       addThreeDots = true
-      // firstValue = `${firstValue}...`
+    }
+    if (props.renderAsHTML) {
+      firstValue = parser.parseHTML(firstValue)
     }
     return (
       <>
-        <div>{firstValue}</div>
+        <span>{firstValue}</span>
         {addThreeDots &&
-          <span className={props.classes.threeDots} onClick={() => props.onExpandClick(props.rowId)}> ...</span>}
+          <span className={props.classes.threeDots} onClick={() => props.onExpandClick(props.rowId)}>...</span>}
       </>
     )
   }
@@ -71,23 +87,38 @@ const StringList = props => {
     }
   }
 
-  const { renderAsHTML, classes } = props
+  const { renderAsHTML, classes, expanded, rowId, onExpandClick, showExtraCollapseButton = false } = props
   let { data } = props
   if (data == null || data === '-') {
     return '-'
   }
   const isArray = Array.isArray(data)
+  let firstValue
+  if (!expanded) {
+    firstValue = createFirstValue(data)
+  }
   if (renderAsHTML) {
-    const parser = new HTMLParser(props)
     data = parser.parseHTML(data)
   }
   return (
     <>
-      {!props.expanded && createFirstValue(data, isArray)}
+      {!expanded && firstValue}
       <Collapse in={props.expanded} timeout='auto' unmountOnExit>
         {isArray && createBasicList(data)}
-        {!isArray && <div>{data}</div>}
+        {!isArray && <>{data}</>}
       </Collapse>
+      {expanded && showExtraCollapseButton &&
+        <IconButton
+          className={clsx(classes.expand, {
+            [classes.expandOpen]: expanded
+          })}
+          onClick={() => onExpandClick(rowId)}
+          aria-expanded={expanded}
+          aria-label='Show more'
+          size='large'
+        >
+          <ExpandMoreIcon />
+        </IconButton>}
     </>
   )
 }
