@@ -6,6 +6,7 @@ import { Route, Redirect } from 'react-router-dom'
 import { groupBy, orderBy } from 'lodash'
 import PerspectiveTabs from '../main_layout/PerspectiveTabs'
 import LeafletMap from './LeafletMap'
+import GMap from './GMap'
 import ResultInfo from './ResultInfo'
 import VirtualizedTable from './VirtualizedTable'
 import ApexCharts from './ApexCharts'
@@ -110,6 +111,13 @@ const FederatedResults = props => {
             />
             )
           : <ResultInfo message={intl.get('leafletMap.tooManyResults')} />}
+      </Route>
+      <Route path={`${rootUrl}/${perspectiveID}/${searchMode}/heatmap`}>
+        <GMap
+          results={props.clientFSResults}
+          layoutConfig={layoutConfig}
+          portalConfig={portalConfig}
+        />
       </Route>
       <Route path={`${rootUrl}/${perspectiveID}/${searchMode}/statistics`}>
         <ApexCharts

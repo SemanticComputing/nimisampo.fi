@@ -29,13 +29,18 @@
             "tabPath": "map_markers",
             "tabIcon": "LocationOn"
         },
-        "statistics": {
+        "heatmap": {
             "tabID": 3,
+            "tabPath": "heatmap",
+            "tabIcon": "LocationOn"
+        },
+        "statistics": {
+            "tabID": 4,
             "tabPath": "statistics",
             "tabIcon": "PieChart"
         },
         "download": {
-            "tabID": 4,
+            "tabID": 5,
             "tabPath": "download",
             "tabIcon": "CloudDownload"
         },
