@@ -2,6 +2,8 @@ FROM node:16.13.0-alpine
 ARG API_URL
 ARG MAPBOX_ACCESS_TOKEN
 
+RUN apk upgrade ca-certificates-bundle
+
 # Based on https://nodejs.org/en/docs/guides/nodejs-docker-webapp/
 
 # Create app directory
@@ -29,4 +31,4 @@ EXPOSE 3001
 USER node
 
 # Express server handles the backend functionality and also serves the React app
-CMD ["node", "/usr/src/app/dist/server"]
+CMD ["node", "--use-openssl-ca", "/usr/src/app/dist/server"]
