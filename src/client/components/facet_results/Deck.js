@@ -70,11 +70,25 @@ class Deck extends React.Component {
   }
 
   componentDidMount = () => {
-    this.props.fetchResults({
-      resultClass: this.props.resultClass,
-      facetClass: this.props.facetClass,
-      sortBy: null
-    })
+    if ((this.props.pageType === 'facetResults' || this.props.pageType === 'instancePage')) {
+      this.props.fetchResults({
+        resultClass: this.props.resultClass,
+        facetClass: this.props.facetClass,
+        sortBy: null
+      })
+    }
+
+    // set viewport longitude and latitude if they're undefined (happens when switching from another map tab to deck)
+    if (!this.state.viewport.longitude || !this.state.viewport.latitude) {
+      this.setState({
+        viewport: {
+          ...this.state.viewport,
+          longitude: this.props.center?.lng,
+          latitude: this.props.center?.lat
+        }
+      })
+    }
+
     this.setState({ mounted: true })
   }
 
@@ -169,7 +183,7 @@ class Deck extends React.Component {
       radiusPixels: 40,
       threshold: 0.025,
       getPosition: d => [+d.long, +d.lat],
-      getWeight: d => +d.instanceCount
+      getWeight: d => d.instanceCount ? +d.instanceCount : 1
     })
 
   createHexagonLayer = data =>
